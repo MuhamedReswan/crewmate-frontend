@@ -1,12 +1,24 @@
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ServiceBoyRoutes from "./routes/ServiceBoy.route"
 import './App.css'
-function App() {
+
+const App = () => {
+
+  const router = createBrowserRouter([
+    {path: '/service-boy', element:<ServiceBoyRoutes/>},
+    {path: '/*', element:<ServiceBoyRoutes/>}
+  ])
+
 
   return (
-    <>
-<h1 className='bg-gray-600 text-center'>CrewMate</h1>
-    </>
+<>
+<RouterProvider router={router} />
+
+</>
   )
 }
 
 export default App
+
+
+
