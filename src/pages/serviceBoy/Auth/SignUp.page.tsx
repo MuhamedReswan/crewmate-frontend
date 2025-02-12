@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -6,14 +7,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/validation/validationSchema';
-import crewmateLogo from "../../../src/assets/images/WorkMate logo og.png"
-import serviceBoyLogin from "../../assets/images/catering_login_image.jpg";
-import { serviceBoyRegister } from "@/api/serviceBoy"; 
-import { SignupFormData } from "types/form.type"; 
+import crewmateLogo from "../../../assets/images/catering_login_image.jpg"
+import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
+import { serviceBoyRegister } from "@/api/serviceBoy";
+import { SignupFormData } from "@/types/form.type";
+import { useState } from "react";
+import OtpModal from "@/components/common/Modal/OtpModal";
+// import useGoogleAuth from "@/hooks/common/useGoogleAuth";
+import { useToast } from "@/hooks/use-toast"
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+
+
 
 
 const SignUpPage = () => {
- 
+
   const {
     register,
     handleSubmit,
@@ -26,17 +34,42 @@ const SignUpPage = () => {
       terms: false, // Set default as false
     }
   });
+  const { toast } = useToast();
 
-  const onSubmit = async(data: SignupFormData) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
+
+
+  // const {googleLogin} = useGoogleAuth()
+  const onSubmit = async (data: SignupFormData) => {
     console.log("form submitted");
-    console.log("onsubmit",data);
-  const registerResponse = await serviceBoyRegister(data);
-  console.log("registerResponse",registerResponse)
+    setEmail(data.email);
+    console.log("onsubmit", data);
+    console.log("email from sign up after set", email);
+    const registerResponse = await serviceBoyRegister(data);
+    console.log("registerResponse on service boy fronty", registerResponse);
+    toast({
+      description: (
+        <SuccessMessage
+          className="" message={registerResponse?.message} />
+      )
+    })
+
+    function HandleModal() {
+      setIsModalOpen(!isModalOpen)
+    }
+
+    if (registerResponse) {
+      console.log("response got on form submit", isModalOpen)
+      setEmail(registerResponse.data);
+      HandleModal();
+    }
+    console.log("registerResponse", registerResponse)
     // Add your signup logic here
   };
 
   const formValues = watch();
-  console.log("formValues",formValues)
+  console.log("formValues", formValues)
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -44,10 +77,10 @@ const SignUpPage = () => {
       <div className="w-full md:w-1/2 flex flex-col h-full p-6">
         {/* Logo and Brand Name */}
         <div className="flex items-center gap-2 mb-4">
-          <svg 
-            width="32" 
-            height="32" 
-            viewBox="0 0 400 400" 
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 400 400"
             className="text-[#4B49AC]"
           />
           <img src={crewmateLogo} alt="logo" className="w-[45px] h-[45px]" />
@@ -71,7 +104,7 @@ const SignUpPage = () => {
                     {...register('name')}
                   />
                   {errors.name && (
-                    <p className="text-xs text-red-500 ">{errors.name.message}</p>
+                    <p className="text-xs text-red-500">{errors.name.message}</p>
                   )}
                 </div>
 
@@ -131,11 +164,11 @@ const SignUpPage = () => {
                 </div>
 
                 <div className="flex items-center space-x-2 pt-1">
-                <Checkbox 
-      id="terms" 
-      checked={watch("terms")} //  Watch state for real-time updates
-      onCheckedChange={(checked) => setValue("terms", checked)} //  Correctly updates the value
-    />
+                  <Checkbox
+                    id="terms"
+                    checked={watch("terms")} //  Watch state for real-time updates
+                    onCheckedChange={(checked) => setValue("terms", checked)} //  Correctly updates the value
+                  />
                   <Label htmlFor="terms" className="text-xs">
                     I agree to the terms & policy
                   </Label>
@@ -159,11 +192,14 @@ const SignUpPage = () => {
                   </div>
                 </div>
 
-                <Button 
+                <Button
                   type="button"
-                  variant="outline" 
+                  variant="outline"
                   className="w-full h-8"
-                  onClick={() => {}}
+                  onClick={() => {
+                    console.log("google login clicked");
+                    // googleLogin();
+                  }}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                     <path
@@ -201,13 +237,16 @@ const SignUpPage = () => {
       {/* Right side - Image */}
       <div className="hidden md:block w-1/2 h-screen">
         <div className="w-full h-full relative">
-          <img 
-            src={serviceBoyLogin} 
-            alt="Service Boy Login" 
+          <img
+            src={serviceBoyLogin}
+            alt="Service Boy Login"
             className="w-full h-full object-cover rounded-tl-3xl rounded-bl-3xl"
           />
         </div>
       </div>
+      {/* Render OTP Modal Conditionally */}
+      {isModalOpen && <OtpModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} email={email} />}
+
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import LoginPage from "@/pages/serviceBoy/Login.page";
-import SignUpPage from "@/pages/serviceBoy/SignUp.page";
-import Test from "@/test";
+import LoginPage from "@/pages/serviceBoy/Auth/Login.page";
+import SignUpPage from "@/pages/serviceBoy/Auth/SignUp.page";
+import Test from "@/Test";
 
 const ServiceBoyRoutes = () => {
     return (

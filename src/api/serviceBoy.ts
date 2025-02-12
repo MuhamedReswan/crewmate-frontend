@@ -1,9 +1,10 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 import API from "@/services/axios"; 
 // error hander
 import { serviceBoyRoutes } from "@/services/endPoints/serviceBoy.endPoints";
 import { ServiceBoy } from "@/types/users.type"; 
 import { SignupFormData } from "@/types/form.type";
+import { GoogleLoginData, Otp } from "@/types/auth.type";
 
 export const login = async (email:string, password:string):Promise <ServiceBoy | undefined> => {
     try {
@@ -14,6 +15,7 @@ export const login = async (email:string, password:string):Promise <ServiceBoy |
         console.log(error);
     }
 }
+
 
 export const serviceBoyRegister = async (data: SignupFormData ):Promise <ServiceBoy | undefined> => {
     try {
@@ -28,3 +30,24 @@ export const serviceBoyRegister = async (data: SignupFormData ):Promise <Service
         console.log(error);
     }
 }
+
+export const otpVerification = async (data:Otp): Promise <ServiceBoy | undefined> => {
+    try {
+        const otpResult : AxiosResponse<ServiceBoy> = await API.post(serviceBoyRoutes.otpVerification,data);
+        console.log("otpResul",otpResult)
+        return otpResult.data;
+    } catch (error) {
+        console.log(error); 
+    }
+}
+
+
+    export const googleAuth = async (data:GoogleLoginData) => {
+        try {
+            await API.post(serviceBoyRoutes.googleAuth, {data});
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }

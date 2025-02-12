@@ -2,8 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import serviceBoyLogin from "../../assets/images/catering_login_image.jpg";
-import crewmateLogo from "../../assets/images/WorkMate logo og.png";
+import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
+import crewmateLogo from "../../../assets/images/WorkMate logo og.png";
 
 const LoginPage = () => {
   return (
