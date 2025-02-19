@@ -1,3 +1,5 @@
+import { Role } from "./enum.type";
+
 export interface ServiceBoyRegister {
   name: string;
   email: string;
@@ -13,6 +15,13 @@ export interface GoogleLoginData {
 }
 
 export interface Otp {
-  otp: string;
+  otp?: string;
   email: string;
+}
+
+export interface ResponseResult {
+  message: string;
+  statusCode: number;
+  data: any | null;
+  role?: Role
 }

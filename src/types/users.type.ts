@@ -43,3 +43,20 @@ export interface ServiceBoy extends CommonDetails{
 
 
 
+export interface Vendor extends CommonDetails  {
+    location: string, 
+    profileImage:string,
+    isBlocked:boolean,
+    aadharNumber:string,
+    role:string; 
+    age:number,
+    qualification:string,
+    offDates:UnAvailable[]
+    date:Date,
+    walletId:string,
+    workHistoryId:string  
+}
+
+
+
+

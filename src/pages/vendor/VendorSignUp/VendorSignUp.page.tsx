@@ -1,4 +1,4 @@
-
+// old signup
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -7,20 +7,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/validation/validationSchema';
-import crewmateLogo from "../../../assets/images/catering_login_image.jpg"
+import crewmateLogo from "../../../assets/images/WorkMate_logo.png"
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
-import { serviceBoyRegister } from "@/api/serviceBoy";
 import { SignupFormData } from "@/types/form.type";
 import { useState } from "react";
 import OtpModal from "@/components/common/Modal/OtpModal";
 // import useGoogleAuth from "@/hooks/common/useGoogleAuth";
 import { useToast } from "@/hooks/use-toast"
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import { Role } from "@/types/enum.type";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
+import { vendorRegister } from "@/api/vendor";
 
 
 
 
-const SignUpPage = () => {
+const VendorSignUpPage = () => {
 
   const {
     register,
@@ -31,13 +35,15 @@ const SignUpPage = () => {
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      terms: false, // Set default as false
+      terms: false,
     }
   });
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
 
 
   // const {googleLogin} = useGoogleAuth()
@@ -46,14 +52,23 @@ const SignUpPage = () => {
     setEmail(data.email);
     console.log("onsubmit", data);
     console.log("email from sign up after set", email);
-    const registerResponse = await serviceBoyRegister(data);
+    const registerResponse = await vendorRegister(data);
     console.log("registerResponse on service boy fronty", registerResponse);
-    toast({
-      description: (
-        <SuccessMessage
-          className="" message={registerResponse?.message} />
-      )
-    })
+    if (registerResponse && registerResponse.statusCode == 200) {
+      toast({
+        description: (
+          <SuccessMessage
+            className="" message={registerResponse?.message} />
+        )
+      })
+    } else {
+      toast({
+        description: (
+          <ErrorMessage
+            className="" message={registerResponse?.message || "Bad"} />
+        )
+      })
+    }
 
     function HandleModal() {
       setIsModalOpen(!isModalOpen)
@@ -61,7 +76,7 @@ const SignUpPage = () => {
 
     if (registerResponse) {
       console.log("response got on form submit", isModalOpen)
-      setEmail(registerResponse.data);
+      setEmail(registerResponse.data.email);
       HandleModal();
     }
     console.log("registerResponse", registerResponse)
@@ -72,11 +87,11 @@ const SignUpPage = () => {
   console.log("formValues", formValues)
 
   return (
-    <div className="h-screen flex overflow-hidden">
+    <div className="h-screen flex overflow-hidden  relative">
       {/* Left side - Login Form */}
-      <div className="w-full md:w-1/2 flex flex-col h-full p-6">
+      <div className="w-full md:w-1/2 flex flex-col h-full p-4">
         {/* Logo and Brand Name */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 z-50 ">
           <svg
             width="32"
             height="32"
@@ -89,14 +104,26 @@ const SignUpPage = () => {
 
         {/* Form Card */}
         <div className="flex items-center justify-center flex-1">
-          <Card className="border-0 shadow-none w-full max-w-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-bold text-center">Sign Up</CardTitle>
+          <Card className="border-0 shadow-none w-full max-w-sm"> 
+            <CardHeader className="pb-2  flex  items-center pt-1">
+              <CardTitle className="text-lg font-bold text-center ">Sign Up</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+
                 <div className="space-y-1">
-                  <Label htmlFor="name">Name</Label>
+                  <Tabs defaultValue={Role.VENDOR}>
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value={Role.SERVICE_BOY} onClick={() => navigate('/service-boy/register')}>Service boy</TabsTrigger>
+                      <TabsTrigger 
+                      value={Role.VENDOR}  className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white">Vendor</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
+
+
+                <div className="space-y-1">
+                  <Label htmlFor="name">Comany Name</Label>
                   <Input
                     id="name"
                     placeholder="Enter your full name"
@@ -118,7 +145,7 @@ const SignUpPage = () => {
                     {...register('email')}
                   />
                   {errors.email && (
-                    <p className="text-xs text-red-500">{errors.email.message}</p>
+                    <p className="text-xs text-red-500 ">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -167,7 +194,8 @@ const SignUpPage = () => {
                   <Checkbox
                     id="terms"
                     checked={watch("terms")} //  Watch state for real-time updates
-                    onCheckedChange={(checked) => setValue("terms", checked)} //  Correctly updates the value
+                    onCheckedChange={(checked) => setValue("terms", checked as boolean)}
+
                   />
                   <Label htmlFor="terms" className="text-xs">
                     I agree to the terms & policy
@@ -224,7 +252,7 @@ const SignUpPage = () => {
 
                 <div className="text-center text-xs text-gray-500">
                   Already have an account?{' '}
-                  <a href="service-boy/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
+                  <a href="vendor/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
                     Sign in
                   </a>
                 </div>
@@ -244,11 +272,11 @@ const SignUpPage = () => {
           />
         </div>
       </div>
-      {/* Render OTP Modal Conditionally */}
-      {isModalOpen && <OtpModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} email={email} />}
+      {isModalOpen && <OtpModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} email={email} role={Role.VENDOR} />}
+
 
     </div>
   );
 };
 
-export default SignUpPage;
+export default VendorSignUpPage;

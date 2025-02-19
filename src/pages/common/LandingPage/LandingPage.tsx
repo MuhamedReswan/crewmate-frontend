@@ -1,8 +1,7 @@
-import React from 'react';
 import { Users, Star, Clock, Award } from 'lucide-react';
-import Navbar from './components/common/Navbar/Navbar';
+import Navbar from '@/components/common/Navbar/Navbar';
 
-const Test = () => {
+const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -129,4 +128,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default LandingPage;
