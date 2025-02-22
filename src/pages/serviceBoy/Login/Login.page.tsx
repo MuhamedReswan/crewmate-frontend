@@ -12,31 +12,37 @@ import { useToast } from "@/hooks/use-toast";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
-import { Tabs, TabsList, TabsTrigger }  from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import { useState } from "react";
+import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
 const LoginPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
+  const [forgotModal, setForgotModal] = useState(false);
 
   const {
     register,
     onSubmit,
     errors,
     isLoading,
-    serverError,
     watch
   } = useLoginForm({
     loginType: Role.SERVICE_BOY,
     onLoginSuccess: (data) => {
       console.log('Login successful data', data);
       toast({
-        description: <SuccessMessage message={data.message} />,
+        description: <SuccessMessage message={data.message} className="" />,
       })
       dispatch(login(data.data));
       navigate('/service-boy/');
     },
     onLoginError: (error) => {
       console.error('Login failed', error);
+      toast({
+        description: <ErrorMessage message={error.message} />,
+      })
     }
   });
 
@@ -67,10 +73,10 @@ const LoginPage = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-2">
-              <div className="space-y-1">
+                <div className="space-y-1">
                   <Tabs defaultValue={Role.SERVICE_BOY} >
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value={Role.SERVICE_BOY}  className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white ">Service Boy</TabsTrigger>
+                      <TabsTrigger value={Role.SERVICE_BOY} className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white ">Service Boy</TabsTrigger>
                       <TabsTrigger value={Role.VENDOR} onClick={() => navigate('/vendor/login')}>Vendor</TabsTrigger>
                     </TabsList>
                   </Tabs>
@@ -108,19 +114,17 @@ const LoginPage = () => {
                   <button
                     type="button"
                     className="text-sm text-[#4B49AC] hover:text-[#3f3d91]"
-                    onClick={() => navigate('/forgot-password')}
+                    onClick={() => setForgotModal(true)}
                   >
                     Forgot password?
                   </button>
                 </div>
 
-                {serverError && (
-                  <p className="text-red-500 text-xs text-center">{serverError}</p>
-                )}
+
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#4B49AC] hover:bg-[#3f3d91] h-8"
+                  className="w-full bg-[#4B49AC] hover:bg-[#4B49AC h-8"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Signing in...' : 'Sign in'}
@@ -192,6 +196,7 @@ const LoginPage = () => {
           />
         </div>
       </div>
+      {forgotModal && <ForgotPasswordModal open={forgotModal} setOpen={setForgotModal} role={Role.SERVICE_BOY} />}
     </div>
   );
 };

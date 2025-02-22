@@ -4,14 +4,18 @@ import Test from "@/Test";
 import LandingPage from "@/pages/common/LandingPage/LandingPage";
 import LoginPage from "@/pages/serviceBoy/Login/Login.page";
 import ServiceBoyHomePage from "@/pages/serviceBoy/Main/ServiceBoyHomePage";
+import Test2 from "@/Test2";
+import ResetForgetPassword from "@/pages/serviceBoy/ResetForgetPassword/ResetForgetPassword";
 
 const ServiceBoyRoutes = () => {
     return (
         <Routes>
-            <Route path="test" element={<Test />} />
+            <Route path="test" element={<Test/>} />
+            <Route path="test2" element={<Test2 />} />
             <Route path="" element={<ServiceBoyHomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<SignUpPage />} />
+            <Route path="reset-password/:token/:email" element={<ResetForgetPassword />} />
             <Route path="" element={<LandingPage />} />
             {/* Add more routes as needed */}
         </Routes>

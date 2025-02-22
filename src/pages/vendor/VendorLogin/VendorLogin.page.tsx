@@ -13,18 +13,21 @@ import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { Tabs, TabsList, TabsTrigger }  from "@/components/ui/tabs";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
+import { useState } from "react";
 
 const VendorLoginPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
+  const [forgotModal, setForgotModal] =useState(false);
 
   const {
     register,
     onSubmit,
     errors,
     isLoading,
-    serverError,
     watch
   } = useLoginForm({
     loginType: Role.VENDOR,
@@ -38,6 +41,9 @@ const VendorLoginPage = () => {
     },
     onLoginError: (error) => {
       console.error('Login failed', error);
+      toast({
+        description: <ErrorMessage message={error.message} />,
+      })
     }
   });
 
@@ -109,15 +115,12 @@ const VendorLoginPage = () => {
                   <button
                     type="button"
                     className="text-sm text-[#4B49AC] hover:text-[#3f3d91]"
-                    onClick={() => navigate('/forgot-password')}
+                    onClick={() =>setForgotModal(true) }
+
                   >
                     Forgot password?
                   </button>
                 </div>
-
-                {serverError && (
-                  <p className="text-red-500 text-xs text-center">{serverError}</p>
-                )}
 
                 <Button
                   type="submit"
@@ -193,6 +196,7 @@ const VendorLoginPage = () => {
           />
         </div>
       </div>
+      {forgotModal && <ForgotPasswordModal open={forgotModal} setOpen={setForgotModal} role={Role.VENDOR} />}
     </div>
   );
 };

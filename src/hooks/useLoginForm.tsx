@@ -7,6 +7,7 @@ import { LoginFormInputs } from '@/types/form.type';
 import {  serviceBoyLogin } from '@/api/serviceBoy';
 import { Role } from '@/types/enum.type';
 import { ResponseResult } from '@/types/auth.type';
+import { vendorLogin } from '@/api/vendor';
  
 type LoginType = Role 
 
@@ -18,7 +19,6 @@ export interface UseLoginFormProps {
 
 export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLoginFormProps = {}) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const form = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
@@ -33,18 +33,18 @@ export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLog
     try {
       console.log("data from the useLogin on submit",data)
       setIsLoading(true);
-      setServerError(null);
-      let result
+      let result;
       if(loginType===Role.VENDOR){
-          console.log("else case of hook of login")
-        }else if(loginType===Role.SERVICE_BOY){
+        result= await vendorLogin(data)
+        }else {
           result= await serviceBoyLogin(data)
       }
-      if(!result) return
-      onLoginSuccess?.(result);
+      console.log("result of login",result)
+      if(result && result.statusCode === 200){
+        onLoginSuccess?.(result);
+      }
     } catch (error) {
-      setServerError(error instanceof Error ? error.message : 'An error occurred');
-      onLoginError?.(error);
+      onLoginError?.(error.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +53,6 @@ export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLog
   return {
     form,
     isLoading,
-    serverError,
     onSubmit: form.handleSubmit(onSubmit),
     register: form.register,
     errors: form.formState.errors,

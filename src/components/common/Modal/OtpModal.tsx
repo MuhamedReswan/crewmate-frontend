@@ -31,7 +31,7 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  console.log("email form otp modal",email);
+  console.log("email form otp modal", email);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -83,7 +83,7 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
           let otpVerifyResult;
           if (role === Role.VENDOR) {
             otpVerifyResult = await vendorOtpVerification({ email, otp: enteredOtp });
-            console.log("otpVerifyResult vendoer",otpVerifyResult);
+            console.log("otpVerifyResult vendoer", otpVerifyResult);
           } else {
             otpVerifyResult = await serviceBoyOtpVerification({ email, otp: enteredOtp });
             console.log("otpVerifyResult serviceBoy", otpVerifyResult);
@@ -98,7 +98,6 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
 
             // Redirect based on role
             if (role === Role.VENDOR) {
-
               setTimeout(() => {
                 navigate("/vendor/");
               }, 1000);
@@ -191,11 +190,13 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel></AlertDialogCancel>
-          <div className="flex flex-col items-center gap-3">
-            <AlertDialogAction onClick={() => HandleVerifyOtp()} className="bg-[#4B49AC] w-60 rounded-sm text-white">
+          <div className="flex flex-col items-center gap-2">
+            <AlertDialogAction onClick={() => HandleVerifyOtp()} className="bg-[#4B49AC] w-60 rounded-sm text-white hover:bg-[#3f3d91]">
               Verify
             </AlertDialogAction>
-            <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p>
+            {timer === 0 && <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p>}
+            {timer !== 0 && <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" > Resend in {timer} sec</button></p>}
+            {/* <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p> */}
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>

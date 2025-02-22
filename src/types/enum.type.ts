@@ -1,6 +1,6 @@
 export enum Role{
     VENDOR = "vendor",
-    SERVICE_BOY = "service"
+    SERVICE_BOY = "serviceBoy"
 }
 
 export enum Messages{

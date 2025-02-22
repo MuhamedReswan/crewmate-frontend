@@ -25,3 +25,11 @@ export interface ResponseResult {
   data: any | null;
   role?: Role
 }
+
+export interface ResetForgotPassword {
+  email: string;
+  token: string;
+  password: string;
+}
+
+

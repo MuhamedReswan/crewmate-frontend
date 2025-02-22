@@ -18,7 +18,7 @@ import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import { Role } from "@/types/enum.type";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { vendorRegister } from "@/api/vendor";
 
 
@@ -104,7 +104,7 @@ const VendorSignUpPage = () => {
 
         {/* Form Card */}
         <div className="flex items-center justify-center flex-1">
-          <Card className="border-0 shadow-none w-full max-w-sm"> 
+          <Card className="border-0 shadow-none w-full max-w-sm">
             <CardHeader className="pb-2  flex  items-center pt-1">
               <CardTitle className="text-lg font-bold text-center ">Sign Up</CardTitle>
             </CardHeader>
@@ -115,8 +115,8 @@ const VendorSignUpPage = () => {
                   <Tabs defaultValue={Role.VENDOR}>
                     <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value={Role.SERVICE_BOY} onClick={() => navigate('/service-boy/register')}>Service boy</TabsTrigger>
-                      <TabsTrigger 
-                      value={Role.VENDOR}  className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white">Vendor</TabsTrigger>
+                      <TabsTrigger
+                        value={Role.VENDOR} className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white">Vendor</TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
@@ -252,9 +252,9 @@ const VendorSignUpPage = () => {
 
                 <div className="text-center text-xs text-gray-500">
                   Already have an account?{' '}
-                  <a href="vendor/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
+                  <Link to="/vendor/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
                     Sign in
-                  </a>
+                  </Link>
                 </div>
               </form>
             </CardContent>

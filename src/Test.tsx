@@ -1,132 +1,215 @@
-import React from 'react';
-import { Users, Star, Clock, Award } from 'lucide-react';
-import Navbar from './components/common/Navbar/Navbar';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { forgotPasswordSchema } from "./validation/validationSchema";
+import { ForgotPasswordFormData } from "./types/form.type";
+import ErrorMessage from "./components/common/Message/Error.message";
+import { Role } from "./types/enum.type";
+import { serviceBoyForgotPassword } from "./api/serviceBoy";
+import SuccessMessage from "./components/common/Message/SuccessMessage";
+import { vendorForgotPassword } from "./api/vendor";
 
-const Test = () => {
+
+
+function Test({role = Role.VENDOR}: {role:Role}) {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      role: role 
+  }});
+
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false); 
+
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    try {console.log("within onsubmit");
+      console.log("Forgot Password Data:", data);
+      let responseResult;
+      if(role == Role.SERVICE_BOY){
+        responseResult = await serviceBoyForgotPassword(data);
+      }else if(role == Role.VENDOR){
+        responseResult = await vendorForgotPassword(data);
+      }else{
+        console.error("Invalid Role");
+      }
+      console.log("Forgot Password Response:", responseResult);
+if(responseResult && responseResult.statusCode == 200){
+  
+  toast({
+    description: <SuccessMessage message={responseResult.message} />,
+    className: "",
+  });
+}else{
+toast({
+  description: <ErrorMessage message={responseResult?.message} 
+  className=""/>,
+})
+}
+     setOpen(false); // Close modal after success
+      reset(); // Reset form
+    } catch (error) {
+      console.error(error);
+      toast({
+        description: <ErrorMessage message={error.response.data.message} className="" />,
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <Navbar/>
-      <section className="relative h-[500px] bg-gray-900 text-white">
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center">
-          <h1 className="text-5xl font-bold mb-4">Event Helpers &
-            corporation
-            Service</h1>
-          <p className="text-xl mb-8">Elevating dining experiences with excellence</p>
-          <button className="bg-yellow-500 text-black px-8 py-3 rounded-lg font-semibold w-fit hover:bg-yellow-400 transition-colors">
-            Get Started
-          </button>
-        </div>
-      </section>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">Forgot Password?</Button>
+      </DialogTrigger>
 
-      {/* Stats Section */}
-      <section className="bg-blue-600 text-white py-12">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="text-3xl font-bold">25+</div>
-            <div className="text-sm">Years Experience</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold">5150</div>
-            <div className="text-sm">Satisfied Clients</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold">95+</div>
-            <div className="text-sm">Expert Staff</div>
-          </div>
-        </div>
-      </section>
+      <DialogContent className="max-w-md p-6">
+        <DialogHeader>
+          <DialogTitle>Forgot Password?</DialogTitle>
+          <DialogDescription>
+            Enter your email address, and we’ll send you a link to email for reset your password.
+          </DialogDescription>
+        </DialogHeader>
 
-      {/* Features Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose Our Service</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                <Users className="w-8 h-8 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold mb-2">Expert Staff</h3>
-              <p className="text-gray-600">Professional and experienced team</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                <Star className="w-8 h-8 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold mb-2">Quality Service</h3>
-              <p className="text-gray-600">Exceptional dining experience</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                <Clock className="w-8 h-8 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold mb-2">24/7 Support</h3>
-              <p className="text-gray-600">Always here when you need us</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                <Award className="w-8 h-8 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold mb-2">Certified Services</h3>
-              <p className="text-gray-600">Industry recognized excellence</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            {...register("email")}
+          />
+          {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
 
-      {/* CTA Section */}
-      <section className="py-16 bg-yellow-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">Don't Miss Out on Perfect Service</h2>
-            <p className="text-gray-600 mb-8">Join thousands of satisfied customers who trust our expertise</p>
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-              Learn More
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-bold text-lg mb-4">About Us</h3>
-            <ul className="space-y-2">
-              <li>Our Story</li>
-              <li>Team</li>
-              <li>Careers</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg mb-4">Services</h3>
-            <ul className="space-y-2">
-              <li>Event Management</li>
-              <li>Staff Training</li>
-              <li>Consulting</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg mb-4">Contact</h3>
-            <ul className="space-y-2">
-              <li>Support</li>
-              <li>Sales</li>
-              <li>Partners</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg mb-4">Legal</h3>
-            <ul className="space-y-2">
-              <li>Privacy Policy</li>
-              <li>Terms of Service</li>
-              <li>Cookie Policy</li>
-            </ul>
-          </div>
-        </div>
-      </footer>
-    </div>
+          <DialogFooter className="flex justify-between">
+            <DialogClose asChild>
+              <Button variant="ghost">Cancel</Button>
+            </DialogClose>
+            <Button type="submit" className="bg-[#4B49AC] hover:bg-[#3f3d91]">
+              Submit
+            </Button>
+          </DialogFooter>
+        </form>
+        <DialogClose className="absolute top-0 right-0">
+        </DialogClose>
+      </DialogContent>
+    </Dialog>
   );
-};
+}
 
 export default Test;
+
+
+
+
+
+
+// import {
+//   AlertDialog,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   // AlertDialogDescription,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+//   AlertDialogTrigger,
+// } from "@/components/ui/alert-dialog"
+// import { Button } from "@/components/ui/button"
+// import { useForm } from 'react-hook-form';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import { forgotPasswordSchema } from "./validation/validationSchema";
+// import { ForgotPasswordFormData } from "./types/form.type";
+// import { Role } from "./types/enum.type";
+// import { serviceBoyForgotPassword } from "./api/serviceBoy";
+// import { useToast } from "./hooks/use-toast";
+// import SuccessMessage from "./components/common/Message/SuccessMessage";
+// import ErrorMessage from "./components/common/Message/Error.message";
+// import { Input } from "./components/ui/input";
+// import { X } from 'lucide-react';
+
+
+
+// function Test({ role }: { role: Role }) {
+
+//   const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordFormData>({
+//     resolver: zodResolver(forgotPasswordSchema),
+//     defaultValues: {
+//       role: role|| Role.SERVICE_BOY ,
+//       email:""
+
+//     }
+//   });
+
+//   const { toast } = useToast();
+
+//   const onSubmit = async (data: ForgotPasswordFormData) => {
+//     console.log("within onsubmit");
+//     try {
+//       console.log("forgotPassword", data);
+//       let result;
+//       if (role == Role.SERVICE_BOY) {
+//         result = await serviceBoyForgotPassword(data);
+//       } else {
+//         // result = await vendorForgotPassword(data);
+//       }
+//       if (result && result.statusCode == 200) {
+//         console.log(" forgot resut success");
+//         toast({
+//           description: <SuccessMessage message={result.message} />,
+//           className: ""
+//         })
+//       } else {
+//         console.log(" forgot resut failed");
+//         toast({
+//           description: <ErrorMessage message={result?.message} />,
+//           className: ""
+//         })
+//       }
+
+//     } catch (error) {
+//       console.log(error);
+//       throw error;
+
+//     }
+//   }
+
+//   return (
+//     <AlertDialog >
+//       <AlertDialogTrigger asChild>
+//         <Button variant="outline">Show Dialog</Button>
+//       </AlertDialogTrigger>
+//       <form onSubmit={handleSubmit(onSubmit)}>
+//       <AlertDialogContent className="min-h-48 position-relative">
+//         <AlertDialogHeader>
+//           <AlertDialogTitle>Enter your email  for  password</AlertDialogTitle>
+//           {/* <AlertDialogDescription > */}
+//             <div className="flex flex-col gap-4 justify-center items-center position-relative">
+              
+//          <Input  type="email" placeholder="Enter your email" {...register("email")}/>
+//          {errors.email && (
+//                     <p className="text-xs text-red-500">{errors.email.message}</p>
+//                   )}  
+//             <Button className="w-1/2 bg-[#4B49AC] hover:bg-[#3f3d91]" type="submit">Submit</Button>
+//             </div>
+//              {/* </AlertDialogDescription> */}
+//         </AlertDialogHeader>
+//           <AlertDialogCancel className="border-none positon absolute top-0 right-0"> <X /></AlertDialogCancel>
+//         {/* <AlertDialogFooter className="flex-row items-center justify-around">
+//           <AlertDialogAction>Continue</AlertDialogAction>
+//         </AlertDialogFooter> */}
+//       </AlertDialogContent>
+//       </form>
+
+//     </AlertDialog>
+//   )
+// }
+
+// export default Test

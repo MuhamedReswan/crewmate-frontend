@@ -1,6 +1,6 @@
-import { loginSchema, signupSchema } from "@/validation/validationSchema";
+import { forgotPasswordSchema, loginSchema, passwordSchema, signupSchema } from "@/validation/validationSchema";
 import { z } from "zod";
-
+import { Role } from "./enum.type";
 export interface SignUpFormInputs {
     name: string;
     email: string;
@@ -16,7 +16,17 @@ export interface SignUpFormInputs {
     rememberMe?: boolean;
   }
 
+  export interface ForgotPasswordModalProps {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    role: Role; 
+  }
+
+
 
 // Type for form validation
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type PasswordFormValues = z.infer<typeof passwordSchema>;
+

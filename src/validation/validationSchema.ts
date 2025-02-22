@@ -1,3 +1,4 @@
+import { Role } from '@/types/enum.type';
 import * as z from 'zod';
 
 //Singup validation 
@@ -48,3 +49,26 @@ export const loginSchema = z.object({
   rememberMe: z.boolean().optional().default(false)
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" })
+    .trim(),
+    role: z.nativeEnum(Role)
+});
+
+
+export const passwordSchema = z.object({
+  password: z.string()
+    .min(1, { message: "Password is required" })
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
+      message: "Password must include uppercase, lowercase, number, and special character"
+    }),
+  confirmPassword: z.string()
+    .min(1, { message: "Please confirm your password" })
+})
+.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});

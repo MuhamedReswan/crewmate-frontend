@@ -19,7 +19,7 @@ import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import { Role } from "@/types/enum.type";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -251,9 +251,9 @@ const SignUpPage = () => {
 
                 <div className="text-center text-xs text-gray-500">
                   Already have an account?{' '}
-                  <a href="service-boy/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
+                  <Link to="/service-boy/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
                     Sign in
-                  </a>
+                  </Link>
                 </div>
               </form>
             </CardContent>

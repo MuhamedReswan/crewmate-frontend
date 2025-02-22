@@ -6,4 +6,5 @@ export const serviceBoyRoutes = {
   logout: "/service-boy/logout",
   resendOtp: "/service-boy/resend-otp",
   forgotPassword: "/service-boy/forgot-password",
+  resetPassword: "/service-boy/reset-password",
 };
