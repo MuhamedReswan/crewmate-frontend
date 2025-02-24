@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 import { passwordSchema } from '@/validation/validationSchema';
 import { Role } from '@/types/enum.type';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import SuccessMessage from '../Message/SuccessMessage';
 import { useNavigate } from 'react-router-dom';
@@ -107,16 +107,16 @@ const PasswordReset = ({ role }: { role: Role }) => {
         </div>
 
         <div className="flex justify-center space-x-9">
-          <button
+          <Link to={role === Role.VENDOR ? "/vendor/login": "/service-boy/login"}
             type="button"
             className="px-6 py-2 bg-[#4B49AC] opacity-20  text-white rounded hover:bg-[#3f3d91] opacity-40 transition-colors"
           >
             Cancel
-          </button>
+          </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-[#4B49AC] text-white rounded hover:bg-[#3f3d91]transition-colors disabled:opacity-70 text-white"
+            className="px-6 py-2 bg-[#4B49AC] text-white rounded hover:bg-[#3f3d91] transition-colors disabled:opacity-70"
           >
             {isSubmitting ? 'Processing...' : 'Confirm'}
           </button>
