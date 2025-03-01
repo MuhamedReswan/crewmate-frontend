@@ -13,7 +13,7 @@ import { serviceBoyRegister } from "@/api/serviceBoy";
 import { SignupFormData } from "@/types/form.type";
 import { useState } from "react";
 import OtpModal from "@/components/common/Modal/OtpModal";
-// import useGoogleAuth from "@/hooks/common/useGoogleAuth";
+import useGoogleAuth from "@/hooks/useGoogleAuth"; 
 import { useToast } from "@/hooks/use-toast"
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ErrorMessage from "@/components/common/Message/Error.message";
@@ -46,7 +46,7 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
 
-  // const {googleLogin} = useGoogleAuth()
+  const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
   const onSubmit = async (data: SignupFormData) => {
     console.log("form submitted");
     setEmail(data.email);
@@ -223,10 +223,7 @@ const SignUpPage = () => {
                   type="button"
                   variant="outline"
                   className="w-full h-8"
-                  onClick={() => {
-                    console.log("google login clicked");
-                    // googleLogin();
-                  }}
+                  onClick={()=> googleLogin()}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                     <path

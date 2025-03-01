@@ -79,11 +79,13 @@ export const VendorLogout = async (): Promise<boolean | undefined> => {
   }
 };
 
-export const googleAuth = async (data: GoogleLoginData) => {
+export const vendorGoogleAuth = async (data: GoogleLoginData) => {
   try {
-    await API.post(vendorRoutes.googleAuth, { data });
+   const response = await API.post(vendorRoutes.googleAuth,data);
+   return response.data
   } catch (error) {
-    console.log(error);
+    console.log(" api error vendorGoogleAuth",error);
+    throw error;
   }
 };
 

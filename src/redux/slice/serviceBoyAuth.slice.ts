@@ -1,47 +1,30 @@
+import { ServiceBoyState } from "@/types/auth.type";
+import { Role } from "@/types/enum.type";
 import { createSlice } from "@reduxjs/toolkit";
 
-interface serviceBoyState {
-    serviceBoyStatus: boolean;
-    serviceBoyData:{
-        id: string | null;
-        name: string | null;
-        email: string | null
-    }
-}
 
 
-    const intialState: serviceBoyState = {
+
+    const intialState: ServiceBoyState = {
         serviceBoyStatus:false,
-        serviceBoyData:{
-            id:null,
-            name: null,
-            email: null
-        }
+        serviceBoyData:null
 }
 
 
 const serviceBoyAuthSlice = createSlice({
-    name: "serviceBoy",
+    name: Role.SERVICE_BOY,
     initialState:intialState,
 
     reducers:{
         login:(state, action)=>{
             state.serviceBoyStatus =true;
-            state.serviceBoyData= {
-              id:action.payload.id,
-              name:action.payload.name,
-              email: action.payload.email
-            };
+            state.serviceBoyData= action.payload
         },
 
 
         logout: (state) =>{
             state.serviceBoyStatus= false;
-            state.serviceBoyData={
-                id:null,
-                name: null,
-                email: null
-            };         
+            state.serviceBoyData=null       
         }
     }
 });

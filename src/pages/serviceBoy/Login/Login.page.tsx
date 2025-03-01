@@ -16,7 +16,10 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import { useState } from "react";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
+import useGoogleAuth from "@/hooks/useGoogleAuth";
 const LoginPage = () => {
+  const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
@@ -35,7 +38,7 @@ const LoginPage = () => {
       toast({
         description: <SuccessMessage message={data.message} className="" />,
       })
-      dispatch(login(data.data));
+      dispatch(login(data.data.serviceBoy));
       navigate('/service-boy/');
     },
     onLoginError: (error) => {
@@ -145,9 +148,7 @@ const LoginPage = () => {
                   type="button"
                   variant="outline"
                   className="w-full h-8"
-                  onClick={() => {
-                    // Handle Google sign in
-                  }}
+                  onClick={()=> googleLogin()}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                     <path

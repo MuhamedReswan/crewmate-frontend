@@ -77,14 +77,16 @@ export const serviceBoyLogout = async (): Promise<boolean | undefined> => {
       return logout.data;
     }
   } catch (error) {
-    console.log(error);
+    console.log("error logout",error);
     throw error;
   }
 };
 
 export const googleAuth = async (data: GoogleLoginData) => {
   try {
-    await API.post(serviceBoyRoutes.googleAuth, { data });
+   const result =  await API.post(serviceBoyRoutes.googleAuth, data );
+   console.log("result of google auth in servie boy",result);
+   return result.data
   } catch (error) {
     console.log(error);
   }

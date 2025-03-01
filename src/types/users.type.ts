@@ -14,7 +14,6 @@ export interface CommonDetails {
 export interface Vendor extends CommonDetails  {
 location: string, 
 
-   
 }
 
 

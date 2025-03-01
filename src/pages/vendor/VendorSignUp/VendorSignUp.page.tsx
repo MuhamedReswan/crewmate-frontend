@@ -12,7 +12,6 @@ import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
 import { SignupFormData } from "@/types/form.type";
 import { useState } from "react";
 import OtpModal from "@/components/common/Modal/OtpModal";
-// import useGoogleAuth from "@/hooks/common/useGoogleAuth";
 import { useToast } from "@/hooks/use-toast"
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ErrorMessage from "@/components/common/Message/Error.message";
@@ -20,6 +19,7 @@ import { Role } from "@/types/enum.type";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useNavigate } from "react-router-dom";
 import { vendorRegister } from "@/api/vendor";
+import useGoogleAuth from "@/hooks/useGoogleAuth";
 
 
 
@@ -39,6 +39,7 @@ const VendorSignUpPage = () => {
     }
   });
   const { toast } = useToast();
+  const {googleLogin} = useGoogleAuth(Role.VENDOR)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -46,7 +47,6 @@ const VendorSignUpPage = () => {
   const navigate = useNavigate();
 
 
-  // const {googleLogin} = useGoogleAuth()
   const onSubmit = async (data: SignupFormData) => {
     console.log("form submitted");
     setEmail(data.email);
@@ -54,7 +54,7 @@ const VendorSignUpPage = () => {
     console.log("email from sign up after set", email);
     const registerResponse = await vendorRegister(data);
     console.log("registerResponse on service boy fronty", registerResponse);
-    if (registerResponse && registerResponse.statusCode == 200) {
+    if (registerResponse && registerResponse.statusCode === 200) {
       toast({
         description: (
           <SuccessMessage
@@ -226,7 +226,7 @@ const VendorSignUpPage = () => {
                   className="w-full h-8"
                   onClick={() => {
                     console.log("google login clicked");
-                    // googleLogin();
+                    googleLogin();
                   }}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">

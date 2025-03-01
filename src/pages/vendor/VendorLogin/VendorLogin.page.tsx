@@ -11,11 +11,12 @@ import { Role } from "@/types/enum.type";
 import { useToast } from "@/hooks/use-toast";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import { useDispatch } from "react-redux";
-import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { Tabs, TabsList, TabsTrigger }  from "@/components/ui/tabs";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
 import { useState } from "react";
+import useGoogleAuth from "@/hooks/useGoogleAuth";
+import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
 
 const VendorLoginPage = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const VendorLoginPage = () => {
       toast({
         description: <SuccessMessage message={data.message} />,
       })
-      dispatch(login(data.data));
+      dispatch(vendorLogin(data.data.vendor));
       navigate('/vendor/');
     },
     onLoginError: (error) => {
@@ -46,6 +47,10 @@ const VendorLoginPage = () => {
       })
     }
   });
+
+  const {googleLogin} = useGoogleAuth(Role.VENDOR
+
+  )
 
   const loginFormValues = watch();
   console.log(";loginFormValues", loginFormValues)
@@ -145,9 +150,7 @@ const VendorLoginPage = () => {
                   type="button"
                   variant="outline"
                   className="w-full h-8"
-                  onClick={() => {
-                    // Handle Google sign in
-                  }}
+                  onClick={() => googleLogin()}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                     <path
