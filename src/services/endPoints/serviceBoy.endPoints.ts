@@ -1,10 +1,10 @@
 export const serviceBoyRoutes = {
-  login: "/service-boy/login",
-  register: "/service-boy/register",
-  otpVerification: "/service-boy/otp",
-  googleAuth: "/service-boy/google-auth",
-  logout: "/service-boy/logout",
-  resendOtp: "/service-boy/resend-otp",
-  forgotPassword: "/service-boy/forgot-password",
-  resetPassword: "/service-boy/reset-password",
+  login: "/auth/service-boy/login",
+  register: "/auth/service-boy/register",
+  otpVerification: "/auth/service-boy/otp",
+  googleAuth: "/auth/service-boy/google-auth",
+  logout: "/auth/service-boy/logout",
+  resendOtp: "/auth/service-boy/resend-otp",
+  forgotPassword: "/auth/service-boy/forgot-password",
+  resetPassword: "/auth/service-boy/reset-password",
 };
