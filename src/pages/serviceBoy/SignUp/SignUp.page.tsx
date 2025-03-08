@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/validation/validationSchema';
-import crewmateLogo from "../../../assets/images/WorkMate_logo.png"
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
 import { serviceBoyRegister } from "@/api/serviceBoy";
 import { SignupFormData } from "@/types/form.type";
@@ -98,7 +98,7 @@ const SignUpPage = () => {
             viewBox="0 0 400 400"
             className="text-[#4B49AC]"
           />
-          <img src={crewmateLogo} alt="logo" className="w-[45px] h-[45px]" />
+          <img src={crewmateLogo} alt="logo" className="w-10 h-10" />
           <span className="text-xl font-bold text-[#4B49AC]">Crewmate</span>
         </div>
 

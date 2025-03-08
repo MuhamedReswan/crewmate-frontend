@@ -1,5 +1,5 @@
 import { Role } from "./enum.type";
-import { ServiceBoy, Vendor } from "./users.type";
+import { Admin, ServiceBoy, Vendor } from "./users.type";
 
 export interface ServiceBoyRegister {
   name: string;
@@ -38,4 +38,9 @@ export interface ServiceBoyState {
 export interface VendorState {
   vendorStatus: boolean;
   vendorData: Partial<Vendor> | null;
+}
+
+export interface AdminState {
+  adminStatus : boolean;
+  adminData : Partial<Admin> | null
 }

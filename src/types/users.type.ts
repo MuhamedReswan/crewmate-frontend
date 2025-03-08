@@ -58,4 +58,11 @@ export interface Vendor extends CommonDetails  {
 
 
 
+export interface Admin {
+    name:string,
+    email:string
+}
+
+
+
 

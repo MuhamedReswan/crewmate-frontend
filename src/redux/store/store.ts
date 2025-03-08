@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import serviceBoyAuthSlice from "../slice/serviceBoyAuth.slice";
 import vendorAuthSlice from '../slice/vendorAuth.slice'
+import adminAuthSlice from '../slice/adminAuth.slice'
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { Role } from "@/types/enum.type";
@@ -8,12 +9,13 @@ import { Role } from "@/types/enum.type";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [Role.SERVICE_BOY,Role.VENDOR],
+  whitelist: [Role.SERVICE_BOY,Role.VENDOR,Role.ADMIN],
 };
 
 const rootReducer = combineReducers({
   serviceBoy: serviceBoyAuthSlice,
-  vendor: vendorAuthSlice
+  vendor: vendorAuthSlice,
+  admin: adminAuthSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

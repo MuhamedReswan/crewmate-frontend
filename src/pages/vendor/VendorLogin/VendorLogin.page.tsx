@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLoginForm } from '@/hooks/useLoginForm';
 import { useNavigate } from 'react-router-dom';
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
-import crewmateLogo from "../../../assets/images/WorkMate_logo.png"
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
 import { Role } from "@/types/enum.type";
 import { useToast } from "@/hooks/use-toast";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
@@ -37,6 +37,7 @@ const VendorLoginPage = () => {
       toast({
         description: <SuccessMessage message={data.message} />,
       })
+      console.log("vendor login result data",data)
       dispatch(vendorLogin(data.data.vendor));
       navigate('/vendor/');
     },
@@ -68,7 +69,7 @@ const VendorLoginPage = () => {
             className="text-[#4B49AC]"
           />
           <img src={crewmateLogo} alt="logo" className="w-[45px] h-[45px]" />
-          <span className="text-xl font-bold text-[#4B49AC]">Crewmate</span>
+          <span className="text-xl font-bold text-[#4B49AC]">CrewMate</span>
         </div>
 
         {/* Form Card */}

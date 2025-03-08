@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/validation/validationSchema';
-import crewmateLogo from "../../../assets/images/WorkMate_logo.png"
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
 import { SignupFormData } from "@/types/form.type";
 import { useState } from "react";

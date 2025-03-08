@@ -8,6 +8,7 @@ import {  serviceBoyLogin } from '@/api/serviceBoy';
 import { Role } from '@/types/enum.type';
 import { ResponseResult } from '@/types/auth.type';
 import { vendorLogin } from '@/api/vendor';
+import { Login } from '@/api/admin';
  
 type LoginType = Role 
 
@@ -36,8 +37,11 @@ export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLog
       let result;
       if(loginType===Role.VENDOR){
         result= await vendorLogin(data)
-        }else {
+        }else if(loginType === Role.SERVICE_BOY) {
           result= await serviceBoyLogin(data)
+      }else if( loginType === Role.ADMIN){
+        result = await Login(data)
+        console.log("admin login form useLoginForm")
       }
       console.log("result of login",result)
       if(result && result.statusCode === 200){

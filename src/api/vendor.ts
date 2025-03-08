@@ -67,16 +67,12 @@ export const vendorOtpVerification = async (
 };
 
 export const VendorLogout = async (): Promise<boolean | undefined> => {
-  try {
     console.log("logout frin api forn invoked");
     const logout: AxiosResponse<boolean> = await API.post(vendorRoutes.logout);
     console.log("service boy logout response", logout);
     if (logout) {
       return logout.data;
     }
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 export const vendorGoogleAuth = async (data: GoogleLoginData) => {

@@ -138,3 +138,20 @@ export const serviceBoyResetPassword = async (
     throw error;
   }
 };
+
+
+export const ServiceBoyAccessToken = async ():Promise<ResponseResult | undefined> => {
+  try {
+    console.log("token api call inovked")
+    const result = await API.post(serviceBoyRoutes.refreshToken);
+    // const data = await await result.json();
+    // console.log("token-test response json",data); // See it in the browser's console
+    return result.data;
+  } catch (error) {
+    console.log(error)
+    throw error;
+  }
+
+}
+
+
