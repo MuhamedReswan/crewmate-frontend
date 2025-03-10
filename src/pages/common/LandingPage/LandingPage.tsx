@@ -33,7 +33,7 @@ function LandingPage() {
           <h2 className="text-2xl font-bold text-gray-800 mb-8">Popular services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Service 1 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 duration-300 ease-in-out">
               <img 
                 src="https://images.unsplash.com/photo-1565992441121-4367c2967103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
                 alt="Serving Staff" 
@@ -49,7 +49,7 @@ function LandingPage() {
             </div>
 
             {/* Service 2 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 duration-300 ease-in-out">
               <img 
                 src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
                 alt="Barista" 
@@ -65,7 +65,7 @@ function LandingPage() {
             </div>
 
             {/* Service 3 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 duration-300 ease-in-out">
               <img 
                 src="https://images.unsplash.com/photo-1574096079513-d8259312b785?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
                 alt="Bartending" 
@@ -81,7 +81,7 @@ function LandingPage() {
             </div>
 
             {/* Service 4 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 duration-300 ease-in-out">
               <img 
                 src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
                 alt="Events" 

@@ -13,14 +13,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useToast } from '@/hooks/use-toast';
-import { serviceBoyLogout } from '@/api/serviceBoy';
+import { VendorLogout } from '@/api/vendor';
 import SuccessMessage from '../../common/Message/SuccessMessage';
 import ErrorMessage from '../../common/Message/Error.message';
 import NavItem from '../../common/NavItem/NavItem';
-import { logout } from '@/redux/slice/serviceBoyAuth.slice';
+import { vendorLogout} from '@/redux/slice/vendorAuth.slice';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
 
-const SideBar = () => {
+const VendorSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState('Dashboard');
   const navigate = useNavigate();
@@ -36,14 +36,14 @@ const SideBar = () => {
   const handleLogout = async () => {
     try {
       console.log('logout invoked');
-      const response = await serviceBoyLogout();
+      const response = await VendorLogout();
       console.log('response', response);
       if (response && response.statusCode === 200) {
-        dispatch(logout());
+        dispatch(vendorLogout());
         toast({
           description: <SuccessMessage message={response?.message} />,
         });
-        navigate('/service-boy/login');
+        navigate('/vendor/login');
       } else {
         toast({
           description: <ErrorMessage message='Logout failed' className='' />,
@@ -58,16 +58,15 @@ const SideBar = () => {
 
   const navItems = [
     { icon: <LayoutDashboard size={20} />, text: 'Dashboard' },
-    { icon: <Briefcase size={20} />, text: 'Works' },
+    { icon: <Briefcase size={20} />, text: 'Products' },
     { icon: <User size={20} />, text: 'Profile' },
     { icon: <MessageSquareText size={20} />, text: 'Messages' },
     { icon: <Bell size={20} />, text: 'Notifications' },
-    { icon: <Users size={20} />, text: 'Accounts' },
+    { icon: <Users size={20} />, text: 'Customers' },
   ];
 
   return (
     <div className={`bg-white border-r transition-all ${isCollapsed ? 'w-16' : 'w-64'}`}>
-      
       <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-4 border-b`}>
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'}`}>
           <img src={crewMateLogo} className='w-10 h-10 shrink-0' alt='CrewMate logo' />
@@ -101,4 +100,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default VendorSidebar;

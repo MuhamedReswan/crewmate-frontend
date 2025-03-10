@@ -39,7 +39,7 @@ const Footer = () => {
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800 mb-4">Services</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link to="#" className="hover:text-[#4B49AC]">Serving Staff</Link></li>
                 <li><Link to="#" className="hover:text-[#4B49AC]">Bartending</Link></li>
                 <li><Link to="#" className="hover:text-[#4B49AC]">Barista Service</Link></li>
@@ -49,7 +49,7 @@ const Footer = () => {
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800 mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link to="#" className="hover:text-[#4B49AC]">About Us</Link></li>
                 <li><Link to="#" className="hover:text-[#4B49AC]">Careers</Link></li>
                 <li><Link to="#" className="hover:text-[#4B49AC]">Testimonials</Link></li>
@@ -59,11 +59,11 @@ const Footer = () => {
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800 mb-4">Contact</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-gray-400 hover:text-[#4B49AC] ">
                 <li>123 Event Street, Suite 100</li>
                 <li>New York, NY 10001</li>
-                <li>info@eventhelpers.com</li>
-                <li>(555) 123-4567</li>
+                <li>crewmate@gmail.com</li>
+                <li>+91 7306200065</li>
               </ul>
             </div>
           </div>

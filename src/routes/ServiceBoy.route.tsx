@@ -1,29 +1,79 @@
-import { Route, Routes } from "react-router-dom";
-import SignUpPage from "@/pages/serviceBoy/SignUp/SignUp.page";
-import Test from "@/Test";
-import LandingPage from "@/pages/common/LandingPage/LandingPage";
-import LoginPage from "@/pages/serviceBoy/Login/Login.page";
-import ServiceBoyHomePage from "@/pages/serviceBoy/ServiceBoyHomePage/ServiceBoyHomePage";
-import Test2 from "@/Test2";
-import ResetForgetPassword from "@/pages/serviceBoy/ResetForgetPassword/ResetForgetPassword";
-import ProtectServiceBoy from "./privateRoutes/ProtectServiceBoy";
+import { lazy, Suspense } from "react";
+import ServiceBoyLayout from "@/layouts/serviceBoyLayout";
 import ProtectServiceBoyIsLogin from "./privateRoutes/ServiceBoyIsLogin";
+import ProtectServiceBoy from "./privateRoutes/ProtectServiceBoy";
 
-const ServiceBoyRoutes = () => {
-    return (
-        <Routes>
-            <Route path="test" element={<Test/>} />
-            <Route path="test2" element={<ProtectServiceBoy><Test2 /></ProtectServiceBoy>} />
-            <Route path="/" element={<ProtectServiceBoy><ServiceBoyHomePage /></ProtectServiceBoy>} />
-            <Route path="login" element={<ProtectServiceBoyIsLogin><LoginPage /></ProtectServiceBoyIsLogin>} />
-            <Route path="register" element={<ProtectServiceBoyIsLogin><SignUpPage /></ProtectServiceBoyIsLogin>} />
-            <Route path="reset-password/:token/:email" element={<ResetForgetPassword />} />
-            <Route path="" element={<LandingPage />} />
-            {/* Add more routes as needed */}
-        </Routes>
-    );
+const Test = lazy(() => import("@/Test"));
+const Test2 = lazy(() => import("@/Test2"));
+const LoginPage = lazy(() => import("@/pages/serviceBoy/Login/Login.page"));
+const SignUpPage = lazy(() => import("@/pages/serviceBoy/SignUp/SignUp.page"));
+const ServiceBoyHomePage = lazy(
+    () => import("@/pages/serviceBoy/ServiceBoyHomePage/ServiceBoyHomePage")
+);
+const ResetForgetPassword = lazy(
+    () => import("@/pages/serviceBoy/ResetForgetPassword/ResetForgetPassword")
+);
+
+const serviceBoyRoutes = {
+    path: "/service-boy/",
+    element: (<ServiceBoyLayout />),
+    children: [
+        {
+            index: true,
+            element: (
+                <ProtectServiceBoy>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ServiceBoyHomePage />
+                    </Suspense>
+                </ProtectServiceBoy>
+            ),
+        },
+        {
+            path: "login",
+            element: (
+                <ProtectServiceBoyIsLogin>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <LoginPage />
+                    </Suspense>
+                </ProtectServiceBoyIsLogin>
+            ),
+        },
+        {
+            path: "register",
+            element: (
+                <ProtectServiceBoyIsLogin>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <SignUpPage />
+                    </Suspense>
+                </ProtectServiceBoyIsLogin>
+            ),
+        },
+        {
+            path: "reset-password/:token/:email",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <ResetForgetPassword />
+                </Suspense>
+            ),
+        },
+        {
+            path: "test",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Test />
+                </Suspense>
+            ),
+        },
+        {
+            path: "test2",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Test2 />
+                </Suspense>
+            ),
+        },
+
+    ],
 };
 
-export default ServiceBoyRoutes;
-
-
+export default serviceBoyRoutes;

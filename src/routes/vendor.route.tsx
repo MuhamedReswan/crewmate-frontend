@@ -1,21 +1,56 @@
-import VendorLoginPage from '@/pages/vendor/VendorLogin/VendorLogin.page';
-import VendorSignUpPage from '@/pages/vendor/VendorSignUp/VendorSignUp.page';
-import { Route, Routes } from 'react-router-dom';
-import VendorResetForgotPassword from '@/pages/vendor/ResetForgotPassword/VendorResetForgotPassword';
-import ProtectVendor from './privateRoutes/ProtectVendor';
-import VendorHomePage from '@/pages/vendor/VendorHomePage/VendorHomePage';
-import ProtectVendorIsLogin from './privateRoutes/ProtectVendorIsLogin';
+import { lazy, Suspense } from "react";
+import VendorLayout from "@/layouts/VendorLayout"; 
+import ProtectVendor from "./privateRoutes/ProtectVendor";
+import ProtectVendorIsLogin from "./privateRoutes/ProtectVendorIsLogin";
 
-const VendorRoutes = () => {
-  return (
-<Routes>
-    <Route path="register" element={<ProtectVendorIsLogin><VendorSignUpPage /></ProtectVendorIsLogin>} />
-    <Route path="Login" element={<ProtectVendorIsLogin><VendorLoginPage /></ProtectVendorIsLogin>} />
-    <Route path="reset-password/:token/:email" element={<VendorResetForgotPassword />} />
-    <Route path="/" element={<ProtectVendor><VendorHomePage/></ProtectVendor>} />
+const VendorLoginPage = lazy(() => import("@/pages/vendor/VendorLogin/VendorLogin.page"));
+const VendorSignUpPage = lazy(() => import("@/pages/vendor/VendorSignUp/VendorSignUp.page"));
+const VendorHomePage = lazy(() => import("@/pages/vendor/VendorHomePage/VendorHomePage"));
+const VendorResetForgotPassword = lazy(() => import("@/pages/vendor/ResetForgotPassword/VendorResetForgotPassword"));
 
-</Routes>
-  )
-}
+const vendorRoutes = {
+    path: "/vendor/",
+    element: (<VendorLayout />),
+    children: [
+        {
+            index: true,
+            element: (
+                <ProtectVendor>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <VendorHomePage />
+                    </Suspense>
+                </ProtectVendor>
+            ),
+        },
+        {
+            path: "login",
+            element: (
+                <ProtectVendorIsLogin>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <VendorLoginPage />
+                    </Suspense>
+                </ProtectVendorIsLogin>
+            ),
+        },
+        {
+            path: "register",
+            element: (
+                <ProtectVendorIsLogin>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <VendorSignUpPage />
+                    </Suspense>
+                </ProtectVendorIsLogin>
+            ),
+        },
+        {
+            path: "reset-password/:token/:email",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <VendorResetForgotPassword />
+                </Suspense>
+            ),
+        },
+    ],
+};
 
-export default VendorRoutes;
+export default vendorRoutes;

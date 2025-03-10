@@ -1,12 +1,14 @@
-import LandingPage from '@/pages/common/LandingPage/LandingPage'
-import { Route, Routes } from 'react-router-dom'
+import { lazy, Suspense } from 'react';
 
-const CommonRoutes = () => {
-  return (
-<Routes>
-    <Route path='/' element={<LandingPage/>}/>
-</Routes>
-  )
-}
+const LandingPage = lazy(() => import('@/pages/common/LandingPage/LandingPage'));
 
-export default CommonRoutes
+const commonRoutes = {
+  path: '/',
+  element: (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LandingPage />
+    </Suspense>
+  ),
+};
+
+export default commonRoutes;

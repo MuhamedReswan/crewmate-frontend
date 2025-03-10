@@ -1,16 +1,31 @@
-import AdminHome from '@/pages/admin/AdminHome/AdminHome'
-import AdminLogin from '@/pages/admin/Auth/LoginPage/LoginPage'
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import ProtectAdmin from './privateRoutes/ProtectAdmin'
+import { lazy, Suspense } from 'react';
+import ProtectAdmin from './privateRoutes/ProtectAdmin';
 
-const AdminRoutes = () => {
-  return (
-<Routes>
-    <Route path='/login' element={<AdminLogin/>} />
-    <Route path='/' element={<ProtectAdmin><AdminHome/></ProtectAdmin>} />
-</Routes>
-  )
-}
+const AdminHome = lazy(() => import('@/pages/admin/AdminHome/AdminHome'));
+const AdminLogin = lazy(() => import('@/pages/admin/Auth/LoginPage/LoginPage'));
 
-export default AdminRoutes
+const adminRoutes = {
+  path: '/admin/',
+  children: [
+    {
+      path: 'login',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <AdminLogin />
+        </Suspense>
+      ),
+    },
+    {
+      index: true,
+      element: (
+        <ProtectAdmin>
+          <Suspense fallback={<div>Loading...</div>}>
+            <AdminHome />
+          </Suspense>
+        </ProtectAdmin>
+      ),
+    },
+  ],
+};
+
+export default adminRoutes;
