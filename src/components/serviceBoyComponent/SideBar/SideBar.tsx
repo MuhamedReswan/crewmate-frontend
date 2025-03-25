@@ -35,9 +35,7 @@ const SideBar = () => {
 
   const handleLogout = async () => {
     try {
-      console.log('logout invoked');
       const response = await serviceBoyLogout();
-      console.log('response', response);
       if (response && response.statusCode === 200) {
         dispatch(logout());
         toast({
@@ -57,12 +55,12 @@ const SideBar = () => {
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const navItems = [
-    { icon: <LayoutDashboard size={20} />, text: 'Dashboard' },
-    { icon: <Briefcase size={20} />, text: 'Works' },
-    { icon: <User size={20} />, text: 'Profile' },
-    { icon: <MessageSquareText size={20} />, text: 'Messages' },
-    { icon: <Bell size={20} />, text: 'Notifications' },
-    { icon: <Users size={20} />, text: 'Accounts' },
+    { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path:'' },
+    { icon: <Briefcase size={20} />, text: 'Works', path:'works' },
+    { icon: <User size={20} />, text: 'Profile', path:'profile' },
+    { icon: <MessageSquareText size={20} />, text: 'Messages', path:'messages' },
+    { icon: <Bell size={20} />, text: 'Notifications', path:'notification'},
+    { icon: <Users size={20} />, text: 'Accounts', path:'wallet' },
   ];
 
   return (
@@ -87,7 +85,9 @@ const SideBar = () => {
             icon={item.icon}
             text={!isCollapsed ? item.text : ''}
             active={activeItem === item.text}
-            onClick={() => setActiveItem(item.text)}
+            onClick={() =>{ setActiveItem(item.text)
+              navigate(`/service-boy/${item.path}`)
+            }}
           />
         ))}
         <NavItem

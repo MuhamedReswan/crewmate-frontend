@@ -72,3 +72,48 @@ export const passwordSchema = z.object({
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
+
+
+export const profileSchema = z.object({
+  _id: z.string().optional(),
+  name: z.string().min(1, "Full name is required"),
+  qualification: z.string().min(1, "Qualification is required"),
+  aadharNumber: z
+    .string()
+    .min(3, "Aadhar number is required")
+    .regex(/^\d{12}$/, "Aadhar number must be 12 digits"),
+  age: z
+    .string()
+    .min(1, "Age is required")
+    .regex(/^[0-9]+$/, "Age must be a number")
+    .refine((val) => parseInt(val) >= 18, "Age must be at least 18"),
+  mobile: z
+    .string()
+    .min(1, "Mobile number is required")
+    .regex(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+  location: z.string().min(3, "Location is required"),
+  profileImage: z.any().refine((val) => {
+    // If it's a string with length > 3, pass validation
+    if (typeof val === "string" && val.length > 3) return true;
+    // Otherwise, check if it's a valid File
+    return val instanceof File && val !== undefined && val.size > 0;
+  }, {
+    message: "Profile image is required ",
+  }),
+
+  aadharImageFront: z.any().refine((val) => {
+    if (typeof val === "string" && val.length > 3) return true;
+    return val instanceof File && val !== undefined && val.size > 0;
+  }, {
+    message: "Aadhar front image is required ",
+  }),
+
+  aadharImageBack: z.any().refine((val) => {
+    if (typeof val === "string" && val.length > 3) return true;
+    return val instanceof File && val !== undefined && val.size > 0;
+  }, {
+    message: "Aadhar back image is required ",
+  }),
+  email:z.string().email("Invalid email address")
+});
+

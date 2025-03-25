@@ -155,3 +155,28 @@ export const ServiceBoyAccessToken = async ():Promise<ResponseResult | undefined
 }
 
 
+
+export const ServiceBoyAccessProfile = async (): Promise<ResponseResult | undefined> => {
+  try {
+    const result = await API.get(serviceBoyRoutes.profile);
+    return result.data;
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+}
+
+
+
+export const ServiceBoyUpdateProfile = async (data:Partial<ServiceBoy>): Promise<ResponseResult | undefined> => {
+  try {
+    console.log("ServiceBoyUpdateProfile called")
+    const result = await API.post(serviceBoyRoutes.profile,data);
+    return result.data;
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+}
+
+

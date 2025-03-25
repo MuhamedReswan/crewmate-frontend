@@ -2,8 +2,9 @@ import React from 'react'
 import {
     Search,
     Bell as BellIcon,
-    MessageSquare as MessageIcon,
-    MoreVertical
+    MessageSquareText as MessageIcon,
+    MoreVertical,
+    
   } from 'lucide-react';
 
 const ServiceBoyHeader = () => {
@@ -29,11 +30,11 @@ const ServiceBoyHeader = () => {
  <div className="flex items-center space-x-4">
    <button className="relative p-1 text-gray-400">
      <BellIcon size={20} />
-     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+     <span className="absolute top-0 right-0 w-3 h-3 bg-[#4B49AC]/40 rounded-full text-black text-xs">1</span>
    </button>
    <button className="relative p-1 text-gray-400">
      <MessageIcon size={20} />
-     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+     <span className="absolute top-0 right-0 w-3 h-3 bg-[#4B49AC]/40 rounded-full text-black text-xs">6</span>
    </button>
    <div className="flex items-center space-x-2">
      <div className="w-8 h-8 rounded-full bg-[#4B49AC] flex items-center justify-center text-white">

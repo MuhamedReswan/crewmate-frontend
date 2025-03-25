@@ -1,3 +1,4 @@
+
 export const serviceBoyRoutes = {
   login: "/auth/service-boy/login",
   register: "/auth/service-boy/register",
@@ -7,5 +8,6 @@ export const serviceBoyRoutes = {
   resendOtp: "/auth/service-boy/resend-otp",
   forgotPassword: "/auth/service-boy/forgot-password",
   resetPassword: "/auth/service-boy/reset-password",
-  refreshToken: "auth/service-boy/refresh-token"
+  refreshToken: "auth/service-boy/refresh-token",
+  profile:"/service-boy/profile",
 };

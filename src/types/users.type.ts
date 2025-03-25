@@ -26,6 +26,8 @@ export interface ServiceBoy extends CommonDetails{
     profileImage:string,
     isBlocked:boolean,
     aadharNumber:string,
+    aadharImageFront:string,
+    aadharImageBack:string,
     servicerId:string,
     role:string; 
     location:object,
