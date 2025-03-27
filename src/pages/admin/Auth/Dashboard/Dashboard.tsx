@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from '@/components/adminComponents/SideBar/SideBar'; 
 import Header from '@/components/adminComponents/Header/Header'; 
-// import Overview from '../components/Overview';
+import Overview from '../components/Overview';
 // import { useTheme } from '../context/ThemeContext';
 
 const Dashboard: React.FC = () => {

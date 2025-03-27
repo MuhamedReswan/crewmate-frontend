@@ -1,3 +1,5 @@
+import { LocationData } from "./form.type";
+
 export interface CommonDetails {
     _id:string;
     name:string, 
@@ -30,7 +32,7 @@ export interface ServiceBoy extends CommonDetails{
     aadharImageBack:string,
     servicerId:string,
     role:string; 
-    location:object,
+    location:LocationData,
     age:number,
     qualification:string,
     points:number,

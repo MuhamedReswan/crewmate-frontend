@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Edit, MapPin, } from "lucide-react";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ServiceBoyUpdateProfile } from "@/api/serviceBoy";
 import { profileSchema } from "@/validation/validationSchema";
-import { ProfileFormValues } from "@/types/form.type";
+import { LocationData, ProfileFormValues } from "@/types/form.type";
 import { RootState } from "@/redux/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
@@ -12,6 +12,9 @@ import { useToast } from "@/hooks/use-toast";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { Button } from "@/components/ui/button";
+import MapPicker from "@/components/common/MapPicker/MapPicker";
+import MapPreview from "@/components/common/MapPreview/MapPreview";
+
 
 
 
@@ -29,6 +32,8 @@ const Profile = () => {
   const backAadharInputRef = useRef<HTMLInputElement>(null);
 
   const [editMode, setEditMode] = useState(false);
+  const [mapVisible, setMapVisible] = useState(false);
+  const [location, setLocation] = useState<LocationData | undefined>(serviceBoyData?.location || undefined)
   const dispatch = useDispatch();
 
   // State for images
@@ -54,7 +59,7 @@ const Profile = () => {
       aadharNumber: serviceBoyData?.aadharNumber ? serviceBoyData.aadharNumber : "",
       age: serviceBoyData?.age ? serviceBoyData.age.toString() : "",
       mobile: serviceBoyData?.mobile ? serviceBoyData.mobile : "",
-      location: serviceBoyData?.location ? serviceBoyData.location : "",
+      location: location ? location : undefined,
       email: serviceBoyData?.email ? serviceBoyData.email : "",
       profileImage: serviceBoyData?.profileImage ? serviceBoyData.profileImage : undefined,
       aadharImageBack: serviceBoyData?.aadharImageBack ? serviceBoyData.aadharImageBack : undefined,
@@ -62,15 +67,24 @@ const Profile = () => {
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (location) {
+      setValue("location", location)
+    }
+  }, [location, setValue, serviceBoyData])
+  console.log("location from profile", location?.address);
+
+
+
+  useEffect(() => {
     if (serviceBoyData) {
       setValue("_id", serviceBoyData._id || "");
       setValue("name", serviceBoyData.name || "");
       setValue("qualification", serviceBoyData.qualification || "111111");
       setValue("aadharNumber", serviceBoyData.aadharNumber || "");
       setValue("age", serviceBoyData.age ? serviceBoyData.age.toString() : "");
-      setValue("mobile", serviceBoyData.mobile || "");
-      setValue("location", serviceBoyData.location || "");
+      setValue("mobile", serviceBoyData?.mobile || "");
+      setValue("location", serviceBoyData?.location || null);
       setValue("profileImage", serviceBoyData.profileImage || undefined);
       setValue("aadharImageBack", serviceBoyData.aadharImageBack || undefined);
       setValue("aadharImageFront", serviceBoyData.aadharImageFront || undefined);
@@ -88,8 +102,18 @@ const Profile = () => {
     const file = e.target.files?.[0] || null;
     if (file) {
       setValue(fieldName, file);
-      setImagePreview(URL.createObjectURL(file)); // Simpler preview
+      setImagePreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleLocationSelect = (location: {
+    lat: number;
+    lng: number;
+    address: string;
+  }) => {
+    console.log("location from map picker handle", location)
+    setLocation({ lat: location.lat, lng: location.lng, address: location.address })
+    setMapVisible(false);
   };
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -100,8 +124,14 @@ const Profile = () => {
 
     // Add all text fields
     Object.keys(data).forEach(key => {
-      if (key !== "profileImage" && key !== "aadharImageFront" && key !== "aadharImageBack") {
-        formData.append(key, data[key]);
+      if (key === "location" && data[key]) {
+        // Convert location object to a JSON string
+        formData.append(key, JSON.stringify(data[key]));
+      } else {
+
+        if (key !== "profileImage" && key !== "aadharImageFront" && key !== "aadharImageBack") {
+          formData.append(key, data[key]);
+        }
       }
     });
 
@@ -119,6 +149,9 @@ const Profile = () => {
     }
 
     console.log("Ready to submit FormData:", formData);
+    for (const [key, value] of formData.entries()) {
+      console.log(`form data - ${key}: ${value}`);
+    }
 
     try {
       const response = await ServiceBoyUpdateProfile(formData);
@@ -182,6 +215,7 @@ const Profile = () => {
             </div>
           </div>
           <div>
+
             <Button type="button" className="px-5  text-sm font-medium text-white bg-[#4B49AC] rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit"}</Button>
           </div>
@@ -278,7 +312,7 @@ const Profile = () => {
                     <img
                       src={frontAadharImage}
                       alt="Aadhar Front"
-                      className="w-32 h-24 rounded-lg object-cover border border-gray-200"
+                      className="w-52 h-52 rounded-lg object-cover border border-gray-200"
                     />
                     <button
                       type="button"
@@ -293,7 +327,7 @@ const Profile = () => {
                     </button>
                   </div>
                 )}
-                {/* {errors.aadharImageFront && ( */}
+
                 {errors.aadharImageFront && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.aadharImageFront.message}
@@ -323,7 +357,7 @@ const Profile = () => {
                     <img
                       src={backAadharImage}
                       alt="Aadhar Back"
-                      className="w-32 h-24 rounded-lg object-cover border border-gray-200"
+                      className="w-52 h-52 rounded-lg object-cover border border-gray-200"
                     />
                     <button
                       type="button"
@@ -388,16 +422,15 @@ const Profile = () => {
               <label className="block text-sm text-gray-600 mb-1.5">
                 Location
               </label>
-              <div className="relative">
-                <MapPin className="absolute left-4 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Choose your location"
-                  className={`w-full pl-12 pr-4 py-2.5 bg-white border ${errors.location ? "border-red-500" : "border-[#4B49AC]/20"
-                    } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
-                  {...register("location")}
-                  disabled={!editMode}
-                />
+              <div className={` flex gap-2 w-full px-4 py-2.5 bg-white border ${errors.location
+                ? "border-red-500"
+                : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}>
+
+
+                <MapPin className="left-4 top-3 h-5 w-5 text-[#4B49AC]"
+                  onClick={editMode ? () => setMapVisible(true) : undefined} />
+                <p className="flex-1 overflow-x-hidden whitespace-nowrap"> {location?.address ? location?.address : 'Choose location'}   </p>
                 {errors.location && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.location.message}
@@ -406,13 +439,15 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1553825250-b99dd7d40836?auto=format&fit=crop&q=80&w=300&h=200"
-                alt="Map"
-                className="w-full h-32 rounded-lg object-cover"
-              />
-            </div>
+            {location && !mapVisible && (<div className="w-full text-center">
+              <label className="block text-sm text-gray-600 mb-3">
+                Your Location
+              </label>
+              <MapPreview location={location} />
+            </div>)}
+
+            {mapVisible && <MapPicker onClose={() => setMapVisible(false)} onSelectLocation={handleLocationSelect} />}
+
           </div>
         </div>
 

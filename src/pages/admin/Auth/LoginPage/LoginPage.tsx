@@ -125,7 +125,7 @@ function AdminLogin() {
             </div>
             <button
               type="submit"
-              className="w-full py-3 bg-[#4B49AC] text-white rounded-lg shadow-sm"
+              className="w-full py-3 bg-[#4B49AC] text-white rounded-lg shadow-sm text-center"
             >
               <span> {isLoading? "Sign In..." : "Sign in"}</span>
               <ArrowRight size={16} className="ml-2" />

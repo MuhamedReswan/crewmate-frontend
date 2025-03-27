@@ -19,6 +19,7 @@ import ErrorMessage from '../../common/Message/Error.message';
 import NavItem from '../../common/NavItem/NavItem';
 import { vendorLogout} from '@/redux/slice/vendorAuth.slice';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
+import path from 'path';
 
 const VendorSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -57,12 +58,12 @@ const VendorSidebar = () => {
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const navItems = [
-    { icon: <LayoutDashboard size={20} />, text: 'Dashboard' },
-    { icon: <Briefcase size={20} />, text: 'Products' },
-    { icon: <User size={20} />, text: 'Profile' },
-    { icon: <MessageSquareText size={20} />, text: 'Messages' },
-    { icon: <Bell size={20} />, text: 'Notifications' },
-    { icon: <Users size={20} />, text: 'Customers' },
+    { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path:'' },
+    { icon: <Briefcase size={20} />, text: 'Products', path:'events' },
+    { icon: <User size={20} />, text: 'Profile', path:'profile' },
+    { icon: <MessageSquareText size={20} />, text: 'Messages', path:'messages' },
+    { icon: <Bell size={20} />, text: 'Notifications', path:'notification' },
+    { icon: <Users size={20} />, text: 'Customers', path:'customers' },
   ];
 
   return (
@@ -70,7 +71,7 @@ const VendorSidebar = () => {
       <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-4 border-b`}>
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'}`}>
           <img src={crewMateLogo} className='w-10 h-10 shrink-0' alt='CrewMate logo' />
-          {!isCollapsed && <span className='text-xl font-bold text-[#4B49AC]'>CrewMate</span>}
+          {!isCollapsed && <span className='text-xl font-bold text-[#4B49AC] '>CrewMate</span>}
         </div>
         {!isCollapsed && (
           <button onClick={toggleSidebar} className='text-[#4B49AC]'>
@@ -86,7 +87,9 @@ const VendorSidebar = () => {
             icon={item.icon}
             text={!isCollapsed ? item.text : ''}
             active={activeItem === item.text}
-            onClick={() => setActiveItem(item.text)}
+            onClick={() =>{ setActiveItem(item.text)
+              navigate(`/vendor/${item.path}`)
+            }}
           />
         ))}
         <NavItem

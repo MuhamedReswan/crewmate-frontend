@@ -2,6 +2,8 @@ import { lazy, Suspense } from "react";
 import VendorLayout from "@/layouts/VendorLayout"; 
 import ProtectVendor from "./privateRoutes/ProtectVendor";
 import ProtectVendorIsLogin from "./privateRoutes/ProtectVendorIsLogin";
+import path from "path";
+import VendorProfile from "@/pages/vendor/ProfilePage/VendorProfile";
 
 const VendorLoginPage = lazy(() => import("@/pages/vendor/VendorLogin/VendorLogin.page"));
 const VendorSignUpPage = lazy(() => import("@/pages/vendor/VendorSignUp/VendorSignUp.page"));
@@ -50,6 +52,16 @@ const vendorRoutes = {
                 </Suspense>
             ),
         },
+        {
+            path: "profile",
+            element: (
+                <ProtectVendor>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <VendorProfile />
+                    </Suspense>
+                </ProtectVendor>
+            )
+        }
     ],
 };
 

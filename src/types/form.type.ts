@@ -22,7 +22,11 @@ export interface SignUpFormInputs {
     role: Role; 
   }
 
-
+  export interface LocationData {
+    lat: number;
+    lng: number;    
+    address: string;
+  }
 
 // Type for form validation
 export type SignupFormData = z.infer<typeof signupSchema>;

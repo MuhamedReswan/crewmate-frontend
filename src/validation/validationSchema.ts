@@ -91,7 +91,6 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Mobile number is required")
     .regex(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
-  location: z.string().min(3, "Location is required"),
   profileImage: z.any().refine((val) => {
     // If it's a string with length > 3, pass validation
     if (typeof val === "string" && val.length > 3) return true;
@@ -114,6 +113,18 @@ export const profileSchema = z.object({
   }, {
     message: "Aadhar back image is required ",
   }),
+
+  location: z
+  .union([
+    z.object({
+      lat: z.number().min(-90).max(90, "Invalid latitude"),  
+      lng: z.number().min(-180).max(180, "Invalid longitude"), 
+      address: z.string().min(3, "Address is required").optional(),
+    }),
+    z.null(), 
+  ]),
+
+
   email:z.string().email("Invalid email address")
 });
 
