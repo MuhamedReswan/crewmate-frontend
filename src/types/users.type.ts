@@ -13,10 +13,7 @@ export interface CommonDetails {
 
 
 
-export interface Vendor extends CommonDetails  {
-location: string, 
 
-}
 
 
 
@@ -47,17 +44,11 @@ export interface ServiceBoy extends CommonDetails{
 
 
 export interface Vendor extends CommonDetails  {
-    location: string, 
+    location: LocationData, 
     profileImage:string,
-    isBlocked:boolean,
-    aadharNumber:string,
-    role:string; 
-    age:number,
-    qualification:string,
-    offDates:UnAvailable[]
-    date:Date,
-    walletId:string,
-    workHistoryId:string  
+    licenceImage:string,
+    licenceNumber:string,
+estd:string
 }
 
 

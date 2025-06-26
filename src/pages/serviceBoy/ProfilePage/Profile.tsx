@@ -14,6 +14,7 @@ import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { Button } from "@/components/ui/button";
 import MapPicker from "@/components/common/MapPicker/MapPicker";
 import MapPreview from "@/components/common/MapPreview/MapPreview";
+import { handleLocationSelect } from "@/utils/handleLocationSelection";
 
 
 
@@ -80,7 +81,7 @@ const Profile = () => {
     if (serviceBoyData) {
       setValue("_id", serviceBoyData._id || "");
       setValue("name", serviceBoyData.name || "");
-      setValue("qualification", serviceBoyData.qualification || "111111");
+      setValue("qualification", serviceBoyData.qualification || "Plus Two");
       setValue("aadharNumber", serviceBoyData.aadharNumber || "");
       setValue("age", serviceBoyData.age ? serviceBoyData.age.toString() : "");
       setValue("mobile", serviceBoyData?.mobile || "");
@@ -106,15 +107,15 @@ const Profile = () => {
     }
   };
 
-  const handleLocationSelect = (location: {
-    lat: number;
-    lng: number;
-    address: string;
-  }) => {
-    console.log("location from map picker handle", location)
-    setLocation({ lat: location.lat, lng: location.lng, address: location.address })
-    setMapVisible(false);
-  };
+  // const handleLocationSelect = (location: {
+  //   lat: number;
+  //   lng: number;
+  //   address: string;
+  // }) => {
+  //   console.log("location from map picker handle", location)
+  //   setLocation({ lat: location.lat, lng: location.lng, address: location.address })
+  //   setMapVisible(false);
+  // };
 
   const onSubmit = async (data: ProfileFormValues) => {
     console.log("submit function invoked")
@@ -130,7 +131,7 @@ const Profile = () => {
       } else {
 
         if (key !== "profileImage" && key !== "aadharImageFront" && key !== "aadharImageBack") {
-          formData.append(key, data[key]);
+          formData.append(key, data[key] );
         }
       }
     });
@@ -220,9 +221,9 @@ const Profile = () => {
               onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit"}</Button>
           </div>
         </div>
-        {errors.profileImage && (
+        {errors.profileImage?.message && (
           <p className="text-red-500 text-xs">
-            {errors.profileImage.message}
+            {errors?.profileImage?.message}
           </p>)}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -248,26 +249,31 @@ const Profile = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm text-gray-600 mb-1.5">
-                Qualification
-              </label>
-              <input
-                type="text"
-                placeholder="Your Qualification"
-                className={`w-full px-4 py-2.5 bg-white border ${errors.qualification
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
-                {...register("qualification")}
-                disabled={!editMode}
-              />
-              {errors.qualification && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.qualification.message}
-                </p>
-              )}
-            </div>
+           <div>
+  <label className="block text-sm text-gray-600 mb-1.5">
+    Qualification
+  </label>
+  <select
+    className={`appearance-none w-full px-4 py-2.5 bg-white border ${
+      errors.qualification ? "border-red-500" : "border-[#4B49AC]/20"
+    } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+    {...register("qualification")}
+    disabled={!editMode}
+  >
+    <option value="Plus Two">Plus Two</option>
+    <option value="SSLC">SSLC</option>
+    <option value="Degree">Degree</option>
+    <option value="Post Graduation">Post Graduation</option>
+    <option value="Diploma">Diploma</option>
+    <option value="Others">Others</option>
+  </select>
+  {errors.qualification && (
+    <p className="text-red-500 text-xs mt-1">
+      {errors.qualification.message}
+    </p>
+  )}
+</div>
+
 
             <div>
               <label className="block text-sm text-gray-600 mb-1.5">
@@ -431,12 +437,13 @@ const Profile = () => {
                 <MapPin className="left-4 top-3 h-5 w-5 text-[#4B49AC]"
                   onClick={editMode ? () => setMapVisible(true) : undefined} />
                 <p className="flex-1 overflow-x-hidden whitespace-nowrap"> {location?.address ? location?.address : 'Choose location'}   </p>
-                {errors.location && (
+              
+              </div>
+              {errors.location && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.location.message}
                   </p>
                 )}
-              </div>
             </div>
 
             {location && !mapVisible && (<div className="w-full text-center">
@@ -446,7 +453,8 @@ const Profile = () => {
               <MapPreview location={location} />
             </div>)}
 
-            {mapVisible && <MapPicker onClose={() => setMapVisible(false)} onSelectLocation={handleLocationSelect} />}
+            {mapVisible && <MapPicker onClose={() => setMapVisible(false)}       onSelectLocation={(location) => handleLocationSelect(location, setLocation, setMapVisible)}
+            />}
 
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { forgotPasswordSchema, loginSchema, passwordSchema, profileSchema, signupSchema } from "@/validation/validationSchema";
+import { forgotPasswordSchema, loginSchema, passwordSchema, profileSchema, signupSchema, vendorProfileSchema } from "@/validation/validationSchema";
 import { z } from "zod";
 import { Role } from "./enum.type";
 export interface SignUpFormInputs {
@@ -34,4 +34,5 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type PasswordFormValues = z.infer<typeof passwordSchema>;
 export type ProfileFormValues = z.infer<typeof profileSchema>;
+export type VendrProfileFormValues = z.infer <typeof vendorProfileSchema>
 

@@ -122,3 +122,11 @@ export const vendorResetPassword = async (
   const result = await API.patch(vendorRoutes.resetPassword, data);
   return result.data;
 };
+
+
+export const VendorUpdateProfile = async (
+  data:Partial<Vendor>
+):Promise<ResponseResult | undefined> => {
+  console.log("ServiceBoyUpdateProfile called")
+  const result = await API.post(vendorRoutes.profile,data);
+  return result.data;}

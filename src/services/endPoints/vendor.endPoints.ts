@@ -6,5 +6,6 @@ export const vendorRoutes = {
     logout : "/auth/vendor/logout",
     resendOtp: '/auth/vendor/resend-otp',
     forgotPassword: '/auth/vendor/forgot-password',
-    resetPassword: '/auth/vendor/reset-password'
+    resetPassword: '/auth/vendor/reset-password',
+    profile:'/vendor/profile'
   };

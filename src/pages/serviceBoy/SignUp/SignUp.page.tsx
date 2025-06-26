@@ -23,7 +23,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 
-
 const SignUpPage = () => {
 
   const {
@@ -44,6 +43,7 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
+
 
 
   const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
