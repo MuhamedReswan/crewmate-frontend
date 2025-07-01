@@ -17,6 +17,7 @@ import ErrorMessage from "@/components/common/Message/Error.message";
 import { useState } from "react";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
+import { Eye, EyeOff } from "lucide-react";
 const LoginPage = () => {
   const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
 
@@ -24,6 +25,8 @@ const LoginPage = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const [forgotModal, setForgotModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const {
     register,
@@ -101,13 +104,24 @@ const LoginPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
+                    <div className="relative">
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="p-1.5 h-8"
                     {...register('password')}
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword(!showPassword)}
+                     tabIndex={-1}
+                  >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                 </button>
+                 </div>
+
                   {errors.password && (
                     <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                   )}

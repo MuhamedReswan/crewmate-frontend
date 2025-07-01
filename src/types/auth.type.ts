@@ -17,10 +17,10 @@ export interface Otp {
   email: string;
 }
 
-export interface ResponseResult {
+export interface ResponseResult<T = unknown> {
   message: string;
   statusCode: number;
-  data: any | null;
+  data: T | null;
   role?: Role
 }
 
@@ -32,6 +32,9 @@ export interface ResetForgotPassword {
 
 export interface ServiceBoyState {
   serviceBoyStatus: boolean;
+  serviceBoyData:Partial<ServiceBoy> | null
+}
+export interface ProfileData {
   serviceBoyData:Partial<ServiceBoy> | null
 }
 

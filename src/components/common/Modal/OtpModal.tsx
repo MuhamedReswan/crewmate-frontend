@@ -135,7 +135,6 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
 
   const handleResendOtp = async () => {
     try {
-      alert("button resend clicked")
       if (email) {
         let otpResendResult;
         if (role === Role.VENDOR) {

@@ -20,6 +20,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useNavigate } from "react-router-dom";
 import { vendorRegister } from "@/api/vendor";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { Eye, EyeOff } from "lucide-react";
 
 
 
@@ -43,18 +45,24 @@ const VendorSignUpPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const navigate = useNavigate();
 
 
   const onSubmit = async (data: SignupFormData) => {
-    console.log("form submitted");
+ 
+try{
+  console.log("form submitted");
+    setLoading(true);
     setEmail(data.email);
     console.log("onsubmit", data);
     console.log("email from sign up after set", email);
     const registerResponse = await vendorRegister(data);
     console.log("registerResponse on service boy fronty", registerResponse);
-    if (registerResponse && registerResponse.statusCode === 200) {
+    if (registerResponse && registerResponse.statusCode === 201) {
       toast({
         description: (
           <SuccessMessage
@@ -69,6 +77,7 @@ const VendorSignUpPage = () => {
         )
       })
     }
+    
 
     function HandleModal() {
       setIsModalOpen(!isModalOpen)
@@ -80,8 +89,18 @@ const VendorSignUpPage = () => {
       HandleModal();
     }
     console.log("registerResponse", registerResponse)
-    // Add your signup logic here
+
+  
+}catch(error:unknown){
+ const message = getApiErrorMessage(error, "Registration failed. Please try again.");
+  toast({
+    description: <ErrorMessage message={message} />,
+  });
+  } finally {
+    setLoading(false);
+  } 
   };
+
 
   const formValues = watch();
   console.log("formValues", formValues)
@@ -164,13 +183,23 @@ const VendorSignUpPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
+                <div className="relative">
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create password"
                     className="p-1.5 h-8"
                     {...register('password')}
                   />
+                   <button
+                    type="button"
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword(!showPassword)}
+                     tabIndex={-1}
+                  >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                 </button>
+                 </div>
                   {errors.password && (
                     <p className="text-xs text-red-500">{errors.password.message}</p>
                   )}
@@ -178,13 +207,23 @@ const VendorSignUpPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
                   <Input
                     id="confirmPassword"
-                    type="password"
+                    type={showConfirm ? "text" : "password"}
                     placeholder="Confirm password"
                     className="p-1.5 h-8"
                     {...register('confirmPassword')}
                   />
+                   <button
+                    type="button"
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                     tabIndex={-1}
+                  >
+                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                 </button>
+                 </div>
                   {errors.confirmPassword && (
                     <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
                   )}
@@ -206,7 +245,7 @@ const VendorSignUpPage = () => {
                 </div>
 
                 <Button type="submit" className="w-full bg-[#4B49AC] hover:bg-[#3f3d91] h-8">
-                  Sign Up
+                  {loading ? "Signing up..." : "Sign Up"}
                 </Button>
 
                 <div className="relative my-1">

@@ -48,6 +48,7 @@ export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLog
         onLoginSuccess?.(result);
       }
     } catch (error) {
+      console.log("error from onLoginError useLoginForm",error)
       onLoginError?.(error.response.data);
     } finally {
       setIsLoading(false);

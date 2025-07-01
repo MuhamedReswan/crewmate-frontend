@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Edit, MapPin, } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
-import { ServiceBoyUpdateProfile } from "@/api/serviceBoy";
+import { ServiceBoyFetchProfile, ServiceBoyUpdateProfile } from "@/api/serviceBoy";
 import { profileSchema } from "@/validation/validationSchema";
 import { LocationData, ProfileFormValues } from "@/types/form.type";
 import { RootState } from "@/redux/store/store";
@@ -10,22 +10,24 @@ import { useDispatch, useSelector } from "react-redux";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import { useToast } from "@/hooks/use-toast";
 import ErrorMessage from "@/components/common/Message/Error.message";
-import { login } from "@/redux/slice/serviceBoyAuth.slice";
+import { login, logout } from "@/redux/slice/serviceBoyAuth.slice";
 import { Button } from "@/components/ui/button";
 import MapPicker from "@/components/common/MapPicker/MapPicker";
 import MapPreview from "@/components/common/MapPreview/MapPreview";
 import { handleLocationSelect } from "@/utils/handleLocationSelection";
+import { ServiceBoy } from "@/types/users.type";
+import { pickDTOFields } from "@/utils/dtoMapper";
+import { serviceBoyLoginShape } from "@/utils/dtoShapes";
+import { isDataChanged } from "@/utils/compareObjects";
 
 
 
 
 const Profile = () => {
 
+  const [profileData, setProfileData] = useState<ServiceBoy | null>(null)
   const { serviceBoyData } = useSelector((state: RootState) => state.serviceBoy);
-  console.log("serviceBoyData------------------", serviceBoyData)
-
-  // Default profile image
-  const defaultImage = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";
+  console.log("serviceBoyData------------------", serviceBoyData);
 
   // Create references for file inputs
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -34,63 +36,101 @@ const Profile = () => {
 
   const [editMode, setEditMode] = useState(false);
   const [mapVisible, setMapVisible] = useState(false);
-  const [location, setLocation] = useState<LocationData | undefined>(serviceBoyData?.location || undefined)
-  const dispatch = useDispatch();
-
+  const [location, setLocation] = useState<LocationData | undefined>(undefined)
+  
   // State for images
-  const [profileImage, setProfileImage] = useState<string | undefined>(serviceBoyData?.profileImage || undefined);
-  const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>(serviceBoyData?.aadharImageFront || undefined);
-  const [backAadharImage, setBackAadharImage] = useState<string | undefined>(serviceBoyData?.aadharImageBack || undefined);
-
+  const [profileImage, setProfileImage] = useState<string | undefined>( undefined );
+  const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>( undefined );
+  const [backAadharImage, setBackAadharImage] = useState<string | undefined>( undefined );
+  
+  const dispatch = useDispatch();
   const { toast } = useToast();
+
+// Default profile image
+  const defaultImage = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";
+
+
+  useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      if (serviceBoyData?._id) {
+        const response = await ServiceBoyFetchProfile(serviceBoyData._id);
+        console.log("Fetched Profile Data", response?.data);
+        const profile = response?.data;
+
+      if (!profile) {
+        console.log("ServiceBoyFetchProfile not got in profile serviceBoy");
+        dispatch(logout());
+        return;
+      }
+
+ const filteredData = pickDTOFields(serviceBoyLoginShape,profile); 
+ const keys = Object.keys(filteredData) as (keyof typeof filteredData)[];
+
+ const hasDataChanged  =  isDataChanged(serviceBoyData,filteredData,keys);
+ if(hasDataChanged ){
+   dispatch(login(filteredData)); 
+ }
+          setProfileData(profile)
+        
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+        // dispatch(logout()); // Logout on unexpected error 
+        toast({
+        description: <ErrorMessage message={error.message} />,
+      })
+    }
+  };
+
+  fetchProfile();
+}, [serviceBoyData?._id,dispatch]);
+
+          console.log("profileData",profileData)
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<ProfileFormValues>({
     mode: "onChange",
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      _id: serviceBoyData?._id ? serviceBoyData._id : "",
-      name: serviceBoyData?.name ? serviceBoyData.name : "",
-      qualification: serviceBoyData?.qualification ? serviceBoyData.qualification : "111111",
-      aadharNumber: serviceBoyData?.aadharNumber ? serviceBoyData.aadharNumber : "",
-      age: serviceBoyData?.age ? serviceBoyData.age.toString() : "",
-      mobile: serviceBoyData?.mobile ? serviceBoyData.mobile : "",
-      location: location ? location : undefined,
-      email: serviceBoyData?.email ? serviceBoyData.email : "",
-      profileImage: serviceBoyData?.profileImage ? serviceBoyData.profileImage : undefined,
-      aadharImageBack: serviceBoyData?.aadharImageBack ? serviceBoyData.aadharImageBack : undefined,
-      aadharImageFront: serviceBoyData?.aadharImageFront ? serviceBoyData.aadharImageFront : undefined,
-    },
   });
+
+
+  useEffect(() => {
+  if (profileData) {
+    reset({
+      _id: profileData._id || "",
+      name: profileData.name || "",
+      qualification: profileData.qualification || "Plus Two",
+      aadharNumber: profileData.aadharNumber || "",
+      age: profileData.age ? profileData.age.toString() : "",
+      mobile: profileData.mobile || "",
+      location: profileData.location || undefined,
+      email: profileData.email || "",
+      profileImage: profileData.profileImage || undefined,
+      aadharImageBack: profileData.aadharImageBack || undefined,
+      aadharImageFront: profileData.aadharImageFront || undefined,
+    });
+
+    setLocation(profileData.location || undefined);
+    setProfileImage(profileData.profileImage || undefined);
+    setFrontAadharImage(profileData.aadharImageFront || undefined);
+    setBackAadharImage(profileData.aadharImageBack || undefined);
+  }
+}, [profileData, reset]);
+
 
   useEffect(() => {
     if (location) {
       setValue("location", location)
     }
-  }, [location, setValue, serviceBoyData])
+  }, [location, setValue, profileData])
   console.log("location from profile", location?.address);
-
-
-
-  useEffect(() => {
-    if (serviceBoyData) {
-      setValue("_id", serviceBoyData._id || "");
-      setValue("name", serviceBoyData.name || "");
-      setValue("qualification", serviceBoyData.qualification || "Plus Two");
-      setValue("aadharNumber", serviceBoyData.aadharNumber || "");
-      setValue("age", serviceBoyData.age ? serviceBoyData.age.toString() : "");
-      setValue("mobile", serviceBoyData?.mobile || "");
-      setValue("location", serviceBoyData?.location || null);
-      setValue("profileImage", serviceBoyData.profileImage || undefined);
-      setValue("aadharImageBack", serviceBoyData.aadharImageBack || undefined);
-      setValue("aadharImageFront", serviceBoyData.aadharImageFront || undefined);
-    }
-  }, [serviceBoyData, setValue]);
 
   const watchedValues = watch();
   console.log("watchedValues", watchedValues)
@@ -107,15 +147,6 @@ const Profile = () => {
     }
   };
 
-  // const handleLocationSelect = (location: {
-  //   lat: number;
-  //   lng: number;
-  //   address: string;
-  // }) => {
-  //   console.log("location from map picker handle", location)
-  //   setLocation({ lat: location.lat, lng: location.lng, address: location.address })
-  //   setMapVisible(false);
-  // };
 
   const onSubmit = async (data: ProfileFormValues) => {
     console.log("submit function invoked")
@@ -205,14 +236,14 @@ const Profile = () => {
               />
             </div>
             <div>
-              <h2 className="text-gray-800 font-medium">{serviceBoyData?.name
-                ? serviceBoyData.name
+              <h2 className="text-gray-800 font-medium">{profileData?.name
+                ? profileData.name
                   .split(" ")
                   .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                   .join(" ")
                 : ""}</h2>
               <p className="text-sm text-gray-500">ID: A-12</p>
-              <p className="text-sm text-gray-500">Email: {serviceBoyData?.email}</p>
+              <p className="text-sm text-gray-500">Email: {profileData?.email}</p>
             </div>
           </div>
           <div>
@@ -256,12 +287,12 @@ const Profile = () => {
   <select
     className={`appearance-none w-full px-4 py-2.5 bg-white border ${
       errors.qualification ? "border-red-500" : "border-[#4B49AC]/20"
-    } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+    } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC] disabled:text-black disabled:bg-white`}
     {...register("qualification")}
     disabled={!editMode}
   >
     <option value="Plus Two">Plus Two</option>
-    <option value="SSLC">SSLC</option>
+    <option value="Sslc">SSLC</option>
     <option value="Degree">Degree</option>
     <option value="Post Graduation">Post Graduation</option>
     <option value="Diploma">Diploma</option>

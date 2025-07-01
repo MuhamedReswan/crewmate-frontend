@@ -7,6 +7,7 @@ import { LoginFormInputs, SignupFormData } from "@/types/form.type";
 import {
   GoogleLoginData,
   Otp,
+  ProfileData,
   ResetForgotPassword,
   ResponseResult,
 } from "@/types/auth.type";
@@ -178,5 +179,20 @@ export const ServiceBoyUpdateProfile = async (data:Partial<ServiceBoy>): Promise
     throw error
   }
 }
+
+
+
+export const ServiceBoyFetchProfile = async (id:string): Promise<ProfileData | undefined> => {
+  try {
+    console.log("ServiceBoyFetchProfile called")
+    const result = await API.get(`${serviceBoyRoutes.profile}/${id}`);
+    return result.data;
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+}
+
+
 
 

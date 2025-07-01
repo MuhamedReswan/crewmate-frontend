@@ -17,12 +17,15 @@ import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
 import { useState } from "react";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
 import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
+import { Eye, EyeOff } from "lucide-react";
 
 const VendorLoginPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
   const [forgotModal, setForgotModal] =useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  
 
   const {
     register,
@@ -105,13 +108,23 @@ const VendorLoginPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
+                  <div className="relative">
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="p-1.5 h-8"
                     {...register('password')}
                   />
+                   <button
+                    type="button"
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword(!showPassword)}
+                     tabIndex={-1}
+                  >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                 </button>
+                 </div>
                   {errors.password && (
                     <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                   )}
