@@ -8,9 +8,11 @@ import {
   Otp,
   ResetForgotPassword,
   ResponseResult,
+  VendorProfileData,
 } from "@/types/auth.type";
 import { vendorRoutes } from "@/services/endPoints/vendor.endPoints";
 import { Role } from "@/types/enum.type";
+import { ApiResponse } from "@/types/ApiResponse";
 
 export const vendorLogin = async (
   data: LoginFormInputs
@@ -51,10 +53,10 @@ export const vendorRegister = async (
 
 export const vendorOtpVerification = async (
   data: Otp
-): Promise<Vendor | undefined> => {
+): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     console.log("serviceBoyOtpVerification", data);
-    const otpResult: AxiosResponse<Vendor> = await API.post(
+    const otpResult: AxiosResponse<ApiResponse<Partial<Vendor>>> = await API.post(
       vendorRoutes.otpVerification,
       data
     );
@@ -66,9 +68,9 @@ export const vendorOtpVerification = async (
   }
 };
 
-export const VendorLogout = async (): Promise<boolean | undefined> => {
+export const VendorLogoutApi = async (): Promise<ResponseResult | undefined> => {
     console.log("logout frin api forn invoked");
-    const logout: AxiosResponse<boolean> = await API.post(vendorRoutes.logout);
+    const logout: AxiosResponse<ResponseResult> = await API.post(vendorRoutes.logout);
     console.log("service boy logout response", logout);
     if (logout) {
       return logout.data;
@@ -125,8 +127,24 @@ export const vendorResetPassword = async (
 
 
 export const VendorUpdateProfile = async (
-  data:Partial<Vendor>
+  data:FormData
 ):Promise<ResponseResult | undefined> => {
   console.log("ServiceBoyUpdateProfile called")
-  const result = await API.post(vendorRoutes.profile,data);
+  const result = await API.put(vendorRoutes.profile,data,{
+      headers: {
+    "Content-Type": "multipart/form-data"
+  }}
+  );
   return result.data;}
+
+
+  export const VendorFetchProfile = async (id: string): Promise<ResponseResult<VendorProfileData> | undefined> => {
+  try {
+    console.log("VendorFetchProfile called");
+    const result = await API.get<ResponseResult<VendorProfileData>>(`${vendorRoutes.profile}/${id}`);
+    return result.data;
+  } catch (error) {
+    console.log("Error in VendorFetchProfile:", error);
+    throw error;
+  }
+};

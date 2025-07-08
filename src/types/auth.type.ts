@@ -34,9 +34,7 @@ export interface ServiceBoyState {
   serviceBoyStatus: boolean;
   serviceBoyData:Partial<ServiceBoy> | null
 }
-export interface ProfileData {
-  serviceBoyData:Partial<ServiceBoy> | null
-}
+
 
 export interface VendorState {
   vendorStatus: boolean;
@@ -47,3 +45,9 @@ export interface AdminState {
   adminStatus : boolean;
   adminData : Partial<Admin> | null
 }
+
+// export interface ProfileData {
+//   serviceBoyData:Partial<ServiceBoy> | null
+// }
+export type VendorProfileData = Partial<Vendor>
+export type ProfileData = Partial<ServiceBoy>

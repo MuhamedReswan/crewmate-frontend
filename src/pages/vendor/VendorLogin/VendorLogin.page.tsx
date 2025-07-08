@@ -35,13 +35,13 @@ const VendorLoginPage = () => {
     watch
   } = useLoginForm({
     loginType: Role.VENDOR,
-    onLoginSuccess: (data) => {
-      console.log('Login successful data', data);
+    onLoginSuccess: (response) => {
+      console.log('Login successful data', response);
       toast({
-        description: <SuccessMessage message={data.message} />,
+        description: <SuccessMessage message={response.message} />,
       })
-      console.log("vendor login result data",data)
-      dispatch(vendorLogin(data.data.vendor));
+      console.log("vendor login result data",response)
+      dispatch(vendorLogin(response.data));
       navigate('/vendor/');
     },
     onLoginError: (error) => {

@@ -48,7 +48,10 @@ export interface Vendor extends CommonDetails  {
     profileImage:string,
     licenceImage:string,
     licenceNumber:string,
-estd:string
+    estd:string,
+    instaId:string,
+    isBlocked:boolean,
+    isVerified:boolean
 }
 
 

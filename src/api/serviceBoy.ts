@@ -12,6 +12,7 @@ import {
   ResponseResult,
 } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
+import { ApiResponse } from "@/types/ApiResponse";
 
 export const serviceBoyLogin = async (
   data: LoginFormInputs
@@ -52,10 +53,10 @@ export const serviceBoyRegister = async (
 
 export const serviceBoyOtpVerification = async (
   data: Otp
-): Promise<ServiceBoy | undefined> => {
+): Promise<ApiResponse<Partial<ServiceBoy> | undefined>> => {
   try {
     console.log("serviceBoyOtpVerification", data);
-    const otpResult: AxiosResponse<ServiceBoy> = await API.post(
+    const otpResult: AxiosResponse<ApiResponse<Partial<ServiceBoy>>> = await API.post(
       serviceBoyRoutes.otpVerification,
       data
     );
@@ -89,7 +90,8 @@ export const googleAuth = async (data: GoogleLoginData) => {
    console.log("result of google auth in servie boy",result);
    return result.data
   } catch (error) {
-    console.log(error);
+    console.log("error googleAuth",error);
+    throw error;
   }
 };
 
@@ -169,10 +171,14 @@ export const ServiceBoyAccessProfile = async (): Promise<ResponseResult | undefi
 
 
 
-export const ServiceBoyUpdateProfile = async (data:Partial<ServiceBoy>): Promise<ResponseResult | undefined> => {
+export const ServiceBoyUpdateProfile = async (data:FormData): Promise<ResponseResult | undefined> => {
   try {
     console.log("ServiceBoyUpdateProfile called")
-    const result = await API.post(serviceBoyRoutes.profile,data);
+    const result = await API.put(serviceBoyRoutes.profile,data,{
+      headers: {
+    "Content-Type": "multipart/form-data"
+  }}
+    );
     return result.data;
   } catch (error) {
     console.log(error);
@@ -182,10 +188,10 @@ export const ServiceBoyUpdateProfile = async (data:Partial<ServiceBoy>): Promise
 
 
 
-export const ServiceBoyFetchProfile = async (id:string): Promise<ProfileData | undefined> => {
+export const ServiceBoyFetchProfile = async (id:string): Promise<ResponseResult<ProfileData> | undefined> => {
   try {
     console.log("ServiceBoyFetchProfile called")
-    const result = await API.get(`${serviceBoyRoutes.profile}/${id}`);
+    const result = await API.get<ResponseResult<ProfileData>>(`${serviceBoyRoutes.profile}/${id}`);
     return result.data;
   } catch (error) {
     console.log(error);

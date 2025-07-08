@@ -18,6 +18,7 @@ import { useState } from "react";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
 import { Eye, EyeOff } from "lucide-react";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 const LoginPage = () => {
   const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
 
@@ -36,18 +37,21 @@ const LoginPage = () => {
     watch
   } = useLoginForm({
     loginType: Role.SERVICE_BOY,
-    onLoginSuccess: (data) => {
-      console.log('Login successful data', data);
+    onLoginSuccess: (response) => {
+      console.log('Login successful data', response);
       toast({
-        description: <SuccessMessage message={data.message} className="" />,
+        description: <SuccessMessage message={response.message} className="" />,
       })
-      dispatch(login(data.data.serviceBoy));
+      console.log("login response.data ----------",response.data)
+      dispatch(login(response.data));
       navigate('/service-boy/');
     },
     onLoginError: (error) => {
       console.error('Login failed', error);
       toast({
-        description: <ErrorMessage message={error.message} />,
+        description:   <ErrorMessage
+          message={getApiErrorMessage(error, "Login failed. Please try again.")}
+        />,
       })
     }
   });

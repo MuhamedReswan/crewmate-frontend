@@ -13,13 +13,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useToast } from '@/hooks/use-toast';
-import { VendorLogout } from '@/api/vendor';
+import { VendorLogoutApi } from '@/api/vendor';
 import SuccessMessage from '../../common/Message/SuccessMessage';
 import ErrorMessage from '../../common/Message/Error.message';
 import NavItem from '../../common/NavItem/NavItem';
-import { vendorLogout} from '@/redux/slice/vendorAuth.slice';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
-import path from 'path';
+import { vendorLogout } from '@/redux/slice/vendorAuth.slice';
+import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
+import { Messages } from '@/types/enum.type';
 
 const VendorSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -36,9 +37,7 @@ const VendorSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      console.log('logout invoked');
-      const response = await VendorLogout();
-      console.log('response', response);
+      const response = await VendorLogoutApi();
       if (response && response.statusCode === 200) {
         dispatch(vendorLogout());
         toast({
@@ -47,11 +46,15 @@ const VendorSidebar = () => {
         navigate('/vendor/login');
       } else {
         toast({
-          description: <ErrorMessage message='Logout failed' className='' />,
+          description: <ErrorMessage message={Messages.LOGOUT_FAILED} className='' />,
         });
       }
     } catch (error) {
-      console.log(error);
+      toast({
+          description: <ErrorMessage message={getApiErrorMessage(error)} className='' />,
+        });
+        dispatch(vendorLogout());
+        navigate('/vendor/login');
     }
   };
 

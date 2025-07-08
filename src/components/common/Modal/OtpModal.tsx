@@ -16,6 +16,10 @@ import { useNavigate } from "react-router-dom";
 import SuccessMessage from "../Message/SuccessMessage";
 import { Messages, Role } from "@/types/enum.type";
 import { vendorOtpVerification, vendorResendOtp } from "@/api/vendor";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slice/serviceBoyAuth.slice";
+import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 
 interface OtpModalProps {
   isModalOpen: boolean;
@@ -30,22 +34,26 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useDispatch()
 
   console.log("email form otp modal", email);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    if (!isModalOpen) return;
 
-    if (isModalOpen && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      clearInterval(interval);
-    }
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
     return () => clearInterval(interval);
-  }, [isModalOpen, timer]);
+  }, [isModalOpen]);
+
 
   const handleInputChange = (index: number, value: string) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
@@ -71,67 +79,52 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
 
   }
 
+
   const HandleVerifyOtp = async () => {
-
     try {
-      console.log("email from handle verify otp", email);
-
       const enteredOtp = otp.join("");
-      if (enteredOtp.length === 4) {
-        console.log("email from handle verify otp", email);
-        if (email && otp) {
-          let otpVerifyResult;
-          if (role === Role.VENDOR) {
-            otpVerifyResult = await vendorOtpVerification({ email, otp: enteredOtp });
-            console.log("otpVerifyResult vendoer", otpVerifyResult);
-          } else {
-            otpVerifyResult = await serviceBoyOtpVerification({ email, otp: enteredOtp });
-            console.log("otpVerifyResult serviceBoy", otpVerifyResult);
 
-          }
-
-          if (otpVerifyResult) {
-            toast({
-              description: <SuccessMessage
-                message={otpVerifyResult?.message} />
-            });
-
-            // Redirect based on role
-            if (role === Role.VENDOR) {
-              setTimeout(() => {
-                navigate("/vendor/");
-              }, 1000);
-
-            } else {
-
-              toast({
-                description: <SuccessMessage
-                  className="" message={otpVerifyResult?.message} />
-              });
-
-              setTimeout(() => {
-                navigate("/service-boy/");
-              }, 1000);
-
-            }
-            if (setIsModalOpen) setIsModalOpen(false);
-
-          }
-        }
-      } else {
+      if (enteredOtp.length !== 4) {
         toast({
           description: <ErrorMessage message={Messages.ENTER_VALID_OTP} />,
           className: "error",
         });
+        return;
+      }
+
+      if (!email) return;
+
+      let otpVerifyResult;
+
+      if (role === Role.VENDOR) {
+        otpVerifyResult = await vendorOtpVerification({ email, otp: enteredOtp });
+      } else {
+        otpVerifyResult = await serviceBoyOtpVerification({ email, otp: enteredOtp });
+      }
+
+      if (otpVerifyResult) {
+        toast({
+          description: <SuccessMessage message={otpVerifyResult.message} />,
+        });
+
+        if (role === Role.VENDOR) {
+          dispatch(vendorLogin(otpVerifyResult.data));
+          setTimeout(() => navigate("/vendor/"), 1000);
+        } else {
+          dispatch(login(otpVerifyResult.data));
+          setTimeout(() => navigate("/service-boy/"), 1000);
+        }
+
+        if (setIsModalOpen) setIsModalOpen(false);
       }
     } catch (error) {
       toast({
-        description: <ErrorMessage message={error.response.data.message} />,
+        description: <ErrorMessage message={getApiErrorMessage(error)} />,
         className: "error",
       });
     }
+  };
 
-  }
 
   const handleResendOtp = async () => {
     try {
@@ -139,11 +132,9 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
         let otpResendResult;
         if (role === Role.VENDOR) {
           otpResendResult = await vendorResendOtp({ email });
-          console.log("otpResendResult vendor", otpResendResult);
 
         } else {
           otpResendResult = await serviceBoyResendOtp({ email });
-          console.log("otpResendResult serviceBoy", otpResendResult);
         }
         if (otpResendResult) {
           toast({
@@ -154,7 +145,7 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
       }
     } catch (error) {
       toast({
-        description: <ErrorMessage message={error.response.data.message} />,
+        description: <ErrorMessage message={getApiErrorMessage(error, Messages.RESEND_OTP_FAILED)} />,
         className: "error",
       })
 
@@ -195,7 +186,6 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
             </AlertDialogAction>
             {timer === 0 && <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p>}
             {timer !== 0 && <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" > Resend in {timer} sec</button></p>}
-            {/* <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p> */}
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>

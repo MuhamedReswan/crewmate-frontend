@@ -8,3 +8,13 @@ export const serviceBoyLoginShape: ServiceBoyLoginDTO = {
   isBlocked: false,
   role: '',
 };
+
+
+export const VendorLoginShape: ServiceBoyLoginDTO = {
+  _id: '',
+  name: '',
+  email: '',
+  isVerified: false,
+  isBlocked: false,
+  role:'',
+};

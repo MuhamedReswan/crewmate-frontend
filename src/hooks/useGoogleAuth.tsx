@@ -37,10 +37,10 @@ const useGoogleAuth = (role: Role) => {
         })
 
         if (role === Role.SERVICE_BOY) {
-          dispatch(login(googleAuthResponse.data.serviceBoy))
+          dispatch(login(googleAuthResponse.data))
           navigate('/service-boy/');
         } else if(role === Role.VENDOR) {
-          dispatch(vendorLogin(googleAuthResponse.data.vendor))
+          dispatch(vendorLogin(googleAuthResponse.data))
           navigate('/vendor/');
         }else{
           console.log("google log role not proper")
