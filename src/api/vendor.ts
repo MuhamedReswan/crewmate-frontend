@@ -7,7 +7,6 @@ import {
   GoogleLoginData,
   Otp,
   ResetForgotPassword,
-  ResponseResult,
   VendorProfileData,
 } from "@/types/auth.type";
 import { vendorRoutes } from "@/services/endPoints/vendor.endPoints";
@@ -16,10 +15,10 @@ import { ApiResponse } from "@/types/ApiResponse";
 
 export const vendorLogin = async (
   data: LoginFormInputs
-): Promise<Vendor | undefined> => {
+): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     const { email, password } = data;
-    const result: AxiosResponse<Vendor> = await API.post(vendorRoutes.login, {
+    const result= await API.post<ApiResponse<Partial<Vendor>>>(vendorRoutes.login, {
       email,
       password,
     });
@@ -33,13 +32,13 @@ export const vendorLogin = async (
 
 export const vendorRegister = async (
   data: SignupFormData
-): Promise<Vendor | undefined> => {
+): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     console.log("vendorRegister", data);
     delete data.terms;
     delete data.confirmPassword;
 
-    const result: AxiosResponse<Vendor> = await API.post(
+    const result = await API.post<ApiResponse<Partial<Vendor>>>(
       vendorRoutes.register,
       data
     );
@@ -56,7 +55,7 @@ export const vendorOtpVerification = async (
 ): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     console.log("serviceBoyOtpVerification", data);
-    const otpResult: AxiosResponse<ApiResponse<Partial<Vendor>>> = await API.post(
+    const otpResult = await API.post<ApiResponse<Partial<Vendor>>>(
       vendorRoutes.otpVerification,
       data
     );
@@ -68,18 +67,18 @@ export const vendorOtpVerification = async (
   }
 };
 
-export const VendorLogoutApi = async (): Promise<ResponseResult | undefined> => {
+export const VendorLogoutApi = async (): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
     console.log("logout frin api forn invoked");
-    const logout: AxiosResponse<ResponseResult> = await API.post(vendorRoutes.logout);
+    const logout = await API.post<ApiResponse<Partial<Vendor>>>(vendorRoutes.logout);
     console.log("service boy logout response", logout);
     if (logout) {
       return logout.data;
     }
 };
 
-export const vendorGoogleAuth = async (data: GoogleLoginData) => {
+export const vendorGoogleAuth = async (data: GoogleLoginData):Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
-   const response = await API.post(vendorRoutes.googleAuth,data);
+   const response = await API.post<ApiResponse<Partial<Vendor>>>(vendorRoutes.googleAuth,data);
    return response.data
   } catch (error) {
     console.log(" api error vendorGoogleAuth",error);
@@ -89,10 +88,10 @@ export const vendorGoogleAuth = async (data: GoogleLoginData) => {
 
 export const vendorResendOtp = async (
   data: Otp
-): Promise<ResponseResult | undefined> => {
+): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     console.log("VendorResendOtp", data);
-    const result: AxiosResponse = await API.post(vendorRoutes.resendOtp, data);
+    const result = await API.post<ApiResponse<Partial<Vendor>>>(vendorRoutes.resendOtp, data);
     console.log("VenodrResendOtp", result);
     return result.data;
   } catch (error) {
@@ -103,11 +102,11 @@ export const vendorResendOtp = async (
 export const vendorForgotPassword = async (data: {
   email: string;
   role?: Role;
-}): Promise<ResponseResult | undefined> => {
+}): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     console.log("api vendor ForgotPassword", data);
     delete data.role;
-    const result: AxiosResponse = await API.post(
+    const result = await API.post<ApiResponse<Partial<Vendor>>>(
       vendorRoutes.forgotPassword,
       data
     );
@@ -120,17 +119,17 @@ export const vendorForgotPassword = async (data: {
 
 export const vendorResetPassword = async (
   data: ResetForgotPassword
-): Promise<ResponseResult | undefined> => {
-  const result = await API.patch(vendorRoutes.resetPassword, data);
+): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
+  const result = await API.patch<ApiResponse<Partial<Vendor>>>(vendorRoutes.resetPassword, data);
   return result.data;
 };
 
 
 export const VendorUpdateProfile = async (
   data:FormData
-):Promise<ResponseResult | undefined> => {
+):Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   console.log("ServiceBoyUpdateProfile called")
-  const result = await API.put(vendorRoutes.profile,data,{
+  const result = await API.put<ApiResponse<Partial<Vendor>>>(vendorRoutes.profile,data,{
       headers: {
     "Content-Type": "multipart/form-data"
   }}
@@ -138,10 +137,10 @@ export const VendorUpdateProfile = async (
   return result.data;}
 
 
-  export const VendorFetchProfile = async (id: string): Promise<ResponseResult<VendorProfileData> | undefined> => {
+  export const VendorFetchProfile = async (id: string): Promise<ApiResponse<VendorProfileData> | undefined> => {
   try {
     console.log("VendorFetchProfile called");
-    const result = await API.get<ResponseResult<VendorProfileData>>(`${vendorRoutes.profile}/${id}`);
+    const result = await API.get<ApiResponse<VendorProfileData>>(`${vendorRoutes.profile}/${id}`);
     return result.data;
   } catch (error) {
     console.log("Error in VendorFetchProfile:", error);

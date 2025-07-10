@@ -8,6 +8,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '@/components/common/Message/Error.message';
 import { adminLogin } from '@/redux/slice/adminAuth.slice';
+import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
+import { Admin } from '@/types/users.type';
+import { ApiResponse } from '@/types/ApiResponse';
 
 function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,28 +20,33 @@ function AdminLogin() {
   
 
 
-  const {
-    register,
-    onSubmit,
-    errors,
-    isLoading,
-  } = useLoginForm({
-    loginType: Role.ADMIN,
-    onLoginSuccess: (data) => {
-      console.log('Login successful data admin', data);
-      toast({
-        description: <SuccessMessage message={data.message} className="" />,
-      })
-      dispatch(adminLogin(data.data.admin));
+const {
+  register,
+  onSubmit,
+  errors,
+  isLoading,
+} = useLoginForm<ApiResponse<Partial<Admin>>>({
+  loginType: Role.ADMIN,
+  onLoginSuccess: (data) => {
+    console.log('Login successful data admin', data);
+
+    toast({
+      description: <SuccessMessage message={data.message} className="" />,
+    });
+
+    if (data.data) {
+      dispatch(adminLogin(data.data));
       navigate('/admin/');
-    },
-    onLoginError: (error) => {
-      console.error('Login failed admin', error);
-      toast({
-        description: <ErrorMessage message={error.message} />,
-      })
     }
-  });
+  },
+  onLoginError: (error) => {
+    console.error('Login failed admin', error);
+    toast({
+      description: <ErrorMessage message={getApiErrorMessage(error)} />,
+    });
+  },
+});
+
 
 
   return (

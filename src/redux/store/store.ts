@@ -4,12 +4,11 @@ import vendorAuthSlice from '../slice/vendorAuth.slice'
 import adminAuthSlice from '../slice/adminAuth.slice'
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { Role } from "@/types/enum.type";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [Role.SERVICE_BOY,Role.VENDOR,Role.ADMIN],
+whitelist: ["serviceBoy", "vendor", "admin"],
 };
 
 const rootReducer = combineReducers({

@@ -6,19 +6,25 @@ import { loginSchema } from '@/validation/validationSchema';
 import { LoginFormInputs } from '@/types/form.type';
 import {  serviceBoyLogin } from '@/api/serviceBoy';
 import { Role } from '@/types/enum.type';
-import { ResponseResult } from '@/types/auth.type';
 import { vendorLogin } from '@/api/vendor';
 import { Login } from '@/api/admin';
+import { ApiResponse } from '@/types/ApiResponse';
+import { isAxiosError } from 'axios';
  
-type LoginType = Role 
 
-export interface UseLoginFormProps {
-    onLoginSuccess?: (data: ResponseResult) => void;
-    onLoginError?: (error: unknown) => void;
-    loginType?:LoginType 
-  }
 
-export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLoginFormProps = {}) => {
+export interface UseLoginFormProps<T extends ApiResponse = ApiResponse> {
+  onLoginSuccess?: (data: T) => void;
+  onLoginError?: (error: unknown) => void;
+  loginType?: Role;
+}
+
+export const useLoginForm = <T extends ApiResponse = ApiResponse>({
+  onLoginSuccess,
+  onLoginError,
+  loginType,
+}: UseLoginFormProps<T> = {}) => {
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormInputs>({
@@ -29,18 +35,20 @@ export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLog
       rememberMe: false
     }
   });
+  
 
+  
   const onSubmit = async (data: LoginFormInputs) => {
     try {
       console.log("data from the useLogin on submit",data)
       setIsLoading(true);
-      let result;
+let result: T | undefined;
       if(loginType===Role.VENDOR){
-        result= await vendorLogin(data)
+        result= await vendorLogin(data) as T
         }else if(loginType === Role.SERVICE_BOY) {
-          result= await serviceBoyLogin(data)
+          result= await serviceBoyLogin(data) as T
       }else if( loginType === Role.ADMIN){
-        result = await Login(data)
+        result = await Login(data)as T
         console.log("admin login form useLoginForm")
       }
       console.log("result of login",result)
@@ -48,8 +56,14 @@ export  const useLoginForm = ({ onLoginSuccess, onLoginError,loginType }: UseLog
         onLoginSuccess?.(result);
       }
     } catch (error) {
-      console.log("error from onLoginError useLoginForm",error)
-      onLoginError?.(error.response.data);
+
+       if (isAxiosError(error) && error.response) {
+    onLoginError?.(error.response.data);
+  } else {
+    console.error("Unknown error", error);
+    onLoginError?.({ message: "Unexpected error occurred", statusCode: 500, data: null });
+  }
+
     } finally {
       setIsLoading(false);
     }
