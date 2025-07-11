@@ -1,6 +1,6 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { VendorState } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
-import { createSlice } from "@reduxjs/toolkit";
 
 
 

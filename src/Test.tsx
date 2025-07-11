@@ -168,8 +168,8 @@
 
 // admin dashboard 2
 
-import React from 'react';
 import { LineChart, BarChartBig, Users, Calendar, Settings, Bell, Moon, LogOut } from 'lucide-react';
+import React from 'react';
 
 function Test() {
   // Exact data from the image

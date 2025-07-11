@@ -1,15 +1,15 @@
-import { googleAuth } from "@/api/serviceBoy";
-import { vendorGoogleAuth } from "@/api/vendor";
-import { Role } from "@/types/enum.type";
 import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
-import { useToast } from "./use-toast";
-import SuccessMessage from "@/components/common/Message/SuccessMessage";
-import ErrorMessage from "@/components/common/Message/Error.message";
 
 import {useDispatch} from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { useToast } from "./use-toast";
+import { googleAuth } from "@/api/serviceBoy";
+import { vendorGoogleAuth } from "@/api/vendor";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
+import { Role } from "@/types/enum.type";
 
 
 const useGoogleAuth = (role: Role) => {

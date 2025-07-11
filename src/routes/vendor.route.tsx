@@ -1,8 +1,7 @@
 import { lazy, Suspense } from "react";
-import VendorLayout from "@/layouts/VendorLayout"; 
 import ProtectVendor from "./privateRoutes/ProtectVendor";
 import ProtectVendorIsLogin from "./privateRoutes/ProtectVendorIsLogin";
-import path from "path";
+import VendorLayout from "@/layouts/VendorLayout";
 import VendorProfile from "@/pages/vendor/ProfilePage/VendorProfile";
 
 const VendorLoginPage = lazy(() => import("@/pages/vendor/VendorLogin/VendorLogin.page"));

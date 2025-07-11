@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Sidebar from '@/components/adminComponents/SideBar/SideBar'; 
-import Header from '@/components/adminComponents/Header/Header'; 
 import Overview from '../components/Overview';
+import Header from '@/components/adminComponents/Header/Header'; 
+import Sidebar from '@/components/adminComponents/SideBar/SideBar'; 
 // import { useTheme } from '../context/ThemeContext';
 
 const Dashboard: React.FC = () => {

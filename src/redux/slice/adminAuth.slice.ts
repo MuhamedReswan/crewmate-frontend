@@ -1,6 +1,6 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { AdminState } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
-import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: AdminState = {
     adminStatus : false,

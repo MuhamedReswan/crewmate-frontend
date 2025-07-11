@@ -1,10 +1,10 @@
-import React from 'react';
 import {
     Search,
     Bell as BellIcon,
     MessageSquare as MessageIcon,
     MoreVertical
 } from 'lucide-react';
+import React from 'react';
 
 const VendorHeader = () => {
   return (

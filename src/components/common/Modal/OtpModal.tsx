@@ -1,3 +1,11 @@
+import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../Message/Error.message";
+import SuccessMessage from "../Message/SuccessMessage";
+import { serviceBoyOtpVerification, serviceBoyResendOtp } from "@/api/serviceBoy";
+import { vendorOtpVerification, vendorResendOtp } from "@/api/vendor";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,18 +15,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import React, { useEffect, useRef, useState } from "react";
-import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
-import { serviceBoyOtpVerification, serviceBoyResendOtp } from "@/api/serviceBoy";
 import { useToast } from "@/hooks/use-toast"
-import ErrorMessage from "../Message/Error.message";
-import { useNavigate } from "react-router-dom";
-import SuccessMessage from "../Message/SuccessMessage";
-import { Messages, Role } from "@/types/enum.type";
-import { vendorOtpVerification, vendorResendOtp } from "@/api/vendor";
-import { useDispatch } from "react-redux";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
+import { Messages, Role } from "@/types/enum.type";
 import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 
 interface OtpModalProps {
@@ -184,8 +184,8 @@ function OtpModal({ isModalOpen, setIsModalOpen, email, role }: OtpModalProps) {
             <AlertDialogAction onClick={() => HandleVerifyOtp()} className="bg-[#4B49AC] w-60 rounded-sm text-white hover:bg-[#3f3d91]">
               Verify
             </AlertDialogAction>
-            {timer === 0 && <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p>}
-            {timer !== 0 && <p className="text-sm">Didn't recieve code? <button className="text-[#4B49AC]" > Resend in {timer} sec</button></p>}
+            {timer === 0 && <p className="text-sm">Didn&apos;t recieve code? <button className="text-[#4B49AC]" onClick={handleResendOtp}> Resend </button></p>}
+            {timer !== 0 && <p className="text-sm">Didn&apos;t recieve code? <button className="text-[#4B49AC]" > Resend in {timer} sec</button></p>}
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,27 +1,27 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Edit, MapPin, } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
-import { ServiceBoyFetchProfile, ServiceBoyUpdateProfile } from "@/api/serviceBoy";
-import { profileSchema } from "@/validation/validationSchema";
-import { LocationData, ProfileFormValues } from "@/types/form.type";
-import { RootState } from "@/redux/store/store";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import SuccessMessage from "@/components/common/Message/SuccessMessage";
-import { useToast } from "@/hooks/use-toast";
-import ErrorMessage from "@/components/common/Message/Error.message";
-import { login, logout } from "@/redux/slice/serviceBoyAuth.slice";
-import { Button } from "@/components/ui/button";
+import { getImageUrl } from "@/api/common";
+import { ServiceBoyFetchProfile, ServiceBoyUpdateProfile } from "@/api/serviceBoy";
 import MapPicker from "@/components/common/MapPicker/MapPicker";
 import MapPreview from "@/components/common/MapPreview/MapPreview";
-import { handleLocationSelect } from "@/utils/handleLocationSelection";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { login, logout } from "@/redux/slice/serviceBoyAuth.slice";
+import { RootState } from "@/redux/store/store";
+import { Messages } from "@/types/enum.type";
+import { LocationData, ProfileFormValues } from "@/types/form.type";
 import { ServiceBoy } from "@/types/users.type";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { isDataChanged } from "@/utils/compareObjects";
 import { pickDTOFields } from "@/utils/dtoMapper";
 import { serviceBoyLoginShape } from "@/utils/dtoShapes";
-import { isDataChanged } from "@/utils/compareObjects";
-import { getImageUrl } from "@/api/common";
-import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
-import { Messages } from "@/types/enum.type";
+import { handleLocationSelect } from "@/utils/handleLocationSelection";
+import { profileSchema } from "@/validation/validationSchema";
 
 
 
@@ -115,7 +115,7 @@ const Profile = () => {
     };
 
     fetchProfile();
-  }, [serviceBoyData?._id, dispatch]);
+  }, [serviceBoyData, toast, dispatch]);  // }, [serviceBoyData?._id, dispatch]);
 
   const {
     register,

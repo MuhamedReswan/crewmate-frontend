@@ -1,7 +1,7 @@
-import { RootState } from '@/redux/store/store'
 import React, { ReactNode, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { RootState } from '@/redux/store/store'
 
 interface ProtectVendorProps {
   children: ReactNode

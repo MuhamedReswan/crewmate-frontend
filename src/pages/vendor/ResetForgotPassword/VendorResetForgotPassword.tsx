@@ -1,6 +1,6 @@
+import React from 'react'
 import PasswordReset from '@/components/common/PasswordReset/ForgotPasswordReset'
 import { Role } from '@/types/enum.type'
-import React from 'react'
 
 const VendorResetForgotPassword = () => {
   return (

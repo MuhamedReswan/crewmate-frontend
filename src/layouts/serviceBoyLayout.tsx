@@ -1,7 +1,7 @@
 import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import ServiceBoyHeader from '@/components/serviceBoyComponent/ServiceBoyHeader/ServiceBoyHeader';
 import SideBar from '@/components/serviceBoyComponent/SideBar/SideBar';
-import { Outlet, useLocation } from 'react-router-dom';
 
 const ServiceBoyLayout = () => {
   const { pathname } = useLocation();

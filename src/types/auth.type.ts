@@ -1,4 +1,3 @@
-import { Role } from "./enum.type";
 import { Admin, ServiceBoy, Vendor } from "./users.type";
 
 export interface ServiceBoyRegister {
@@ -9,7 +8,7 @@ export interface ServiceBoyRegister {
 }
 
 export interface GoogleLoginData {
-  googleToken:string
+  googleToken: string;
 }
 
 export interface Otp {
@@ -32,9 +31,8 @@ export interface ResetForgotPassword {
 
 export interface ServiceBoyState {
   serviceBoyStatus: boolean;
-  serviceBoyData:Partial<ServiceBoy> | null
+  serviceBoyData: Partial<ServiceBoy> | null;
 }
-
 
 export interface VendorState {
   vendorStatus: boolean;
@@ -42,12 +40,12 @@ export interface VendorState {
 }
 
 export interface AdminState {
-  adminStatus : boolean;
-  adminData : Partial<Admin> | null
+  adminStatus: boolean;
+  adminData: Partial<Admin> | null;
 }
 
 // export interface ProfileData {
 //   serviceBoyData:Partial<ServiceBoy> | null
 // }
-export type VendorProfileData = Partial<Vendor>
-export type ProfileData = Partial<ServiceBoy>
+export type VendorProfileData = Partial<Vendor>;
+export type ProfileData = Partial<ServiceBoy>;

@@ -1,6 +1,6 @@
-import { LocationData } from '@/types/form.type'
 import React from 'react'
 import { MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet'
+import { LocationData } from '@/types/form.type'
 
 interface MapPreviewProps {
     location: LocationData;

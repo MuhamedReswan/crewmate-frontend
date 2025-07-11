@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Briefcase,
@@ -10,17 +9,18 @@ import {
   ChevronRight,
   MessageSquareText
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useToast } from '@/hooks/use-toast';
-import { VendorLogoutApi } from '@/api/vendor';
-import SuccessMessage from '../../common/Message/SuccessMessage';
-import ErrorMessage from '../../common/Message/Error.message';
-import NavItem from '../../common/NavItem/NavItem';
+import { useNavigate } from 'react-router-dom';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
+import ErrorMessage from '../../common/Message/Error.message';
+import SuccessMessage from '../../common/Message/SuccessMessage';
+import NavItem from '../../common/NavItem/NavItem';
+import { VendorLogoutApi } from '@/api/vendor';
+import { useToast } from '@/hooks/use-toast';
 import { vendorLogout } from '@/redux/slice/vendorAuth.slice';
-import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { Messages } from '@/types/enum.type';
+import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 
 const VendorSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);

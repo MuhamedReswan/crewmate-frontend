@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
-import ServiceBoyLayout from "@/layouts/serviceBoyLayout";
-import ProtectServiceBoyIsLogin from "./privateRoutes/ServiceBoyIsLogin";
 import ProtectServiceBoy from "./privateRoutes/ProtectServiceBoy";
+import ProtectServiceBoyIsLogin from "./privateRoutes/ServiceBoyIsLogin";
+import ServiceBoyLayout from "@/layouts/serviceBoyLayout";
 
 const Test = lazy(() => import("@/Test"));
 // const Test2 = lazy(() => import("@/Test2"));

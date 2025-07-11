@@ -1,17 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
-import { Eye, EyeOff } from 'lucide-react';
-import { passwordSchema } from '@/validation/validationSchema';
-import { Role } from '@/types/enum.type';
 import { Link, useParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import SuccessMessage from '../Message/SuccessMessage';
 import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '../Message/Error.message';
+import SuccessMessage from '../Message/SuccessMessage';
 import { serviceBoyResetPassword } from '@/api/serviceBoy';
 import { vendorResetPassword } from '@/api/vendor';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { Role } from '@/types/enum.type';
+import { passwordSchema } from '@/validation/validationSchema';
 
 
 const PasswordReset = ({ role }: { role: Role }) => {

@@ -1,3 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Edit, MapPin } from 'lucide-react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import { getImageUrl } from '@/api/common';
 import { VendorFetchProfile, VendorUpdateProfile } from '@/api/vendor';
 import MapPicker from '@/components/common/MapPicker/MapPicker';
@@ -16,11 +21,6 @@ import { pickDTOFields } from '@/utils/dtoMapper';
 import { VendorLoginShape } from '@/utils/dtoShapes';
 import { handleLocationSelect } from '@/utils/handleLocationSelection';
 import { vendorProfileSchema } from '@/validation/validationSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Edit, MapPin } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
 
 const VendorProfile = () => {
   const { vendorData } = useSelector((state: RootState) => state.vendor);

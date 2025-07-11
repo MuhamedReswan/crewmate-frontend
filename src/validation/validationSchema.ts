@@ -1,5 +1,5 @@
-import { Role } from "@/types/enum.type";
 import * as z from "zod";
+import { Role } from "@/types/enum.type";
 
 //Singup validation
 export const signupSchema = z

@@ -1,31 +1,32 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useLoginForm } from '@/hooks/useLoginForm';
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
 import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
-import { Role } from "@/types/enum.type";
-import { useToast } from "@/hooks/use-toast";
-import SuccessMessage from "@/components/common/Message/SuccessMessage";
-import { useDispatch } from "react-redux";
-import { Tabs, TabsList, TabsTrigger }  from "@/components/ui/tabs";
 import ErrorMessage from "@/components/common/Message/Error.message";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
+import { useLoginForm } from '@/hooks/useLoginForm';
 import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
-import { Eye, EyeOff } from "lucide-react";
+import { Role } from "@/types/enum.type";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 
 const VendorLoginPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const [forgotModal, setForgotModal] =useState(false);
+  const [forgotModal, setForgotModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
 
   const {
     register,
@@ -40,19 +41,20 @@ const VendorLoginPage = () => {
       toast({
         description: <SuccessMessage message={response.message} />,
       })
-      console.log("vendor login result data",response)
+      console.log("vendor login result data", response)
       dispatch(vendorLogin(response.data));
       navigate('/vendor/');
     },
     onLoginError: (error) => {
       console.error('Login failed', error);
       toast({
-        description: <ErrorMessage message={error.message} />,
+        description: <ErrorMessage message={getApiErrorMessage(error)
+        } />,
       })
     }
   });
 
-  const {googleLogin} = useGoogleAuth(Role.VENDOR
+  const { googleLogin } = useGoogleAuth(Role.VENDOR
 
   )
 
@@ -83,7 +85,7 @@ const VendorLoginPage = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-2">
-              <div className="space-y-1">
+                <div className="space-y-1">
                   <Tabs defaultValue={Role.VENDOR} >
                     <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value={Role.SERVICE_BOY} onClick={() => navigate('/service-boy/login')} >Service Boy</TabsTrigger>
@@ -109,22 +111,22 @@ const VendorLoginPage = () => {
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="p-1.5 h-8"
-                    {...register('password')}
-                  />
-                   <button
-                    type="button"
-                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowPassword(!showPassword)}
-                     tabIndex={-1}
-                  >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                 </button>
-                 </div>
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="p-1.5 h-8"
+                      {...register('password')}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                   {errors.password && (
                     <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                   )}
@@ -134,7 +136,7 @@ const VendorLoginPage = () => {
                   <button
                     type="button"
                     className="text-sm text-[#4B49AC] hover:text-[#3f3d91]"
-                    onClick={() =>setForgotModal(true) }
+                    onClick={() => setForgotModal(true)}
 
                   >
                     Forgot password?
@@ -188,7 +190,7 @@ const VendorLoginPage = () => {
                 </Button>
 
                 <div className="text-center text-sm text-gray-500">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <button
                     type="button"
                     className="text-[#4B49AC] hover:text-[#3f3d91] font-medium"

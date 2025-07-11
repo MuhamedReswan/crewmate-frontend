@@ -1,7 +1,7 @@
 import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import VendorHeader from '@/components/vendorComponent/VendorHeader/VendorHeader'; 
 import VendorSidebar from '@/components/vendorComponent/VendorSidebar/VendorSidebar';
-import { Outlet, useLocation } from 'react-router-dom';
 
 const VendorLayout = () => {
   const { pathname } = useLocation();

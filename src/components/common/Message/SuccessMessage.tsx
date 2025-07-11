@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils'
-import { MessageProps } from '@/types/message.type'
 import { CircleCheck } from 'lucide-react'
 import React from 'react'
+import { cn } from '@/lib/utils'
+import { MessageProps } from '@/types/message.type'
 
 const SuccessMessage: React.FC<MessageProps> = ({ className, message }) => {
   return (

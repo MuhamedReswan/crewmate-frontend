@@ -1,9 +1,7 @@
-import { AxiosResponse } from "axios";
 import API from "@/services/axios";
 // error hander
 import { serviceBoyRoutes } from "@/services/endPoints/serviceBoy.endPoints";
-import { ServiceBoy } from "@/types/users.type";
-import { LoginFormInputs, SignupFormData } from "@/types/form.type";
+import { ApiResponse } from "@/types/ApiResponse";
 import {
   GoogleLoginData,
   Otp,
@@ -11,7 +9,8 @@ import {
   ResetForgotPassword,
 } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
-import { ApiResponse } from "@/types/ApiResponse";
+import { LoginFormInputs, SignupFormData } from "@/types/form.type";
+import { ServiceBoy } from "@/types/users.type";
 
 export const serviceBoyLogin = async (
   data: LoginFormInputs
@@ -67,7 +66,9 @@ export const serviceBoyOtpVerification = async (
   }
 };
 
-export const serviceBoyLogout = async (): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+export const serviceBoyLogout = async (): Promise<
+  ApiResponse<Partial<ServiceBoy>> | undefined
+> => {
   try {
     console.log("logout frin api forn invoked");
     const logout = await API.post<ApiResponse<Partial<ServiceBoy>>>(
@@ -78,18 +79,23 @@ export const serviceBoyLogout = async (): Promise<ApiResponse<Partial<ServiceBoy
       return logout.data;
     }
   } catch (error) {
-    console.log("error logout",error);
+    console.log("error logout", error);
     throw error;
   }
 };
 
-export const googleAuth = async (data: GoogleLoginData): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+export const googleAuth = async (
+  data: GoogleLoginData
+): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
   try {
-   const result =  await API.post<ApiResponse<Partial<ServiceBoy>>>(serviceBoyRoutes.googleAuth, data );
-   console.log("result of google auth in servie boy",result);
-   return result.data
+    const result = await API.post<ApiResponse<Partial<ServiceBoy>>>(
+      serviceBoyRoutes.googleAuth,
+      data
+    );
+    console.log("result of google auth in servie boy", result);
+    return result.data;
   } catch (error) {
-    console.log("error googleAuth",error);
+    console.log("error googleAuth", error);
     throw error;
   }
 };
@@ -133,7 +139,10 @@ export const serviceBoyResetPassword = async (
   data: ResetForgotPassword
 ): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
   try {
-    const result = await API.patch<ApiResponse<Partial<ServiceBoy>>>(serviceBoyRoutes.resetPassword, data);
+    const result = await API.patch<ApiResponse<Partial<ServiceBoy>>>(
+      serviceBoyRoutes.resetPassword,
+      data
+    );
     return result.data;
   } catch (error) {
     console.log(error);
@@ -141,63 +150,69 @@ export const serviceBoyResetPassword = async (
   }
 };
 
-
-export const ServiceBoyAccessToken = async ():Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+export const ServiceBoyAccessToken = async (): Promise<
+  ApiResponse<Partial<ServiceBoy>> | undefined
+> => {
   try {
-    console.log("token api call inovked")
-    const result = await API.post<ApiResponse<Partial<ServiceBoy>>>(serviceBoyRoutes.refreshToken);
+    console.log("token api call inovked");
+    const result = await API.post<ApiResponse<Partial<ServiceBoy>>>(
+      serviceBoyRoutes.refreshToken
+    );
     // const data = await await result.json();
     // console.log("token-test response json",data); // See it in the browser's console
     return result.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw error;
   }
+};
 
-}
-
-
-
-export const ServiceBoyAccessProfile = async (): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+export const ServiceBoyAccessProfile = async (): Promise<
+  ApiResponse<Partial<ServiceBoy>> | undefined
+> => {
   try {
-    const result = await API.get<ApiResponse<Partial<ServiceBoy>>>(serviceBoyRoutes.profile);
-    return result.data;
-  } catch (error) {
-    console.log(error);
-    throw error
-  }
-}
-
-
-
-export const ServiceBoyUpdateProfile = async (data:FormData): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
-  try {
-    console.log("ServiceBoyUpdateProfile called")
-    const result = await API.put<ApiResponse<Partial<ServiceBoy>>>(serviceBoyRoutes.profile,data,{
-      headers: {
-    "Content-Type": "multipart/form-data"
-  }}
+    const result = await API.get<ApiResponse<Partial<ServiceBoy>>>(
+      serviceBoyRoutes.profile
     );
     return result.data;
   } catch (error) {
     console.log(error);
-    throw error
+    throw error;
   }
-}
+};
 
-
-
-export const ServiceBoyFetchProfile = async (id:string): Promise<ApiResponse<ProfileData> | undefined> => {
+export const ServiceBoyUpdateProfile = async (
+  data: FormData
+): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
   try {
-    console.log("ServiceBoyFetchProfile called")
-    const result = await API.get<ApiResponse<ProfileData>>(`${serviceBoyRoutes.profile}/${id}`);
+    console.log("ServiceBoyUpdateProfile called");
+    const result = await API.put<ApiResponse<Partial<ServiceBoy>>>(
+      serviceBoyRoutes.profile,
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return result.data;
   } catch (error) {
     console.log(error);
-    throw error
+    throw error;
   }
-}
+};
 
-
-
-
+export const ServiceBoyFetchProfile = async (
+  id: string
+): Promise<ApiResponse<ProfileData> | undefined> => {
+  try {
+    console.log("ServiceBoyFetchProfile called");
+    const result = await API.get<ApiResponse<ProfileData>>(
+      `${serviceBoyRoutes.profile}/${id}`
+    );
+    return result.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

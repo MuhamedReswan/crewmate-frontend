@@ -1,9 +1,9 @@
+import axios, { AxiosInstance, AxiosResponse, HttpStatusCode } from "axios";
 import { adminLogout } from "@/redux/slice/adminAuth.slice";
 import { logout } from "@/redux/slice/serviceBoyAuth.slice";
 import { vendorLogout } from "@/redux/slice/vendorAuth.slice";
 import store from "@/redux/store/store";
 import { getRoleFromUrl } from "@/utils/getRoleFromUrl";
-import axios, { AxiosInstance, AxiosResponse, HttpStatusCode } from "axios";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 

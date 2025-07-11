@@ -1,9 +1,9 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import serviceBoyAuthSlice from "../slice/serviceBoyAuth.slice";
-import vendorAuthSlice from '../slice/vendorAuth.slice'
-import adminAuthSlice from '../slice/adminAuth.slice'
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import adminAuthSlice from '../slice/adminAuth.slice'
+import serviceBoyAuthSlice from "../slice/serviceBoyAuth.slice";
+import vendorAuthSlice from '../slice/vendorAuth.slice'
 
 const persistConfig = {
   key: "root",

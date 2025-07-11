@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Briefcase,
@@ -10,15 +9,16 @@ import {
   ChevronRight,
   MessageSquareText
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useToast } from '@/hooks/use-toast';
-import { serviceBoyLogout } from '@/api/serviceBoy';
-import SuccessMessage from '../../common/Message/SuccessMessage';
-import ErrorMessage from '../../common/Message/Error.message';
-import NavItem from '../../common/NavItem/NavItem';
-import { logout } from '@/redux/slice/serviceBoyAuth.slice';
+import { useNavigate } from 'react-router-dom';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
+import ErrorMessage from '../../common/Message/Error.message';
+import SuccessMessage from '../../common/Message/SuccessMessage';
+import NavItem from '../../common/NavItem/NavItem';
+import { serviceBoyLogout } from '@/api/serviceBoy';
+import { useToast } from '@/hooks/use-toast';
+import { logout } from '@/redux/slice/serviceBoyAuth.slice';
 
 const SideBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);

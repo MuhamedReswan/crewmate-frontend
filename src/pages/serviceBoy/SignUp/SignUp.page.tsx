@@ -1,27 +1,27 @@
 // old signup
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema } from '@/validation/validationSchema';
-import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
-import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
-import { serviceBoyRegister } from "@/api/serviceBoy";
-import { SignupFormData } from "@/types/form.type";
-import { useState } from "react";
-import OtpModal from "@/components/common/Modal/OtpModal";
-import useGoogleAuth from "@/hooks/useGoogleAuth"; 
-import { useToast } from "@/hooks/use-toast"
-import SuccessMessage from "@/components/common/Message/SuccessMessage";
-import ErrorMessage from "@/components/common/Message/Error.message";
-import { Role } from "@/types/enum.type";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link, useNavigate } from "react-router-dom";
-import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from "react-router-dom";
+import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
+import { serviceBoyRegister } from "@/api/serviceBoy";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import OtpModal from "@/components/common/Modal/OtpModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast"
+import useGoogleAuth from "@/hooks/useGoogleAuth"; 
+import { Role } from "@/types/enum.type";
+import { SignupFormData } from "@/types/form.type";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { signupSchema } from '@/validation/validationSchema';
 
 
 
