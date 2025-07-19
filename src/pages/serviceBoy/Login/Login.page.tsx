@@ -20,7 +20,7 @@ import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { Role } from "@/types/enum.type";
 import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 const LoginPage = () => {
-  const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
+  const { googleLogin } = useGoogleAuth(Role.SERVICE_BOY)
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,14 +42,14 @@ const LoginPage = () => {
       toast({
         description: <SuccessMessage message={response.message} className="" />,
       })
-      console.log("login response.data ----------",response.data)
+      console.log("login response.data ----------", response.data)
       dispatch(login(response.data));
       navigate('/service-boy/');
     },
     onLoginError: (error) => {
       console.error('Login failed', error);
       toast({
-        description:   <ErrorMessage
+        description: <ErrorMessage
           message={getApiErrorMessage(error, "Login failed. Please try again.")}
         />,
       })
@@ -108,23 +108,23 @@ const LoginPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
-                    <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="p-1.5 h-8"
-                    {...register('password')}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowPassword(!showPassword)}
-                     tabIndex={-1}
-                  >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                 </button>
-                 </div>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="p-1.5 h-8"
+                      {...register('password')}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
 
                   {errors.password && (
                     <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
@@ -166,7 +166,7 @@ const LoginPage = () => {
                   type="button"
                   variant="outline"
                   className="w-full h-8"
-                  onClick={()=> googleLogin()}
+                  onClick={() => googleLogin()}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                     <path
@@ -190,7 +190,7 @@ const LoginPage = () => {
                 </Button>
 
                 <div className="text-center text-sm text-gray-500">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <button
                     type="button"
                     className="text-[#4B49AC] hover:text-[#3f3d91] font-medium"

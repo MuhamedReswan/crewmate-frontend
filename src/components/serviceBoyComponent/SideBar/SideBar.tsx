@@ -19,6 +19,8 @@ import NavItem from '../../common/NavItem/NavItem';
 import { serviceBoyLogout } from '@/api/serviceBoy';
 import { useToast } from '@/hooks/use-toast';
 import { logout } from '@/redux/slice/serviceBoyAuth.slice';
+import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
+import { Messages } from '@/types/enum.type';
 
 const SideBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -48,24 +50,27 @@ const SideBar = () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.log("logout error from sidebar", error);
+      toast({
+        description: <ErrorMessage message={getApiErrorMessage(error, Messages.LOGOUT_FAILED)} />,
+      });
     }
   };
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const navItems = [
-    { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path:'' },
-    { icon: <Briefcase size={20} />, text: 'Works', path:'works' },
-    { icon: <User size={20} />, text: 'Profile', path:'profile' },
-    { icon: <MessageSquareText size={20} />, text: 'Messages', path:'messages' },
-    { icon: <Bell size={20} />, text: 'Notifications', path:'notification'},
-    { icon: <Users size={20} />, text: 'Accounts', path:'wallet' },
+    { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path: '' },
+    { icon: <Briefcase size={20} />, text: 'Works', path: 'works' },
+    { icon: <User size={20} />, text: 'Profile', path: 'profile' },
+    { icon: <MessageSquareText size={20} />, text: 'Messages', path: 'messages' },
+    { icon: <Bell size={20} />, text: 'Notifications', path: 'notification' },
+    { icon: <Users size={20} />, text: 'Accounts', path: 'wallet' },
   ];
 
   return (
     <div className={`bg-white border-r transition-all ${isCollapsed ? 'w-16' : 'w-64'}`}>
-      
+
       <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-4 border-b`}>
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'}`}>
           <img src={crewMateLogo} className='w-10 h-10 shrink-0' alt='CrewMate logo' />
@@ -85,7 +90,8 @@ const SideBar = () => {
             icon={item.icon}
             text={!isCollapsed ? item.text : ''}
             active={activeItem === item.text}
-            onClick={() =>{ setActiveItem(item.text)
+            onClick={() => {
+              setActiveItem(item.text)
               navigate(`/service-boy/${item.path}`)
             }}
           />

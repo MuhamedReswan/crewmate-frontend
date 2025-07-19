@@ -47,6 +47,7 @@ const Profile = () => {
   const [backAadharImage, setBackAadharImage] = useState<string | undefined>(undefined);
 
   const dispatch = useDispatch();
+
   const { toast } = useToast();
 
   // Default profile image

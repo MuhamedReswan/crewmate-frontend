@@ -11,7 +11,6 @@ import {
 import { Role } from "@/types/enum.type";
 import { LoginFormInputs, SignupFormData } from "@/types/form.type";
 import { ServiceBoy } from "@/types/users.type";
-
 export const serviceBoyLogin = async (
   data: LoginFormInputs
 ): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
