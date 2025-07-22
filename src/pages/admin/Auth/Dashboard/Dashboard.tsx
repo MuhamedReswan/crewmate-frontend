@@ -1,13 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Overview from '../components/Overview';
-import Header from '@/components/adminComponents/Header/Header'; 
-import Sidebar from '@/components/adminComponents/SideBar/SideBar'; 
+// import Overview from '../components/Overview';
+import Header from '@/components/adminComponents/Header/Header';
+import Sidebar from '@/components/adminComponents/SideBar/SideBar';
 // import { useTheme } from '../context/ThemeContext';
 
 const Dashboard: React.FC = () => {
-//   const { theme } = useTheme();
-  
+  //   const { theme } = useTheme();
+
   return (
     <div className={`flex h-screen bg-gray-50 dark:bg-dark-900 transition-colors duration-200`}>
       <Sidebar />

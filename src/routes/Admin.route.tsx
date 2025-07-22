@@ -25,6 +25,16 @@ const adminRoutes = {
         </ProtectAdmin>
       ),
     },
+    {
+      path: 'verification-request',
+      element: (
+        <ProtectAdmin>
+          <Suspense fallback={<div>Loading...</div>}>
+
+          </Suspense>
+        </ProtectAdmin>
+      ),
+    },
   ],
 };
 

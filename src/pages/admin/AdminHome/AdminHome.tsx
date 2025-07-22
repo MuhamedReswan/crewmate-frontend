@@ -1,5 +1,4 @@
 import { LineChart, BarChartBig, Users, Calendar, Settings, Bell, Moon, LogOut } from 'lucide-react';
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '@/api/admin';
@@ -8,6 +7,7 @@ import SuccessMessage from '@/components/common/Message/SuccessMessage';
 // import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { adminLogout } from '@/redux/slice/adminAuth.slice';
+import AdminHeader from '@/components/adminComponents/Header/Header';
 
 
 
@@ -105,7 +105,7 @@ const AdminHome = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-8">
-        <header className="flex justify-between items-center mb-8">
+        {/* <header className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-2xl font-bold mb-1">Welcome Admin</h1>
             <p className="text-gray-500">Analytics your advertising KPI in a single detailed interface.</p>
@@ -123,7 +123,9 @@ const AdminHome = () => {
               className="w-10 h-10 rounded-full"
             />
           </div>
-        </header>
+        </header> */}
+
+        <AdminHeader />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-4 gap-6 mb-8">
@@ -254,7 +256,7 @@ const AdminHome = () => {
           </div>
         </div>
       </main>
-    </div>
+    </div >
   );
 }
 
