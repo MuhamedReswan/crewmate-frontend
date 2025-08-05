@@ -1,17 +1,19 @@
 import React from 'react';
 
 import { Bell, Moon } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store/store';
 
 const AdminHeader: React.FC = () => {
-    // const { user } = useAuth();
 
+    const { adminData } = useSelector((state: RootState) => state.admin);
     return (
 
-        <header className="flex justify-between items-center mb-8">
+        <header className="flex justify-between items-center my-4 mx-4 bg-[#12132D] p-3 border-[#12132D] rounded">
             <div>
-                <h1 className="text-2xl font-bold mb-1">Welcome Admin</h1>
+                <h1 className="text-2xl font-bold mb-1">Welcome {adminData?.name}</h1>
                 <p className="text-gray-500">Analytics your advertising KPI in a single detailed interface.</p>
-            </div>
+            </div >
             <div className="flex items-center gap-6">
                 <button className="p-2 hover:bg-[#12132D] rounded-lg transition-colors">
                     <Bell size={20} className="text-gray-500" />
@@ -25,7 +27,7 @@ const AdminHeader: React.FC = () => {
                     className="w-10 h-10 rounded-full"
                 />
             </div>
-        </header>
+        </header >
 
         // <header className="bg-white dark:bg-dark-800 border-b border-gray-200 dark:border-dark-700 py-4 px-6 transition-colors duration-200">
         //     <div className="flex items-center justify-between">

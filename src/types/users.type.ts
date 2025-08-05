@@ -1,3 +1,4 @@
+import { Role } from "./enum.type";
 import { LocationData } from "./form.type";
 
 export interface CommonDetails {
@@ -8,7 +9,7 @@ export interface CommonDetails {
   password: string;
   isVerified: boolean;
   isBlocked: boolean;
-  role: string;
+  role: Role;
 }
 
 export interface UnAvailable {
@@ -17,12 +18,10 @@ export interface UnAvailable {
 }
 export interface ServiceBoy extends CommonDetails {
   profileImage: string;
-  isBlocked: boolean;
   aadharNumber: string;
   aadharImageFront: string;
   aadharImageBack: string;
   servicerId: string;
-  role: string;
   location: LocationData;
   age: number;
   qualification: string;

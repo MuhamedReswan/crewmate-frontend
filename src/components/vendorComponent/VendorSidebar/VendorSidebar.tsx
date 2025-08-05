@@ -16,7 +16,7 @@ import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
 import ErrorMessage from '../../common/Message/Error.message';
 import SuccessMessage from '../../common/Message/SuccessMessage';
 import NavItem from '../../common/NavItem/NavItem';
-import { VendorLogoutApi } from '@/api/vendor';
+import { VendorLogoutApi } from '@/api/vendor/vendor';
 import { useToast } from '@/hooks/use-toast';
 import { vendorLogout } from '@/redux/slice/vendorAuth.slice';
 import { Messages } from '@/types/enum.type';
@@ -51,22 +51,22 @@ const VendorSidebar = () => {
       }
     } catch (error) {
       toast({
-          description: <ErrorMessage message={getApiErrorMessage(error)} className='' />,
-        });
-        dispatch(vendorLogout());
-        navigate('/vendor/login');
+        description: <ErrorMessage message={getApiErrorMessage(error)} className='' />,
+      });
+      dispatch(vendorLogout());
+      navigate('/vendor/login');
     }
   };
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const navItems = [
-    { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path:'' },
-    { icon: <Briefcase size={20} />, text: 'Products', path:'events' },
-    { icon: <User size={20} />, text: 'Profile', path:'profile' },
-    { icon: <MessageSquareText size={20} />, text: 'Messages', path:'messages' },
-    { icon: <Bell size={20} />, text: 'Notifications', path:'notification' },
-    { icon: <Users size={20} />, text: 'Customers', path:'customers' },
+    { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path: '' },
+    { icon: <Briefcase size={20} />, text: 'Products', path: 'events' },
+    { icon: <User size={20} />, text: 'Profile', path: 'profile' },
+    { icon: <MessageSquareText size={20} />, text: 'Messages', path: 'messages' },
+    { icon: <Bell size={20} />, text: 'Notifications', path: 'notification' },
+    { icon: <Users size={20} />, text: 'Customers', path: 'customers' },
   ];
 
   return (
@@ -90,7 +90,8 @@ const VendorSidebar = () => {
             icon={item.icon}
             text={!isCollapsed ? item.text : ''}
             active={activeItem === item.text}
-            onClick={() =>{ setActiveItem(item.text)
+            onClick={() => {
+              setActiveItem(item.text)
               navigate(`/vendor/${item.path}`)
             }}
           />

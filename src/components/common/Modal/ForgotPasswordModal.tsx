@@ -3,8 +3,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../Message/Error.message";
 import SuccessMessage from "../Message/SuccessMessage";
-import { serviceBoyForgotPassword } from "@/api/serviceBoy";
-import { vendorForgotPassword } from "@/api/vendor";
+import { serviceBoyForgotPassword } from "@/api/serviceBoy/serviceBoy";
+import { vendorForgotPassword } from "@/api/vendor/vendor";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +24,7 @@ import { forgotPasswordSchema } from "@/validation/validationSchema";
 
 
 
-const ForgotPasswordModal : React.FC<ForgotPasswordModalProps>= ({open, setOpen, role})=> {
+const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, setOpen, role }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {

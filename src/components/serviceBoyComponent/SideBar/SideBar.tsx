@@ -16,7 +16,7 @@ import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
 import ErrorMessage from '../../common/Message/Error.message';
 import SuccessMessage from '../../common/Message/SuccessMessage';
 import NavItem from '../../common/NavItem/NavItem';
-import { serviceBoyLogout } from '@/api/serviceBoy';
+import { serviceBoyLogout } from '@/api/serviceBoy/serviceBoy';
 import { useToast } from '@/hooks/use-toast';
 import { logout } from '@/redux/slice/serviceBoyAuth.slice';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';

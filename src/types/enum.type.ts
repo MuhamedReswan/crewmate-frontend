@@ -15,4 +15,14 @@ export enum Messages {
   UPDATE_PROFILE_FAILED = "Failed to update profile. Please try again.",
   LOGOUT_FAILED = "some thing went wrong on logout. please try again",
   RESEND_OTP_FAILED = "Failed to resend OTP",
+  FAILED_TO_FETCH_VERIFICATION_SERVICE_BOY ="Failed to fetch service boy verification",
+  VERIFCATION_STATUS_CHANGE_FAILED = "Failed verification status change"
 }
+
+
+export enum VerificationStatus {
+  Pending = "pending",
+  Verified = "verified",
+  Rejected = "rejected",
+}
+

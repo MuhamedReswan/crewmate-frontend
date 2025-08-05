@@ -1,10 +1,10 @@
 import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
 
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { useToast } from "./use-toast";
-import { googleAuth } from "@/api/serviceBoy";
-import { vendorGoogleAuth } from "@/api/vendor";
+import { googleAuth } from "@/api/serviceBoy/serviceBoy";
+import { vendorGoogleAuth } from "@/api/vendor/vendor";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
@@ -39,10 +39,10 @@ const useGoogleAuth = (role: Role) => {
         if (role === Role.SERVICE_BOY) {
           dispatch(login(googleAuthResponse.data))
           navigate('/service-boy/');
-        } else if(role === Role.VENDOR) {
+        } else if (role === Role.VENDOR) {
           dispatch(vendorLogin(googleAuthResponse.data))
           navigate('/vendor/');
-        }else{
+        } else {
           console.log("google log role not proper")
         }
 

@@ -118,7 +118,7 @@ const {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   {...register('password')}
-                  className="block w-full pl-10 pr-10 py-3 border rounded-lg"
+                  className="block w-full pl-10 pr-10 py-3 border rounded-lg text-gray-400"
                   placeholder="••••••••"
                 />
                 <button

@@ -3,8 +3,8 @@ import { Edit, MapPin } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { getImageUrl } from '@/api/common';
-import { VendorFetchProfile, VendorUpdateProfile } from '@/api/vendor';
+import { getImageUrl } from '@/api/common/common';
+import { VendorFetchProfile, VendorUpdateProfile } from '@/api/vendor/vendor';
 import MapPicker from '@/components/common/MapPicker/MapPicker';
 import MapPreview from '@/components/common/MapPreview/MapPreview';
 import ErrorMessage from '@/components/common/Message/Error.message';
@@ -53,11 +53,11 @@ const VendorProfile = () => {
           const response = await VendorFetchProfile(vendorData._id);
           const profile = response?.data;
           if (!profile) {
-          toast({
-            description: (
-              <ErrorMessage message={Messages.FETCH_PROFILE_FAILED} />
-            ),
-          });
+            toast({
+              description: (
+                <ErrorMessage message={Messages.FETCH_PROFILE_FAILED} />
+              ),
+            });
             dispatch(vendorLogout());
             return;
           }
@@ -93,9 +93,9 @@ const VendorProfile = () => {
           setProfileData(profile);
         }
       } catch (error) {
-        dispatch(vendorLogout()); 
+        dispatch(vendorLogout());
         toast({
-          description: <ErrorMessage message={getApiErrorMessage(error,Messages.FETCH_PROFILE_FAILED)} />,
+          description: <ErrorMessage message={getApiErrorMessage(error, Messages.FETCH_PROFILE_FAILED)} />,
         });
       }
     };
@@ -167,15 +167,15 @@ const VendorProfile = () => {
     const formData = new FormData();
     try {
 
-Object.keys(data).forEach((key) => {
-  const typedKey = key as keyof typeof data;
+      Object.keys(data).forEach((key) => {
+        const typedKey = key as keyof typeof data;
 
-  if (typedKey === "location" && data[typedKey]) {
-    formData.append(typedKey, JSON.stringify(data[typedKey]));
-  } else if (typedKey !== "profileImage" && typedKey !== "licenceImage") {
-    formData.append(typedKey, data[typedKey] as string);
-  }
-});
+        if (typedKey === "location" && data[typedKey]) {
+          formData.append(typedKey, JSON.stringify(data[typedKey]));
+        } else if (typedKey !== "profileImage" && typedKey !== "licenceImage") {
+          formData.append(typedKey, data[typedKey] as string);
+        }
+      });
 
       // Add image files only if they exist
       if (data.profileImage) {
@@ -202,7 +202,7 @@ Object.keys(data).forEach((key) => {
     } catch (error) {
       console.log("error from profile", error)
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error,Messages.UPDATE_PROFILE_FAILED)} />,
+        description: <ErrorMessage message={getApiErrorMessage(error, Messages.UPDATE_PROFILE_FAILED)} />,
       })
     }
     finally {

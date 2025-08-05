@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from "react-router-dom";
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
 import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
-import { serviceBoyRegister } from "@/api/serviceBoy";
+import { serviceBoyRegister } from "@/api/serviceBoy/serviceBoy";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import OtpModal from "@/components/common/Modal/OtpModal";
@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast"
-import useGoogleAuth from "@/hooks/useGoogleAuth"; 
+import useGoogleAuth from "@/hooks/useGoogleAuth";
 import { Role } from "@/types/enum.type";
 import { SignupFormData } from "@/types/form.type";
 import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
@@ -54,51 +54,51 @@ const SignUpPage = () => {
 
 
 
-  const {googleLogin} = useGoogleAuth(Role.SERVICE_BOY)
+  const { googleLogin } = useGoogleAuth(Role.SERVICE_BOY)
   const onSubmit = async (data: SignupFormData) => {
-    try{
-    console.log("form submitted");
-    setLoading(true);
-    setEmail(data.email);
-    console.log("onsubmit", data);
-    console.log("email from sign up after set", email);
-    const registerResponse = await serviceBoyRegister(data);
-    console.log("registerResponse on service boy fronty", registerResponse);
-    if (registerResponse && registerResponse.statusCode == 201) {
+    try {
+      console.log("form submitted");
+      setLoading(true);
+      setEmail(data.email);
+      console.log("onsubmit", data);
+      console.log("email from sign up after set", email);
+      const registerResponse = await serviceBoyRegister(data);
+      console.log("registerResponse on service boy fronty", registerResponse);
+      if (registerResponse && registerResponse.statusCode == 201) {
+        toast({
+          description: (
+            <SuccessMessage
+              className="" message={registerResponse?.message} />
+          )
+        })
+      } else {
+        toast({
+          description: (
+            <ErrorMessage
+              className="" message={registerResponse?.message || "Bad"} />
+          )
+        })
+      }
+
+      function HandleModal() {
+        setIsModalOpen(!isModalOpen)
+      }
+
+      if (registerResponse) {
+        console.log("response got on form submit", isModalOpen)
+        setEmail(registerResponse.data?.email);
+        HandleModal();
+      }
+      console.log("registerResponse", registerResponse)
+
+    } catch (error: unknown) {
+      const message = getApiErrorMessage(error, "Registration failed. Please try again.");
       toast({
-        description: (
-          <SuccessMessage
-            className="" message={registerResponse?.message} />
-        )
-      })
-    } else {
-      toast({
-        description: (
-          <ErrorMessage
-            className="" message={registerResponse?.message || "Bad"} />
-        )
-      })
+        description: <ErrorMessage message={message} />,
+      });
+    } finally {
+      setLoading(false);
     }
-
-    function HandleModal() {
-      setIsModalOpen(!isModalOpen)
-    }
-
-    if (registerResponse) {
-      console.log("response got on form submit", isModalOpen)
-      setEmail(registerResponse.data?.email);
-      HandleModal();
-    }
-    console.log("registerResponse", registerResponse)
-
-    }catch(error:unknown){
- const message = getApiErrorMessage(error, "Registration failed. Please try again.");
-  toast({
-    description: <ErrorMessage message={message} />,
-  });
-  } finally {
-    setLoading(false);
-  } 
   };
 
   const formValues = watch();
@@ -122,7 +122,7 @@ const SignUpPage = () => {
 
         {/* Form Card */}
         <div className="flex items-center justify-center flex-1">
-          <Card className="border-0 shadow-none w-full max-w-sm"> 
+          <Card className="border-0 shadow-none w-full max-w-sm">
             <CardHeader className="pb-2  flex  items-center pt-1">
               <CardTitle className="text-lg font-bold text-center ">Sign Up</CardTitle>
             </CardHeader>
@@ -132,7 +132,7 @@ const SignUpPage = () => {
                 <div className="space-y-1">
                   <Tabs defaultValue={Role.SERVICE_BOY}>
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value={Role.SERVICE_BOY}  className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white">Service Boy</TabsTrigger>
+                      <TabsTrigger value={Role.SERVICE_BOY} className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white">Service Boy</TabsTrigger>
                       <TabsTrigger value={Role.VENDOR} onClick={() => navigate('/vendor/register')}>Vendor</TabsTrigger>
                     </TabsList>
                   </Tabs>
@@ -181,23 +181,23 @@ const SignUpPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create password"
-                    className="p-1.5 h-8"
-                    {...register('password')}
-                  />
-                   <button
-                    type="button"
-                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowPassword(!showPassword)}
-                     tabIndex={-1}
-                  >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                 </button>
-                 </div>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create password"
+                      className="p-1.5 h-8"
+                      {...register('password')}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                   {errors.password && (
                     <p className="text-xs text-red-500">{errors.password.message}</p>
                   )}
@@ -205,23 +205,23 @@ const SignUpPage = () => {
 
                 <div className="space-y-1">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirm ? "text" : "password"}
-                    placeholder="Confirm password"
-                    className="p-1.5 h-8"
-                    {...register('confirmPassword')}
-                  />
-                   <button
-                    type="button"
-                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowConfirm(!showConfirm)}
-                     tabIndex={-1}
-                  >
-                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
-                 </button>
-                 </div>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirm ? "text" : "password"}
+                      placeholder="Confirm password"
+                      className="p-1.5 h-8"
+                      {...register('confirmPassword')}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                      tabIndex={-1}
+                    >
+                      {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                   {errors.confirmPassword && (
                     <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
                   )}
@@ -243,8 +243,8 @@ const SignUpPage = () => {
                 </div>
 
                 <Button type="submit" className="w-full bg-[#4B49AC] hover:bg-[#3f3d91] h-8">
-               {loading ? "Signing up..." : "Sign Up"}           
-                 </Button>
+                  {loading ? "Signing up..." : "Sign Up"}
+                </Button>
 
                 <div className="relative my-1">
                   <div className="absolute inset-0 flex items-center">
@@ -261,7 +261,7 @@ const SignUpPage = () => {
                   type="button"
                   variant="outline"
                   className="w-full h-8"
-                  onClick={()=> googleLogin()}
+                  onClick={() => googleLogin()}
                 >
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                     <path

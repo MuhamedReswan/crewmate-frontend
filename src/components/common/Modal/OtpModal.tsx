@@ -4,8 +4,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../Message/Error.message";
 import SuccessMessage from "../Message/SuccessMessage";
-import { serviceBoyOtpVerification, serviceBoyResendOtp } from "@/api/serviceBoy";
-import { vendorOtpVerification, vendorResendOtp } from "@/api/vendor";
+import { serviceBoyOtpVerification, serviceBoyResendOtp } from "@/api/serviceBoy/serviceBoy";
+import { vendorOtpVerification, vendorResendOtp } from "@/api/vendor/vendor";
 import {
   AlertDialog,
   AlertDialogAction,

@@ -3,8 +3,8 @@ import { Edit, MapPin, } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { getImageUrl } from "@/api/common";
-import { ServiceBoyFetchProfile, ServiceBoyUpdateProfile } from "@/api/serviceBoy";
+import { getImageUrl } from "@/api/common/common";
+import { ServiceBoyFetchProfile, ServiceBoyUpdateProfile } from "@/api/serviceBoy/serviceBoy";
 import MapPicker from "@/components/common/MapPicker/MapPicker";
 import MapPreview from "@/components/common/MapPreview/MapPreview";
 import ErrorMessage from "@/components/common/Message/Error.message";
@@ -49,6 +49,7 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const { toast } = useToast();
+
 
   // Default profile image
   const defaultImage = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";

@@ -6,8 +6,8 @@ import { Link, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '../Message/Error.message';
 import SuccessMessage from '../Message/SuccessMessage';
-import { serviceBoyResetPassword } from '@/api/serviceBoy';
-import { vendorResetPassword } from '@/api/vendor';
+import { serviceBoyResetPassword } from '@/api/serviceBoy/serviceBoy';
+import { vendorResetPassword } from '@/api/vendor/vendor';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Role } from '@/types/enum.type';
@@ -107,7 +107,7 @@ const PasswordReset = ({ role }: { role: Role }) => {
         </div>
 
         <div className="flex justify-center space-x-9">
-          <Link to={role === Role.VENDOR ? "/vendor/login": "/service-boy/login"}
+          <Link to={role === Role.VENDOR ? "/vendor/login" : "/service-boy/login"}
             type="button"
             className="px-6 py-2 bg-[#4B49AC] opacity-20  text-white rounded hover:bg-[#3f3d91] opacity-40 transition-colors"
           >

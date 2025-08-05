@@ -10,6 +10,9 @@ const AdminLayout = () => {
 
     const shouldHideLayout = routesWithoutLayout.some(route => pathname.startsWith(route));
 
+    console.log('Current pathname:', pathname);
+    console.log('Should hide layout:', shouldHideLayout);
+
     return (
         <div className="flex h-screen bg-[#0D1117] text-white transition-colors duration-300">
             {!shouldHideLayout && <AdminSideBar />}
