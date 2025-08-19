@@ -6,6 +6,10 @@ export const adminAuthRoutes = {
 export const adminRoutes = {
     serviceBoyVerificationRequest : "admin/service-boys/verify",
     verifyServiceBoyById : "admin/service-boys/:id/verify",
+    updateStatusServiceBoyById : "admin/service-boys/:id/:status",
+    getServiceBoyById : "admin/service-boys/:id",
+    LoadServiceBoys : "admin/service-boys",
+    
     
     vendorVerificationRequest : "admin/vendor/verify",
     verifyVendorById : "admin/vendor/:id/verify"

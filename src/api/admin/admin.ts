@@ -5,6 +5,28 @@ import { VerificationStatus } from "@/types/enum.type"
 import { LoginFormInputs } from "@/types/form.type"
 import { Admin, ServiceBoy, Vendor } from "@/types/users.type"
 
+export interface GetServiceBoysParams {
+  page: number;                
+  limit: number;               
+  search?: string;             
+  sort?: string;               
+  isBlocked?: boolean;         
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface GetServiceBoysResponse {
+  data: ServiceBoy[];
+  pagination: PaginationMeta;
+}
+
 export const Login = async (data: LoginFormInputs):Promise<ApiResponse<Partial<Admin>> | undefined> =>{
     const {email, password} = data;
     try {
@@ -52,6 +74,47 @@ export const verifyServiceBoyByAdmin = async (id: string,status:VerificationStat
 
     }
 }
+
+
+export const updateServiceBoyBlockStatus = async (id: string,status: string): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+    try {
+        console.log("status",status)
+ const url = adminRoutes.updateStatusServiceBoyById.replace(":id", id).replace(":status", status);
+         const response = await API.patch<ApiResponse<Partial<ServiceBoy>> | undefined>(`${url}`);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+
+    }
+}
+
+
+export const getServiceBoyById = async (url: string): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+    try {
+        console.log("url",url)
+         const response = await API.get<ApiResponse<Partial<ServiceBoy>> | undefined>(`${url}`);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+
+    }
+}
+
+
+export const getServiceBoys = async(params: GetServiceBoysParams): Promise<ApiResponse<GetServiceBoysResponse> | undefined> =>{
+try {
+    console.log("getServiceBoys params",params)
+    // const { page, limit, search, sort,  isBlocked } = params;
+    const response = await API.get<ApiResponse<GetServiceBoysResponse> | undefined>(`${adminRoutes.LoadServiceBoys}`,{params});
+    console.log("result of getServiceBoys==",response);
+    if(!response) return;
+    return response.data;
+ } catch (error) {
+    throw error
+}
+}
+
+
 
 
 // Vendor Api
