@@ -1,10 +1,12 @@
 import React from 'react';
 
-import { Bell, Moon } from 'lucide-react';
+import { Bell} from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store/store';
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
+import { ThemeToggleProps } from '@/types/theme.type';
 
-const AdminHeader: React.FC = () => {
+const AdminHeader: React.FC<ThemeToggleProps> = ({ theme, setTheme}: ThemeToggleProps) => {
 
     const { adminData } = useSelector((state: RootState) => state.admin);
     return (
@@ -15,12 +17,12 @@ const AdminHeader: React.FC = () => {
                 <p className="text-gray-500">Analytics your advertising KPI in a single detailed interface.</p>
             </div >
             <div className="flex items-center gap-6">
-                <button className="p-2 hover:bg-[#12132D] rounded-lg transition-colors">
-                    <Bell size={20} className="text-gray-500" />
-                </button>
-                <button className="p-2 hover:bg-[#12132D] rounded-lg transition-colors">
-                    <Moon size={20} className="text-gray-500" />
-                </button>
+               <button className="p-2 hover:bg-accent rounded-lg transition-colors">
+          <Bell size={20} className="text-muted-foreground" />
+        </button>
+
+       <ThemeToggle theme={theme} setTheme={setTheme} />
+
                 <img
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                     alt="Profile"

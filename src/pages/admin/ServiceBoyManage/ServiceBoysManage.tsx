@@ -19,6 +19,7 @@ const debouncedSearch = useDebounce(search, 3000);
   const [totalPages, setTotaltPage] = useState(1);
   const limit = 10;
   const [filterBlockedStatus, setFilterBlockedStatus] = useState<'all' | 'blocked' | 'unblocked'>('all');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
  useEffect(() => {
@@ -38,8 +39,8 @@ const debouncedSearch = useDebounce(search, 3000);
   }, [search]);
   
   const fetchServiceBoys = async (page: number) => {
+      setLoading(true);
     try {
-
       const params: GetServiceBoysParams = {
         page: page ? page : 1,
         limit: limit,
@@ -83,6 +84,9 @@ const debouncedSearch = useDebounce(search, 3000);
         ),
       });
     }
+     finally {
+    setLoading(false); 
+     }
   };
 
   const handleBlockToggle = async (id: string, action: string) => {
@@ -192,14 +196,26 @@ const debouncedSearch = useDebounce(search, 3000);
         </div>
       </div>
 
+    {/* Table or Loader */}
+    {loading ? (
+      <div className="flex justify-center items-center py-20">
+        <div className="h-8 w-8 border-4 border-[#8B5CF6] border-t-transparent rounded-full animate-spin"></div>
+        <span className="ml-3 text-white">Loading service boys...</span>
+      </div>
+    ) : (
+      <UserManagementTable
+        data={serviceBoys}
+        columns={columns}
+        serialStart={limit * (currentPage - 1) + 1}
+      />
+    )}
 
-      <UserManagementTable data={serviceBoys} columns={columns} onToggleBlock={handleBlockToggle} serialStart={limit * (currentPage - 1) + 1} />
 
-      {/* Pagination */}
+      {/* Pagination (show only if not loading and has data) */}
+    {!loading && serviceBoys.length > 0 && (
       <div className="flex justify-center mt-6 gap-2">
         <button
           className="px-3 py-1 rounded-md border border-[#8B5CF6]/30 text-white disabled:opacity-50"
-          // onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
           onClick={() => fetchServiceBoys(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -211,11 +227,12 @@ const debouncedSearch = useDebounce(search, 3000);
           .map(p => (
             <button
               key={p}
-              onClick={() => {
-                fetchServiceBoys(p)
-              }}
-              className={`px-3 py-1 rounded-md ${p === currentPage ? 'bg-[#8B5CF6] text-white' : 'border border-[#8B5CF6]/30 text-white'
-                }`}
+              onClick={() => fetchServiceBoys(p)}
+              className={`px-3 py-1 rounded-md ${
+                p === currentPage
+                  ? 'bg-[#8B5CF6] text-white'
+                  : 'border border-[#8B5CF6]/30 text-white'
+              }`}
             >
               {p}
             </button>
@@ -229,7 +246,9 @@ const debouncedSearch = useDebounce(search, 3000);
           Next
         </button>
       </div>
-    </div>)
+    )}
+  </div>
+);
 }
 
 

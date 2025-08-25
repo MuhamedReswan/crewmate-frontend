@@ -19,7 +19,6 @@ interface Column<T> {
 interface UserManagementTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  onToggleBlock: (id: string, currentStatus: string) => void;
   serialStart?: number; 
   showSerialNo?: boolean;
 }
@@ -27,7 +26,6 @@ interface UserManagementTableProps<T> {
 export function UserManagementTable<T extends { _id: string; isBlocked: boolean}>({
   data,
   columns,
-  // onToggleBlock,
   serialStart = 1,
   showSerialNo = true,
 }: UserManagementTableProps<T>) {
@@ -48,28 +46,38 @@ export function UserManagementTable<T extends { _id: string; isBlocked: boolean}
          
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {data.map((item, index) => {
-            return (
+              <TableBody>
+          {data.length === 0 ? (
             <TableRow
-              key={item._id || index}
-              className="border-b border-[#8B5CF6]/10 hover:bg-[#1F2037]/30 transition-colors"
-            >
-              {showSerialNo && (
-                <TableCell className="text-white font-medium">
-                  {serialStart + index}
-                </TableCell>
-              )}
-              {columns.map((col) => (
-                <TableCell key={col.key} className="text-white">
-                  {col.render ? col.render(item) : (item as any)[col.key]}
-                </TableCell>
-              ))}
-              <TableCell className="text-white">
-</TableCell>
+            className="border-b border-[#8B5CF6]/10 hover:bg-[#1F2037]/30 transition-colors">
+             <TableCell
+                colSpan={columns.length + (showSerialNo ? 1 : 0)}
+                className="text-center text-gray-400 py-8"
+              >
+                   <span className="text-lg md:text-xl font-semibold tracking-wide">
+         No users found
+      </span>
+              </TableCell>
             </TableRow>
-          )
-          })}
+          ) : (
+            data.map((item, index) => (
+              <TableRow
+                key={item._id || index}
+                className="border-b border-[#8B5CF6]/10 hover:bg-[#1F2037]/30 transition-colors"
+              >
+                {showSerialNo && (
+                  <TableCell className="text-white font-medium">
+                    {serialStart + index}
+                  </TableCell>
+                )}
+                {columns.map((col) => (
+                  <TableCell key={col.key} className="text-white">
+                    {col.render ? col.render(item) : (item as any)[col.key]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>
