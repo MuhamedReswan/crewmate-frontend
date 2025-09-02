@@ -25,26 +25,26 @@ export function VerificationTable<T extends { _id?: string }>({
   onVerify,
 }: VerificationTableProps<T>) {
   return (
-    <div className="rounded-lg border border-[#8B5CF6]/20 overflow-hidden">
+    <div className="rounded-lg border border-primary/20 overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-[#8B5CF6]/20 hover:bg-[#1F2037]/50">
-            <TableHead className="text-gray-300 font-semibold">S.no</TableHead>
+          <TableRow className="border-b border-primary/20 hover:bg-primary/20">
+            <TableHead className="text-foreground font-semibold">S.no</TableHead>
             {columns.map(col => (
-              <TableHead key={col.key} className="text-gray-300 font-semibold">{col.label}</TableHead>
+              <TableHead key={col.key} className="text-text-foreground  font-semibold">{col.label}</TableHead>
             ))}
-            <TableHead className="text-gray-300 font-semibold">Approved</TableHead>
+            <TableHead className="text-foreground  font-semibold">Approved</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((item, index) => (
             <TableRow
               key={item._id}
-              className="border-b border-[#8B5CF6]/10 hover:bg-[#1F2037]/30 transition-colors"
+              className="border-b border-primary/20 hover:bg-primary/20 transition-colors"
             >
-              <TableCell className="text-white font-medium">{limit * (currentPage - 1) + index + 1}</TableCell>
+              <TableCell className="text-muted font-medium">{limit * (currentPage - 1) + index + 1}</TableCell>
               {columns.map(col => (
-                <TableCell key={col.key} className="text-white">
+                <TableCell key={col.key} className="text-muted">
                   {col.render ? col.render(item) : (item as any)[col.key]}
                 </TableCell>
               ))}
@@ -53,7 +53,7 @@ export function VerificationTable<T extends { _id?: string }>({
                   <Button
                     size="sm"
                     onClick={() => onVerify(item._id!, VerificationStatus.Verified)}
-                    className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-white px-3 py-1 text-xs"
+                    className="bg-accent hover:bg-white/50 text-accent-foreground px-3 py-1 text-xs"
                   >
                     Accept
                   </Button>
@@ -61,7 +61,7 @@ export function VerificationTable<T extends { _id?: string }>({
                     size="sm"
                     variant="destructive"
                     onClick={() => onVerify(item._id!, VerificationStatus.Rejected)}
-                    className="bg-[#EF4444] hover:bg-[#EF4444]/90 text-white px-3 py-1 text-xs"
+                    className="bg-destructive hover:bg-[#EF4444]/90 text-destructive-foreground px-3 py-1 text-xs"
                   >
                     Decline
                   </Button>

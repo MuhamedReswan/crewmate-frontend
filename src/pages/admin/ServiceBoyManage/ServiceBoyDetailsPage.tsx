@@ -103,9 +103,9 @@ const ServiceBoyDetailsPage = () => {
   return (
     <div>
       {user ? (
-        <div className="min-h-screen bg-[#0A0B1E]">
+        <div className="min-h-screen bg-background">
           {/* Header */}
-          <div className="bg-[#12132D] border-b border-[#8B5CF6]/20 sticky top-0 z-10">
+          <div className="bg-surface border-b border-primary/20 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -113,19 +113,19 @@ const ServiceBoyDetailsPage = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleBack()}
-                    className="text-white hover:bg-[#1F2037]/50"
+                    className="text-muted hover:bg-primary/10 hover:text-foreground"
                   >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Users
                   </Button>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">ServiceBoy Details</h3>
+                    <h3 className="text-2xl font-bold text-foreground">ServiceBoy Details</h3>
                   </div>
                 </div>
                 <Badge
-                  className={`text-sm px-3 py-1 ${user.isBlocked
-                      ? 'bg-[#EF4444] text-white'
-                      : 'bg-[#22C55E] text-white'
+                  className={`text-sm px-3 py-1 hover:bg-foreground/30 ${user.isBlocked 
+                      ? 'bg-destructive text-destructive-foreground'
+                      : 'bg-accent text-accent-foreground'
                     }`}
                 >
                   {user.isBlocked ? 'Blocked' : 'Active'}
@@ -140,25 +140,25 @@ const ServiceBoyDetailsPage = () => {
 
               {/* Left Column - Profile Overview */}
               <div className="lg:col-span-1">
-                <div className="bg-[#12132D] border border-[#8B5CF6]/20 rounded-xl p-6">
+                <div className="bg-surface border border-primary/20 rounded-xl p-6">
                   <div className="text-center pb-4">
                     <div className="flex flex-col items-center">
-                      <Avatar className="h-24 w-24 mb-4 ring-4 ring-[#8B5CF6]/20">
+                      <Avatar className="h-24 w-24 mb-4 ring-4 ring-primary/20">
                         <AvatarImage src={user.profileImage} alt={user.name} />
-                        <AvatarFallback className="bg-[#8B5CF6] text-white text-2xl font-bold">
+                        <AvatarFallback className="bg-primary text-foreground text-2xl font-bold">
                           {getInitials(user.name)}
                         </AvatarFallback>
                       </Avatar>
-                      <h2 className="text-2xl font-bold text-white mb-2">{user.name}</h2>
-                      <p className="text-gray-300 text-sm">ID: {user.servicerId}</p>
+                      <h2 className="text-2xl font-bold text-foreground mb-2">{user.name}</h2>
+                      <p className="text-muted text-sm">ID: {user.servicerId}</p>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <Button
                       onClick={handleBlockToggle}
                       className={`w-full ${user.isBlocked
-                          ? 'bg-[#22C55E] hover:bg-[#22C55E]/90 text-white'
-                          : 'bg-[#EF4444] hover:bg-[#EF4444]/90 text-white'
+                          ? 'bg-[#22C55E] hover:bg-[#22C55E]/90 text-muted-foreground'
+                          : 'bg-[#EF4444] hover:bg-[#EF4444]/90 text-muted-foreground'
                         }`}
                       size="lg"
                     >
@@ -170,26 +170,26 @@ const ServiceBoyDetailsPage = () => {
 
                 {/* Quick Stats */}
                 {(user.points !== undefined || user.totalWorkAttended !== undefined) && (
-                  <div className="bg-[#12132D] border border-[#8B5CF6]/20 rounded-xl p-6 mt-6">
+                  <div className="bg-surface border border-surface/20 rounded-xl p-6 mt-6">
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-white flex items-center">
-                        <Award className="h-5 w-5 mr-2 text-[#8B5CF6]" />
+                      <h3 className="text-lg font-semibold text-foreground flex items-center">
+                        <Award className="h-5 w-5 mr-2 text-surface" />
                         Quick Stats
                       </h3>
                     </div>
                     <div className="space-y-4">
                       {user.points !== undefined && (
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-300">Total Points</span>
-                          <span className="bg-[#8B5CF6] text-white px-3 py-1 rounded-md text-lg font-bold">
+                          <span className="text-muted">Total Points</span>
+                          <span className="bg-surface text-foreground px-3 py-1 rounded-md text-lg font-bold">
                             {user.points}
                           </span>
                         </div>
                       )}
                       {user.totalWorkAttended !== undefined && (
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-300">Work Attended</span>
-                          <span className="border border-[#8B5CF6]/30 text-white px-3 py-1 rounded-md text-lg font-bold">
+                          <span className="text-muted">Work Attended</span>
+                          <span className="border border-surface/30 text-foreground px-3 py-1 rounded-md text-lg font-bold">
                             {user.totalWorkAttended}
                           </span>
                         </div>
@@ -204,34 +204,34 @@ const ServiceBoyDetailsPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                   {/* Contact Information */}
-                  <div className="bg-[#12132D] border border-[#8B5CF6]/20 rounded-xl p-6">
+                  <div className="bg-[#12132D] border border-surface/20 rounded-xl p-6">
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-white flex items-center">
-                        <Mail className="h-5 w-5 mr-2 text-[#8B5CF6]" />
+                      <h3 className="text-lg font-semibold text-foreground flex items-center">
+                        <Mail className="h-5 w-5 mr-2 text-surface" />
                         Contact Information
                       </h3>
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <Mail className="h-4 w-4 text-gray-300" />
+                        <Mail className="h-4 w-4 text-muted" />
                         <div>
-                          <p className="text-gray-300 text-sm">Email</p>
-                          <p className="text-white font-medium break-all">{user.email}</p>
+                          <p className="text-muted text-sm">Email</p>
+                          <p className="text-foreground font-medium break-all">{user.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <Phone className="h-4 w-4 text-gray-300" />
+                        <Phone className="h-4 w-4 text-muted" />
                         <div>
-                          <p className="text-gray-300 text-sm">Mobile</p>
-                          <p className="text-[#8B5CF6] font-medium text-lg">{user.mobile}</p>
+                          <p className="text-muted text-sm">Mobile</p>
+                          <p className="text-surface font-medium text-lg">{user.mobile}</p>
                         </div>
                       </div>
                       {user.location?.address && (
                         <div className="flex items-center space-x-3">
-                          <MapPin className="h-4 w-4 text-gray-300" />
+                          <MapPin className="h-4 w-4 text-muted" />
                           <div>
-                            <p className="text-gray-300 text-sm">Location</p>
-                            <p className="text-white font-medium">{user.location.address}</p>
+                            <p className="text-muted text-sm">Location</p>
+                            <p className="text-foreground font-medium">{user.location.address}</p>
                           </div>
                         </div>
                       )}
@@ -239,39 +239,39 @@ const ServiceBoyDetailsPage = () => {
                   </div>
 
                   {/* Personal Information */}
-                  <div className="bg-[#12132D] border border-[#8B5CF6]/20 rounded-xl p-6">
+                  <div className="bg-[#12132D] border border-surface/20 rounded-xl p-6">
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-white flex items-center">
-                        <User className="h-5 w-5 mr-2 text-[#8B5CF6]" />
+                      <h3 className="text-lg font-semibold text-foreground flex items-center">
+                        <User className="h-5 w-5 mr-2 text-surface" />
                         Personal Information
                       </h3>
                     </div>
                     <div className="space-y-4">
                       {user.age && (
                         <div className="flex items-center space-x-3">
-                          <Calendar className="h-4 w-4 text-gray-300" />
+                          <Calendar className="h-4 w-4 text-muted" />
                           <div>
-                            <p className="text-gray-300 text-sm">Age</p>
-                            <p className="text-white font-medium">{user.age} years old</p>
+                            <p className="text-muted text-sm">Age</p>
+                            <p className="text-foreground font-medium">{user.age} years old</p>
                           </div>
                         </div>
                       )}
                       {user.qualification && (
                         <div className="flex items-center space-x-3">
-                          <Briefcase className="h-4 w-4 text-gray-300" />
+                          <Briefcase className="h-4 w-4 text-muted" />
                           <div>
-                            <p className="text-gray-300 text-sm">Qualification</p>
-                            <p className="text-white font-medium">{user.qualification}</p>
+                            <p className="text-muted text-sm">Qualification</p>
+                            <p className="text-foreground font-medium">{user.qualification}</p>
                           </div>
                         </div>
                       )}
                       <div className="flex items-center space-x-3">
-                        <Shield className="h-4 w-4 text-gray-300" />
+                        <Shield className="h-4 w-4 text-muted" />
                         <div>
-                          <p className="text-gray-300 text-sm">Account Status</p>
+                          <p className="text-muted text-sm">Account Status</p>
                           <span className={`mt-1 px-3 py-1 rounded-md text-sm ${user.isBlocked
-                              ? 'bg-[#EF4444] text-white'
-                              : 'bg-[#22C55E] text-white'
+                      ? 'bg-destructive text-destructive-foreground'
+                      : 'bg-accent text-accent-foreground'
                             }`}>
                             {user.isBlocked ? 'Blocked Account' : 'Active Account'}
                           </span>
@@ -281,56 +281,56 @@ const ServiceBoyDetailsPage = () => {
                   </div>
 
                   {/* Additional Details Card */}
-                  <div className="bg-[#12132D] border border-[#8B5CF6]/20 rounded-xl p-6 md:col-span-2">
+                  <div className="bg-[#12132D] border border-surface/20 rounded-xl p-6 md:col-span-2">
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-white">Complete Information</h3>
+                      <h3 className="text-lg font-semibold text-foreground">Complete Information</h3>
                     </div>
                     <div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div className="space-y-2">
-                          <p className="text-gray-300 text-sm font-medium">Full Name</p>
-                          <p className="text-white">{user.name}</p>
+                          <p className="text-muted text-sm">Full Name</p>
+                          <p className="text-foreground font-medium">{user.name}</p>
                         </div>
                         <div className="space-y-2">
-                          <p className="text-gray-300 text-sm font-medium">User ID</p>
-                          <p className="text-white font-mono text-sm">{user._id}</p>
+                          <p className="text-muted text-sm">User ID</p>
+                          <p className="text-foreground font-medium">{user._id}</p>
                         </div>
                         <div className="space-y-2">
-                          <p className="text-gray-300 text-sm font-medium">Email Address</p>
-                          <p className="text-white break-all">{user.email}</p>
+                          <p className="text-muted text-sm">Email Address</p>
+                          <p className="text-foreground break-all font-medium">{user.email}</p>
                         </div>
                         <div className="space-y-2">
-                          <p className="text-gray-300 text-sm font-medium">Phone Number</p>
-                          <p className="text-[#8B5CF6] font-medium">{user.mobile}</p>
+                          <p className="text-muted text-sm">Phone Number</p>
+                          <p className="text-surface font-medium">{user.mobile}</p>
                         </div>
                         {user.age && (
                           <div className="space-y-2">
-                            <p className="text-gray-300 text-sm font-medium">Age</p>
-                            <p className="text-white">{user.age}</p>
+                            <p className="text-muted text-sm">Age</p>
+                            <p className="text-foreground font-medium">{user.age}</p>
                           </div>
                         )}
                         {user.location?.address && (
                           <div className="space-y-2">
-                            <p className="text-gray-300 text-sm font-medium">Location</p>
-                            <p className="text-white">{user.location.address}</p>
+                            <p className="text-muted text-sm">Location</p>
+                            <p className="text-foreground font-medium">{user.location.address}</p>
                           </div>
                         )}
                         {user.qualification && (
                           <div className="space-y-2">
-                            <p className="text-gray-300 text-sm font-medium">Qualification</p>
-                            <p className="text-white">{user.qualification}</p>
+                            <p className="text-muted text-sm">Qualification</p>
+                            <p className="text-foreground font-medium">{user.qualification}</p>
                           </div>
                         )}
                         {user.points !== undefined && (
                           <div className="space-y-2">
-                            <p className="text-gray-300 text-sm font-medium">Total Points</p>
-                            <p className="text-white font-bold">{user.points}</p>
+                            <p className="text-muted text-sm font-medium">Total Points</p>
+                            <p className="text-foreground font-bold">{user.points}</p>
                           </div>
                         )}
                         {user.points !== undefined && (
                           <div className="space-y-2">
-                            <p className="text-gray-300 text-sm font-medium">Work Attended</p>
-                            <p className="text-white font-bold">{user.totalWorkAttended}</p>
+                            <p className="text-muted text-sm">Work Attended</p>
+                            <p className="text-foreground font-bold">{user.totalWorkAttended ? user.totalWorkAttended :0}</p>
                           </div>
                         )}
                       </div>

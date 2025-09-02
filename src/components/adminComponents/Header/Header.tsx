@@ -11,14 +11,14 @@ const AdminHeader: React.FC<ThemeToggleProps> = ({ theme, setTheme}: ThemeToggle
     const { adminData } = useSelector((state: RootState) => state.admin);
     return (
 
-        <header className="flex justify-between items-center my-4 mx-4 bg-[#12132D] p-3 border-[#12132D] rounded">
+        <header className="flex justify-between items-center my-4 mx-4 bg-surface p-3 rounded">
             <div>
                 <h1 className="text-2xl font-bold mb-1">Welcome {adminData?.name}</h1>
-                <p className="text-gray-500">Analytics your advertising KPI in a single detailed interface.</p>
+                <p className="text-muted">Analytics your advertising KPI in a single detailed interface.</p>
             </div >
             <div className="flex items-center gap-6">
-               <button className="p-2 hover:bg-accent rounded-lg transition-colors">
-          <Bell size={20} className="text-muted-foreground" />
+               <button className="p-2 hover:bg-primary-foreground  rounded-lg transition-colors">
+          <Bell size={20} className="text-muted-foreground hover:text-muted" />
         </button>
 
        <ThemeToggle theme={theme} setTheme={setTheme} />

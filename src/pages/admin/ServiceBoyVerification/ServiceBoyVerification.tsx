@@ -7,6 +7,7 @@ import { toast } from '@/hooks/use-toast';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { VerificationTable } from '@/components/adminComponents/verificartionTable/VerificationTable';
+import { Pagination } from '@/components/adminComponents/Pagination/Paginatio';
 
 export default function ServiceBoyVerfication() {
   const [data, setData] = useState<ServiceBoy[]>([]);
@@ -32,8 +33,8 @@ export default function ServiceBoyVerfication() {
 
       const columns = useMemo(() => [
     { key: 'name', label: 'Name' },
-    { key: 'mobile', label: 'Mobile', render:( row:ServiceBoy) => <span className="text-[#8B5CF6]">{row.mobile}</span> },
-    { key: 'email', label: 'Email', render: ( row:ServiceBoy) => <span className="text-gray-300">{row.email}</span> },
+    { key: 'mobile', label: 'Mobile', render:( row:ServiceBoy) => <span className="text-primary">{row.mobile}</span> },
+    { key: 'email', label: 'Email', render: ( row:ServiceBoy) => <span className="text-muted">{row.email}</span> },
     { key: 'age', label: 'Age' },
     { key: 'location', label: 'Location', render: ( row:ServiceBoy) => row.location?.address },
     { key: 'qualification', label: 'Qualification' },
@@ -73,10 +74,10 @@ export default function ServiceBoyVerfication() {
 
 
   return (
- <div className="bg-[#12132D] rounded-xl p-6">
+ <div className="bg-surface rounded-xl p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white">Service Boy Verifications</h2>
+      <div className="flex items-center justify-between mb-6 text-foreground">
+        <h2 className="text-xl font-bold ">Service Boy Verifications</h2>
 
         {/* Search */}
         <div className="flex items-center gap-2">
@@ -84,7 +85,7 @@ export default function ServiceBoyVerfication() {
             placeholder="Search..."
             value={search}
             onChange={e => { setCurrentPage(1); setSearch(e.target.value); }}
-            className="pl-3 pr-3 py-2 rounded-md bg-[#1F2037] border border-[#8B5CF6]/20 text-white placeholder:text-gray-400 outline-none"
+            className="pl-3 pr-3 py-2 rounded-md bg-primary/10 border border-primary/20 placeholder:text-muted-foreground outline-none"
           />
         </div>
       </div>
@@ -98,37 +99,11 @@ export default function ServiceBoyVerfication() {
     />
 
       {/* Pagination */}
-      <div className="flex justify-center mt-6 gap-2">
-        <button
-          className="px-3 py-1 rounded-md border border-[#8B5CF6]/30 text-white disabled:opacity-50"
-          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-          disabled={currentPage === 1}
-        >
-          Prev
-        </button>
-
-        {Array.from({ length: totalPages }, (_, i) => i + 1)
-          .filter(p => p >= Math.max(1, currentPage - 1) && p <= Math.min(totalPages, currentPage + 1))
-          .map(p => (
-            <button
-              key={p}
-              onClick={() => setCurrentPage(p)}
-              className={`px-3 py-1 rounded-md ${
-                p === currentPage ? 'bg-[#8B5CF6] text-white' : 'border border-[#8B5CF6]/30 text-white'
-              }`}
-            >
-              {p}
-            </button>
-          ))}
-
-        <button
-          className="px-3 py-1 rounded-md border border-[#8B5CF6]/30 text-white disabled:opacity-50"
-          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+         <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(Math.max(1, Math.min(totalPages, page)))}
+      />
     </div>
   );
 }

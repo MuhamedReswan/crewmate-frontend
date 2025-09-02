@@ -1,3 +1,4 @@
+
 // tailwind.config.js
 import tailwindcssAnimate from "tailwindcss-animate";
 
@@ -42,6 +43,10 @@ export default {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          foreground: "hsl(var(--surface-foreground))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
