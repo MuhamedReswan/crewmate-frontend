@@ -1,4 +1,4 @@
-import { getServiceBoys, GetServiceBoysParams, updateServiceBoyBlockStatus } from '@/api/admin/admin';
+import { GetServiceBoysParams, getVendors, updateServiceBoyBlockStatus } from '@/api/admin/admin';
 import { Pagination } from '@/components/adminComponents/Pagination/Paginatio';
 import { UserManagementTable } from '@/components/adminComponents/userManagement/UserManagementTable';
 import ErrorMessage from '@/components/common/Message/Error.message';
@@ -6,14 +6,14 @@ import SuccessMessage from '@/components/common/Message/SuccessMessage';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import useDebounce from '@/hooks/useDebounce';
-import { ServiceBoy } from '@/types/users.type';
+import { Vendor } from '@/types/users.type';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { Ellipsis } from 'lucide-react';
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-const ServiceBoysManage = () => {
-  const [serviceBoys, setServiceBoys] = useState<ServiceBoy[] | []>([]);
+const VendorManagement = () => {
+  const [Vendors, setVendors] = useState<Vendor[] | []>([]);
   const [search, setSearch] = useState('');
 const debouncedSearch = useDebounce(search, 3000);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,18 +28,18 @@ const debouncedSearch = useDebounce(search, 3000);
   }, [debouncedSearch]);
 
     useEffect(() => {
-    if (!search) return; // don’t run on empty
+    if (!search) return; 
 
     const idleTimer = setTimeout(() => {
       console.log("Idle fetch triggered after 3s");
-      fetchServiceBoys(1); // always reset to first page
+      fetchVendors(1); 
       setCurrentPage(1);
     }, 3000);
 
     return () => clearTimeout(idleTimer);
   }, [search]);
   
-  const fetchServiceBoys = async (page: number) => {
+  const fetchVendors = async (page: number) => {
       setLoading(true);
     try {
       const params: GetServiceBoysParams = {
@@ -61,12 +61,12 @@ const debouncedSearch = useDebounce(search, 3000);
       console.log("fetching with params:", params); 
 
 
-      const result = await getServiceBoys(params);
+      const result = await getVendors(params);
       if (result) {
         console.log("serviceBoy data in fornt end", result?.data)
         if (result?.data) {
 
-          setServiceBoys(result?.data.data);
+          setVendors(result?.data.data);
           setCurrentPage(result?.data.pagination.page);
           setTotaltPage(result?.data.pagination.totalPages);
         }
@@ -96,7 +96,7 @@ const debouncedSearch = useDebounce(search, 3000);
 
       await updateServiceBoyBlockStatus(id, action);
 
-      setServiceBoys((prev) =>
+      setVendors((prev) =>
         prev.map((sb) =>
           sb._id === id ? { ...sb, isBlocked: newStatus } : sb
         )
@@ -118,9 +118,9 @@ const debouncedSearch = useDebounce(search, 3000);
     }
   };
 
-  const handleSingleUserPage = async (serviceBoyDetail: ServiceBoy) => {
+  const handleSingleUserPage = async (VendorDetail: Vendor) => {
     try {
-      navigate(`/admin/service-boys/${serviceBoyDetail._id}`, { state: serviceBoyDetail })
+      navigate(`/admin/vendors/${VendorDetail._id}`, { state: VendorDetail })
 
     } catch (error) {
       throw error
@@ -129,21 +129,21 @@ const debouncedSearch = useDebounce(search, 3000);
 
 
  useEffect(() => {
-    fetchServiceBoys(currentPage);
+    fetchVendors(currentPage);
   }, [currentPage, filterBlockedStatus, debouncedSearch]);
 
 
 
   const columns = useMemo(() => [
     { key: 'name', label: 'Name' },
-    { key: 'mobile', label: 'Mobile', render: (row: ServiceBoy) => <span className="text-[#8B5CF6]">{row.mobile}</span> },
-    { key: 'email', label: 'Email', render: (row: ServiceBoy) => <span className="text-gray-300">{row.email}</span> },
-    { key: 'age', label: 'Age' },
-    { key: 'location', label: 'Location', render: (row: ServiceBoy) => row.location?.address },
+    { key: 'mobile', label: 'Mobile', render: (row: Vendor) => <span className="text-[#8B5CF6]">{row.mobile}</span> },
+    { key: 'email', label: 'Email', render: (row: Vendor) => <span className="text-gray-300">{row.email}</span> },
+    { key: 'estd', label: 'Estd' },
+    { key: 'location', label: 'Location', render: (row: Vendor) => row.location?.address },
     {
       key: 'action',
       label: 'Action',
-      render: (row: ServiceBoy) => (
+      render: (row: Vendor) => (
         <Button
           size="sm"
           variant={row.isBlocked ? 'constructive' : 'destructive'}
@@ -156,7 +156,7 @@ const debouncedSearch = useDebounce(search, 3000);
     {
       key: 'seeMore',
       label: 'See More',
-      render: (row: ServiceBoy) => (
+      render: (row: Vendor) => (
         <Ellipsis
           className="cursor-pointer"
           onClick={() => handleSingleUserPage(row)}
@@ -165,12 +165,12 @@ const debouncedSearch = useDebounce(search, 3000);
     },
   ], [handleBlockToggle]);
 
-  console.log("serviceBoys form usm", serviceBoys)
+  console.log("Vendors form usm", Vendors)
   return (
     <div className="bg-surface rounded-xl p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-foreground">ServiceBoysManage</h2>
+        <h2 className="text-xl font-bold text-foreground">VendorManagement</h2>
 
         {/* Right Section: Search + Filter */}
         <div className="flex items-center gap-3">
@@ -205,7 +205,7 @@ const debouncedSearch = useDebounce(search, 3000);
       </div>
     ) : (
       <UserManagementTable
-        data={serviceBoys}
+        data={Vendors}
         columns={columns}
         serialStart={limit * (currentPage - 1) + 1}
       />
@@ -213,11 +213,11 @@ const debouncedSearch = useDebounce(search, 3000);
 
 
       {/* Pagination (show only if not loading and has data) */}
-{!loading && serviceBoys.length > 0 && (
+{!loading && Vendors.length > 0 && (
   <Pagination
     currentPage={currentPage}
     totalPages={totalPages}
-    onPageChange={(page) => fetchServiceBoys(page)}
+    onPageChange={(page) => fetchVendors(page)}
   />
 )}
 
@@ -226,4 +226,4 @@ const debouncedSearch = useDebounce(search, 3000);
 }
 
 
-export default ServiceBoysManage
+export default VendorManagement

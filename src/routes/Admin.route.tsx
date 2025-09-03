@@ -5,6 +5,10 @@ import ServiceBoysManage from '@/pages/admin/ServiceBoyManage/ServiceBoysManage'
 import VendorVerfication from '@/pages/admin/VendorVerification/VendorVerfication';
 import ServiceBoyVerfication from '@/pages/admin/ServiceBoyVerification/ServiceBoyVerification';
 import ServiceBoyDetailsPage from '@/pages/admin/ServiceBoyManage/ServiceBoyDetailsPage';
+import SingleVerifcationPage from '@/pages/admin/ServiceBoyVerification/SingleVerifcationPage';
+import VendorVerificationDetails from '@/pages/admin/VendorVerification/SingleVendorVerificationPage';
+import VendorManagement from '@/pages/admin/VendorManage/VendorManagement';
+import VendorDetailsPage from '@/pages/admin/VendorManage/VendorDetailsPage';
 
 const AdminHome = lazy(() => import('@/pages/admin/AdminHome/AdminHome'));
 const AdminLogin = lazy(() => import('@/pages/admin/Auth/LoginPage/LoginPage'));
@@ -32,7 +36,7 @@ const adminRoutes = {
       ),
     },
     {
-      path: "vendor/verify",
+      path: "vendors/verify",
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
@@ -47,6 +51,16 @@ const adminRoutes = {
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
             < ServiceBoyVerfication/>
+          </Suspense>
+        </ProtectAdmin>
+      ),
+    },
+    {
+      path: "service-boys/verify/:id",
+      element: (
+        <ProtectAdmin>
+          <Suspense fallback={<div>Loading...</div>}>
+            < SingleVerifcationPage/>
           </Suspense>
         </ProtectAdmin>
       ),
@@ -76,7 +90,27 @@ const adminRoutes = {
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-
+<VendorManagement/>
+          </Suspense>
+        </ProtectAdmin>
+      ),
+    },
+    {
+      path: "vendors/:id",
+      element: (
+        <ProtectAdmin>
+          <Suspense fallback={<div>Loading...</div>}>
+<VendorDetailsPage/>
+          </Suspense>
+        </ProtectAdmin>
+      ),
+    },
+      {
+      path: "vendors/verify/:id",
+      element: (
+        <ProtectAdmin>
+          <Suspense fallback={<div>Loading...</div>}>
+            < VendorVerificationDetails/>
           </Suspense>
         </ProtectAdmin>
       ),

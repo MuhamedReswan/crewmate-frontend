@@ -11,7 +11,9 @@ export const adminRoutes = {
     LoadServiceBoys : "admin/service-boys",
     
     
-    vendorVerificationRequest : "admin/vendor/verify",
-    verifyVendorById : "admin/vendor/:id/verify"
+    vendorVerificationRequest : "admin/vendors/verify",
+    verifyVendorById : "admin/vendors/:id/verify",
+    LoadVendors : "admin/vendors",
+    getVendorById : "admin/vendors/:id"
 }
 

@@ -16,7 +16,8 @@ export enum Messages {
   LOGOUT_FAILED = "some thing went wrong on logout. please try again",
   RESEND_OTP_FAILED = "Failed to resend OTP",
   FAILED_TO_FETCH_VERIFICATION_SERVICE_BOY ="Failed to fetch service boy verification",
-  VERIFCATION_STATUS_CHANGE_FAILED = "Failed verification status change"
+  VERIFCATION_STATUS_CHANGE_FAILED = "Failed verification status change",
+  FAILED_TO_FETCH_IMAGES = "Failed to fetch images"
 }
 
 

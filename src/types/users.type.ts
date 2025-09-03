@@ -40,8 +40,6 @@ export interface Vendor extends CommonDetails {
   licenceNumber: string;
   estd: string;
   instaId: string;
-  isBlocked: boolean;
-  isVerified: boolean;
 }
 
 export interface Admin {

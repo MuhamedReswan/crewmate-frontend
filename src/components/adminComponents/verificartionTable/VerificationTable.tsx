@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { VerificationStatus } from '@/types/enum.type';
+import { ServiceBoy, Vendor } from '@/types/users.type';
 
 interface Column<T> {
   key: string;
@@ -15,6 +16,7 @@ interface VerificationTableProps<T> {
   currentPage: number;
   limit: number;
   onVerify: (id: string, status: VerificationStatus) => void;
+  onRowClick: (data:T) => void;
 }
 
 export function VerificationTable<T extends { _id?: string }>({
@@ -23,6 +25,7 @@ export function VerificationTable<T extends { _id?: string }>({
   currentPage,
   limit,
   onVerify,
+  onRowClick
 }: VerificationTableProps<T>) {
   return (
     <div className="rounded-lg border border-primary/20 overflow-hidden">
@@ -41,6 +44,7 @@ export function VerificationTable<T extends { _id?: string }>({
             <TableRow
               key={item._id}
               className="border-b border-primary/20 hover:bg-primary/20 transition-colors"
+              onClick={() => onRowClick(item)}
             >
               <TableCell className="text-muted font-medium">{limit * (currentPage - 1) + index + 1}</TableCell>
               {columns.map(col => (

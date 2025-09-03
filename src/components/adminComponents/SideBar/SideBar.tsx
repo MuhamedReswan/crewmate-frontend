@@ -54,8 +54,8 @@ const AdminSideBar: React.FC = () => {
     const menuItems = [
         { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
         { to: '/admin/service-boys', icon: Users, label: 'Users' },
-        { to: '/admin/vendors', icon: ShoppingCart, label: 'Products' },
-        { to: '/admin/vendor/verify', icon: BarChart3, label: 'Vendor verication' },
+        { to: '/admin/vendors', icon: ShoppingCart, label: 'Vendors' },
+        { to: '/admin/vendors/verify', icon: BarChart3, label: 'Vendor verication' },
         { to: '/admin/service-boy/verify', icon: BarChart3, label: 'ServiceBoy verication' },
         { to: '/admin/settings', icon: Settings, label: 'Settings' },
         { to: '/admin/help', icon: HelpCircle, label: 'Help & Support' },

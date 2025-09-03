@@ -22,8 +22,8 @@ export interface PaginationMeta {
   hasPrev: boolean;
 }
 
-export interface GetServiceBoysResponse {
-  data: ServiceBoy[];
+export interface PaginatedResponse<T> {
+  data: T[];
   pagination: PaginationMeta;
 }
 
@@ -101,11 +101,11 @@ export const getServiceBoyById = async (url: string): Promise<ApiResponse<Partia
 }
 
 
-export const getServiceBoys = async(params: GetServiceBoysParams): Promise<ApiResponse<GetServiceBoysResponse> | undefined> =>{
+export const getServiceBoys = async(params: GetServiceBoysParams): Promise<ApiResponse<PaginatedResponse<ServiceBoy>> | undefined> =>{
 try {
     console.log("getServiceBoys params",params)
     // const { page, limit, search, sort,  isBlocked } = params;
-    const response = await API.get<ApiResponse<GetServiceBoysResponse> | undefined>(`${adminRoutes.LoadServiceBoys}`,{params});
+    const response = await API.get<ApiResponse<PaginatedResponse<ServiceBoy>> | undefined>(`${adminRoutes.LoadServiceBoys}`,{params});
     console.log("result of getServiceBoys==",response);
     if(!response) return;
     return response.data;
@@ -135,6 +135,44 @@ export const verifyVendorByAdmin = async (id: string,status:VerificationStatus):
     try {
  const url = adminRoutes.verifyVendorById.replace(":id", id);
          const response = await API.patch<ApiResponse<Partial<ServiceBoy>> | undefined>(`${url}?status=${status}`);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+
+    }
+}
+
+export const getVendors = async(params: GetServiceBoysParams): Promise<ApiResponse<PaginatedResponse<Vendor>> | undefined> =>{
+try {
+    console.log("getVendors params",params)
+    // const { page, limit, search, sort,  isBlocked } = params;
+    const response = await API.get<ApiResponse<PaginatedResponse<Vendor>> | undefined>(`${adminRoutes.LoadVendors}`,{params});
+    console.log("result of getVendorss==",response);
+    if(!response) return;
+    return response.data;
+ } catch (error) {
+    throw error
+ }
+}
+
+
+export const getVendorById = async (url: string): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
+    try {
+        console.log("url",url)
+         const response = await API.get<ApiResponse<Partial<Vendor>> | undefined>(`${url}`);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+
+    }
+}
+
+
+export const updateVendorBlockStatus = async (id: string,status: string): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
+    try {
+        console.log("status",status)
+ const url = adminRoutes.updateStatusServiceBoyById.replace(":id", id).replace(":status", status);
+         const response = await API.patch<ApiResponse<Partial<Vendor>> | undefined>(`${url}`);
         return response.data; 
     } catch (error) {
         throw error;  

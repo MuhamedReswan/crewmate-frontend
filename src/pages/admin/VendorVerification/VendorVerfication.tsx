@@ -8,12 +8,14 @@ import { toast } from '@/hooks/use-toast';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { VerificationTable } from '@/components/adminComponents/verificartionTable/VerificationTable';
 import { Pagination } from '@/components/adminComponents/Pagination/Paginatio';
+import { useNavigate } from 'react-router-dom';
 
 export default function VendorVerfication() {
   const [allData, setAllData] = useState<Vendor[]>([]);
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 8;
+    const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -66,7 +68,15 @@ export default function VendorVerfication() {
     }
   }, []);
 
+  const handleVendorDocumentPage = async (VendprData: Vendor) => {
+      try {
+        console.log("single verification page button clicked---",VendprData)
+        navigate(`/admin/vendors/verify/${VendprData._id}?isVerified=${VendprData.isVerified}`, { state: VendprData })
   
+      } catch (error) {
+        throw error
+      }
+    }
 
   return (
     <div className="bg-surface rounded-xl p-6">
@@ -91,6 +101,7 @@ export default function VendorVerfication() {
         currentPage={currentPage}
         limit={limit}
         onVerify={onVerify}
+        onRowClick={handleVendorDocumentPage}
       />
 
       {/* Pagination */}

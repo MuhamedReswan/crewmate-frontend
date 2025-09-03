@@ -30,6 +30,7 @@ export function UserManagementTable<T extends { _id: string; isBlocked: boolean}
   showSerialNo = true,
 }: UserManagementTableProps<T>) {
     console.log("usermanagement Table",data)
+    
   return (
     <div className="rounded-lg border border-primary/20 overflow-hidden">
       <Table>

@@ -8,8 +8,11 @@ import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { VerificationTable } from '@/components/adminComponents/verificartionTable/VerificationTable';
 import { Pagination } from '@/components/adminComponents/Pagination/Paginatio';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function ServiceBoyVerfication() {
+  const navigate = useNavigate();
   const [data, setData] = useState<ServiceBoy[]>([]);
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -72,6 +75,17 @@ export default function ServiceBoyVerfication() {
   }, []);
 
 
+  const handleServiceBoyDocumentPage = async (serviceBoyData: ServiceBoy) => {
+    try {
+      console.log("single verification page button clicked---",serviceBoyData)
+      navigate(`/admin/service-boys/verify/${serviceBoyData._id}?isVerified=${serviceBoyData.isVerified}`, { state: serviceBoyData })
+
+    } catch (error) {
+      throw error
+    }
+  }
+
+
 
   return (
  <div className="bg-surface rounded-xl p-6">
@@ -96,6 +110,8 @@ export default function ServiceBoyVerfication() {
       currentPage={currentPage}
       limit={limit}
       onVerify={handleVerify}
+      onRowClick={handleServiceBoyDocumentPage}
+      
     />
 
       {/* Pagination */}
