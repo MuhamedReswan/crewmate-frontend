@@ -10,7 +10,7 @@ import {
   MessageSquareText
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
 import ErrorMessage from '../../common/Message/Error.message';
@@ -19,8 +19,9 @@ import NavItem from '../../common/NavItem/NavItem';
 import { VendorLogoutApi } from '@/api/vendor/vendor';
 import { useToast } from '@/hooks/use-toast';
 import { vendorLogout } from '@/redux/slice/vendorAuth.slice';
-import { Messages } from '@/types/enum.type';
+import { Messages, VerificationStatus } from '@/types/enum.type';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
+import { RootState } from '@/redux/store/store';
 
 const VendorSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,6 +35,10 @@ const VendorSidebar = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+    const currentPath = location.pathname.split("/").pop() || ""; 
+      const vendorData = useSelector((state: RootState) => state.vendor.vendorData);
+
+
 
   const handleLogout = async () => {
     try {
@@ -58,7 +63,9 @@ const VendorSidebar = () => {
     }
   };
 
+    const isPending = vendorData?.isVerified !== VerificationStatus.Verified;
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+
 
   const navItems = [
     { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path: '' },
@@ -84,18 +91,21 @@ const VendorSidebar = () => {
       </div>
 
       <nav className='mt-4'>
-        {navItems.map((item, index) => (
-          <NavItem
+        {navItems.map((item, index) => {
+                    const isDisabled = isPending && item.text !== 'Profile' && item.text !== 'Dashboard';
+return (
+      <NavItem
             key={index}
             icon={item.icon}
             text={!isCollapsed ? item.text : ''}
-            active={activeItem === item.text}
+            active={currentPath === item.path}
+            disabled={isDisabled}
             onClick={() => {
               setActiveItem(item.text)
               navigate(`/vendor/${item.path}`)
             }}
           />
-        ))}
+        )})}
         <NavItem
           icon={<LogOut size={20} />}
           text={!isCollapsed ? 'Logout' : ''}

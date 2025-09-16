@@ -21,7 +21,7 @@ const AdminLayout = () => {
   );
 
   return (
-        <div className={`${theme} flex h-screen bg-background text-foreground transition-colors duration-300`}>
+        <div className={`${theme} admin flex h-screen bg-background text-foreground transition-colors duration-300`}>
       {/* Sidebar (hidden on login/register) */}
       {!shouldHideLayout && <AdminSideBar />}
 

@@ -273,7 +273,7 @@ const Profile = () => {
           </div>
           <div>
 
-            <Button type="button" className="px-5  text-sm font-medium text-white bg-[#4B49AC] rounded-lg hover:bg-opacity-90 transition-colors"
+            <Button type="button" className="px-5   rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit"}</Button>
           </div>
         </div>

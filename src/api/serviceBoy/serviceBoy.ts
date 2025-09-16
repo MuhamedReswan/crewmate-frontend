@@ -8,7 +8,7 @@ import {
   ProfileData,
   ResetForgotPassword,
 } from "@/types/auth.type";
-import { Role } from "@/types/enum.type";
+import { Role, VerificationStatus } from "@/types/enum.type";
 import { LoginFormInputs, SignupFormData } from "@/types/form.type";
 import { ServiceBoy } from "@/types/users.type";
 export const serviceBoyLogin = async (
@@ -215,3 +215,16 @@ export const ServiceBoyFetchProfile = async (
     throw error;
   }
 };
+
+
+export const RetryVerficationRequestServiceBoy = async (id: string): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+    try {
+ const url = serviceBoyRoutes.retryVerify.replace(":id", id);
+         const response = await API.patch<ApiResponse<Partial<ServiceBoy>> | undefined>(url);
+         console.log("RetryVerficationRequestServiceBoy api",response.data)
+        return response.data; 
+    } catch (error) {
+        throw error;  
+
+    }
+}

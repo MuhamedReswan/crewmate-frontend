@@ -10,7 +10,7 @@ import {
   MessageSquareText
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import crewMateLogo from '../../../assets/images/CrewMate_logo.png';
 import ErrorMessage from '../../common/Message/Error.message';
@@ -20,14 +20,23 @@ import { serviceBoyLogout } from '@/api/serviceBoy/serviceBoy';
 import { useToast } from '@/hooks/use-toast';
 import { logout } from '@/redux/slice/serviceBoyAuth.slice';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
-import { Messages } from '@/types/enum.type';
+import { Messages, VerificationStatus } from '@/types/enum.type';
+import { RootState } from '@/redux/store/store';
 
 const SideBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState('Dashboard');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const serviceBoyData  = useSelector((state: RootState) => state.serviceBoy.serviceBoyData);
+  //  const [serviceBoyData, setServiceBoyData] = useState(serviceBoyFromRedux);
+
+// useEffect(() => {
+//   setServiceBoyData(serviceBoyFromRedux);
+// }, [serviceBoyFromRedux]);
+
+    // const [activeItem, setActiveItem] = useState('Dashboard');
+  const currentPath = location.pathname.split("/").pop() || ""; 
 
   useEffect(() => {
     const handleResize = () => setIsCollapsed(window.innerWidth <= 768);
@@ -68,6 +77,8 @@ const SideBar = () => {
     { icon: <Users size={20} />, text: 'Accounts', path: 'wallet' },
   ];
 
+  const isPending = serviceBoyData?.isVerified !== VerificationStatus.Verified;
+
   return (
     <div className={`bg-white border-r transition-all ${isCollapsed ? 'w-16' : 'w-64'}`}>
 
@@ -83,24 +94,34 @@ const SideBar = () => {
         )}
       </div>
 
-      <nav className='mt-4'>
-        {navItems.map((item, index) => (
-          <NavItem
-            key={index}
-            icon={item.icon}
-            text={!isCollapsed ? item.text : ''}
-            active={activeItem === item.text}
-            onClick={() => {
-              setActiveItem(item.text)
-              navigate(`/service-boy/${item.path}`)
-            }}
-          />
-        ))}
+      {/* Navigation */}
+      <nav className="mt-4">
+        {navItems.map((item, index) => {
+          const isDisabled = isPending && item.text !== 'Profile' && item.text !== 'Dashboard';
+
+          return (
+            <NavItem
+              key={index}
+              icon={item.icon}
+              text={!isCollapsed ? item.text : ''}
+              active={currentPath === item.path}
+              disabled={isDisabled}
+              onClick={() => {
+                if (!isDisabled) {
+                  // setActiveItem(item.path)
+                  navigate(`/service-boy/${item.path}`);
+                }
+              }}
+            />
+          );
+        })}
+
+        {/* Logout */}
         <NavItem
           icon={<LogOut size={20} />}
           text={!isCollapsed ? 'Logout' : ''}
-          onClick={handleLogout}
-          active={activeItem === 'Logout'}
+          onClick={ handleLogout }
+          active={currentPath === 'logout'}
         />
       </nav>
     </div>

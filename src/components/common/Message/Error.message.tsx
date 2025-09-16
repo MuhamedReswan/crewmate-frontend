@@ -1,7 +1,8 @@
 import { CircleX } from "lucide-react";
 import React from "react";
 import { cn } from "@/lib/utils";
-import { MessageProps } from "@/types/message.type";
+import { MessageProps } from "@/types/types.type";
+// import { MessageProps } from "@/types/message.type";
 
 
 const ErrorMessage: React.FC<MessageProps> = ({

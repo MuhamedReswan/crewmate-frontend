@@ -3,3 +3,4 @@ export type ErrorResponseData = {
   name?: string;
   [key: string]: any;
 };
+

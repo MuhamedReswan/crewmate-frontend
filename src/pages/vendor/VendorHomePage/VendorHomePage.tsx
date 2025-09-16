@@ -2,6 +2,9 @@
 import { useSelector } from 'react-redux';
 import StatCard from '@/components/common/StatCard/StatCard';
 import { RootState } from '@/redux/store/store';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { VerificationStatus } from '@/types/enum.type';
 
 
 function VendorHomePage() {
@@ -12,7 +15,16 @@ function VendorHomePage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Welcome {vendor?.name}</h1>
-          <p className="text-gray-600 text-sm">Please update your profile for admin verification.</p>
+          {/* <p className="text-gray-600 text-sm">Please update your profile for admin verification.</p> */}
+           {vendor?.isVerified === VerificationStatus.Rejected ? (
+            <Button variant="ghost" size="sm" className="bg-[#4B49AC]/20" >
+              Re submit documents
+            </Button>
+          ) : (
+            <Link to="/vendor/profile" className="text-sm text-gray-600 ">
+              Please update your profile for admin verification.
+            </Link>
+          )}
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <span>Today (10 Jan 2021)</span>

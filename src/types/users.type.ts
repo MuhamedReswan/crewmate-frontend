@@ -1,4 +1,4 @@
-import { Role } from "./enum.type";
+import { Role, VerificationStatus } from "./enum.type";
 import { LocationData } from "./form.type";
 
 export interface CommonDetails {
@@ -7,7 +7,7 @@ export interface CommonDetails {
   email: string;
   mobile: string;
   password: string;
-  isVerified: boolean;
+  isVerified: VerificationStatus;
   isBlocked: boolean;
   role: Role;
 }

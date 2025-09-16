@@ -77,7 +77,7 @@ const AdminSideBar: React.FC = () => {
                                 end={end}
                                 className={({ isActive }) =>
                                     `flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${isActive
-                                        ? 'bg-primary-foreground text-primary font-semibold'
+                                        ? 'bg-primary text-primary-foreground font-semibold'
                                         : 'text-muted-foreground hover:text-white hover:bg-primary/10'
                                     }`
                                 }

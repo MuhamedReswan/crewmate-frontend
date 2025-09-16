@@ -10,4 +10,5 @@ export const serviceBoyRoutes = {
   resetPassword: "/auth/service-boy/reset-password",
   refreshToken: "auth/service-boy/refresh-token",
   profile:"/service-boy/profile",
+  retryVerify:"/service-boy/retry-verify/:id",
 };

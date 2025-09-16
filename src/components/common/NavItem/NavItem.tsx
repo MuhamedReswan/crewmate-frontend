@@ -7,9 +7,10 @@ interface NavItemProps {
   text: string; // The text to display
   active?: boolean; // Whether the item is active
   onClick?: () => void; // Optional onClick handler
+   disabled?: boolean;
 }
 
-function NavItem({ icon, text, active = false, onClick }: NavItemProps) {
+function NavItem({ icon, text, active = false, onClick, disabled=false}: NavItemProps) {
   return (
     <div
       // className={`flex items-center px-4 py-3 ${active
@@ -19,7 +20,9 @@ function NavItem({ icon, text, active = false, onClick }: NavItemProps) {
       className={`flex items-center justify-between px-4 py-3 ${active
         ? 'bg-[#4B49AC] text-white border rounded-lg m-2 font-Nunito'
         : 'text-gray-600 hover:bg-gray-100'
-        }`}
+        }
+        ${disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}
+        `}
       onClick={onClick} // Attach the onClick handler
       style={{ cursor: 'pointer' }} // Add pointer cursor for better UX
     >

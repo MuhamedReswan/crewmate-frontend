@@ -1,10 +1,10 @@
-import { Role } from "./enum.type";
+import { Role, VerificationStatus } from "./enum.type";
 
 export type ServiceBoyLoginDTO = {
   _id: string;
   name: string;
   email: string;
-  isVerified: boolean;
+  isVerified: VerificationStatus;
   isBlocked: boolean;
   role: Role;
 }
