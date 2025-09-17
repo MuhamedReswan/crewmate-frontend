@@ -5,18 +5,25 @@ import { RootState } from '@/redux/store/store';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Messages, VerificationStatus } from '@/types/enum.type';
-import { RetryVerficationRequestServiceBoy } from '@/api/serviceBoy/serviceBoy';
+import { GetServiceBoyById, RetryVerficationRequestServiceBoy } from '@/api/serviceBoy/serviceBoy';
 import SuccessMessage from '@/components/common/Message/SuccessMessage';
 import { toast } from '@/hooks/use-toast';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import ErrorMessage from '@/components/common/Message/Error.message';
 import { updateServiceBoyData } from '@/redux/slice/serviceBoyAuth.slice';
+import { useVerificationSync } from '@/hooks/useVerificationSync';
 
 
 function ServiceBoyHomePage() {
 
   const dispatch = useDispatch()
   const serviceBoy = useSelector((state: RootState) => state.serviceBoy.serviceBoyData);
+
+     useVerificationSync({
+    user: serviceBoy,
+    fetchById: GetServiceBoyById,
+    updateAction: updateServiceBoyData,
+  });
 
   const handleRetryVerification = async () => {
     try {

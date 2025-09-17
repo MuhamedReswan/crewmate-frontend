@@ -11,6 +11,7 @@ import {
 import { Role } from "@/types/enum.type";
 import { LoginFormInputs, SignupFormData } from "@/types/form.type";
 import { Vendor } from "@/types/users.type";
+import { VendorLoginDTO } from "@/types/vendorDto.type";
 
 export const vendorLogin = async (
   data: LoginFormInputs
@@ -171,3 +172,26 @@ export const VendorFetchProfile = async (
     throw error;
   }
 };
+
+
+export const RetryVerficationRequestVendor = async (id: string): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
+    try {
+ const url = vendorRoutes.retryVerify.replace(":id", id);
+         const response = await API.patch<ApiResponse<Partial<Vendor>> | undefined>(url);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+
+    }
+}
+
+
+export const GetVendorById = async (id: string): Promise<ApiResponse<VendorLoginDTO> | undefined> => {
+    try {
+ const url = vendorRoutes.vendor.replace(":id", id);
+         const response = await API.get<ApiResponse<VendorLoginDTO> | undefined>(url);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+    }
+}

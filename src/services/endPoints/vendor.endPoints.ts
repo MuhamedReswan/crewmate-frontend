@@ -7,5 +7,7 @@ export const vendorRoutes = {
     resendOtp: '/auth/vendor/resend-otp',
     forgotPassword: '/auth/vendor/forgot-password',
     resetPassword: '/auth/vendor/reset-password',
-    profile:'/vendor/profile'
+    profile:'/vendor/profile',
+    retryVerify:'/vendor/retry-verify/:id',
+    vendor:'/vendor/:id'
   };

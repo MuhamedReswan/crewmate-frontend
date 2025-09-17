@@ -1,14 +1,55 @@
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import StatCard from '@/components/common/StatCard/StatCard';
 import { RootState } from '@/redux/store/store';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { VerificationStatus } from '@/types/enum.type';
+import { Messages, VerificationStatus } from '@/types/enum.type';
+import SuccessMessage from '@/components/common/Message/SuccessMessage';
+import ErrorMessage from '@/components/common/Message/Error.message';
+import { useToast } from '@/hooks/use-toast';
+import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
+import { updateVendorData } from '@/redux/slice/vendorAuth.slice';
+import { GetVendorById, RetryVerficationRequestVendor } from '@/api/vendor/vendor';
+import { useVerificationSync } from '@/hooks/useVerificationSync';
 
 
 function VendorHomePage() {
   const vendor = useSelector((state: RootState) => state.vendor.vendorData);
+  const dispatch = useDispatch();
+  const {toast} = useToast();
+  console.log("VendorHomePage vendor",vendor)
+
+  useVerificationSync({
+    user: vendor,
+    fetchById: GetVendorById,
+    updateAction: updateVendorData,
+  });
+
+    const handleRetryVerification = async () => {
+    try {
+      if (!vendor?._id) return;
+
+      if (!vendor || !vendor._id) return;
+      const result = await RetryVerficationRequestVendor(vendor._id);
+      console.log("handleRetryVerification", result)
+      if (result && result.statusCode === 200) {
+        dispatch(updateVendorData({ isVerified: VerificationStatus.Pending }));
+        toast({ description: <SuccessMessage message={result.message} /> });
+      } else {
+        toast({
+          description: <ErrorMessage message={Messages.VERIFCATION_STATUS_CHANGE_FAILED} />,
+        })
+      }
+    } catch (error) {
+      toast({
+        description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} />,
+      })
+    }
+
+  }
+
+
 
   return (
     <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
@@ -17,9 +58,19 @@ function VendorHomePage() {
           <h1 className="text-2xl font-bold">Welcome {vendor?.name}</h1>
           {/* <p className="text-gray-600 text-sm">Please update your profile for admin verification.</p> */}
            {vendor?.isVerified === VerificationStatus.Rejected ? (
-            <Button variant="ghost" size="sm" className="bg-[#4B49AC]/20" >
-              Re submit documents
-            </Button>
+           <div className="flex flex-col gap-2">
+    <p className="text-sm text-red-500 font-medium">
+      Your request has been rejected.
+    </p>
+    <Button
+      variant="ghost"
+      size="sm"
+      className="bg-[#4B49AC]/20"
+      onClick={handleRetryVerification}
+    >
+      Re submit
+    </Button>
+  </div>
           ) : (
             <Link to="/vendor/profile" className="text-sm text-gray-600 ">
               Please update your profile for admin verification.

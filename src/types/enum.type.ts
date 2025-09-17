@@ -12,6 +12,7 @@ export enum Messages {
   BLOCKED_BY_ADMIN = "You were blocked by admin.",
   FAILED_TO_UPDATE_PROFILE = "Failed to update profile",
   FETCH_PROFILE_FAILED = "Something went wrong. Please login again.",
+  FETCH_USER_FAILED = "Something went wrong while fetch. Please login again.",
   UPDATE_PROFILE_FAILED = "Failed to update profile. Please try again.",
   LOGOUT_FAILED = "some thing went wrong on logout. please try again",
   RESEND_OTP_FAILED = "Failed to resend OTP",
