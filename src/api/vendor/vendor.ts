@@ -9,7 +9,8 @@ import {
   VendorProfileData,
 } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
-import { LoginFormInputs, SignupFormData } from "@/types/form.type";
+import { EventFormData, LoginFormInputs, SignupFormData } from "@/types/form.type";
+import { Event } from "@/types/type";
 import { Vendor } from "@/types/users.type";
 import { VendorLoginDTO } from "@/types/vendorDto.type";
 
@@ -190,6 +191,17 @@ export const GetVendorById = async (id: string): Promise<ApiResponse<VendorLogin
     try {
  const url = vendorRoutes.vendor.replace(":id", id);
          const response = await API.get<ApiResponse<VendorLoginDTO> | undefined>(url);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+    }
+}
+
+
+//Events
+export const CreateEvent = async (data:EventFormData): Promise<ApiResponse<Event> | undefined> => {
+    try {
+         const response = await API.post<ApiResponse<Event> | undefined>(vendorRoutes.event,data);
         return response.data; 
     } catch (error) {
         throw error;  

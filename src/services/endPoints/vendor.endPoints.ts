@@ -9,5 +9,6 @@ export const vendorRoutes = {
     resetPassword: '/auth/vendor/reset-password',
     profile:'/vendor/profile',
     retryVerify:'/vendor/retry-verify/:id',
-    vendor:'/vendor/:id'
+    vendor:'/vendor/:id',
+    event:'/vendor/event'
   };

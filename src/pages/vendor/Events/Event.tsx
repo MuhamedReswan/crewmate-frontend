@@ -1,7 +1,21 @@
+
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Search, Calendar, CalendarIcon } from 'lucide-react';
+
 import { CreateEventModal } from '@/components/vendorComponent/Modals/EventCreateModal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calender';
+import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { CreateEvent } from '@/api/vendor/vendor';
+import ErrorMessage from '@/components/common/Message/Error.message';
+import { useToast } from '@/hooks/use-toast';
+import { Messages } from '@/types/enum.type';
+import SuccessMessage from '@/components/common/Message/SuccessMessage';
+import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
+import { RootState } from '@/redux/store/store';
+import { useSelector } from 'react-redux';
 
 interface TableData {
   slNo: number;
@@ -16,13 +30,51 @@ interface TableData {
 const Events = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dateFilter, setDateFilter] = useState<string>('all');
+  const [customDateFrom, setCustomDateFrom] = useState<Date>();
+  const [customDateTo, setCustomDateTo] = useState<Date>();
+  const [isCustomDateOpen, setIsCustomDateOpen] = useState(false);
+  const vendorData = useSelector((state: RootState) => state.vendor.vendorData);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    
-      const handleEventSubmit = (data: any) => {
-        console.log('Event created:', data);
-        // Here you would typically send the data to your API
-      };
+
+  const { toast } = useToast();
+
+  const handleEventSubmit = async (data: any) => {
+    try {
+      if (!vendorData?._id) {
+      toast({
+        description: <ErrorMessage message="Vendor not logged in!" />,
+      });
+      return;
+    }
+
+    const payload = {
+      ...data,
+      vendorId: vendorData._id,
+    };
+      
+      const response = await CreateEvent(payload);
+      if(!response?.data){
+           toast({
+              description: (
+                <ErrorMessage message={Messages.FAILED_TO_CREATE_EVENT} />
+              ),
+            });
+      }
+      if( response && response?.statusCode === 201){
+ toast({ description: <SuccessMessage message={response.message || Messages.EVENT_CREATION_SUCCESS} /> });
+      }
+
+    } catch (error) {
+  toast({
+          description: <ErrorMessage message={getApiErrorMessage(error, Messages.FAILED_TO_CREATE_EVENT)} />,
+        });
+    }
+
+    console.log('Event created:', data);
+    // Here you would typically send the data to your API
+  };
 
   // Sample data matching the image
   const data: TableData[] = [
@@ -42,70 +94,61 @@ const Events = () => {
       location: 'Ullur',
       reportingTime: '2:00 PM',
       status: 'On going',
-      date: '25/04/2040'
+      date: '25/04/2024'
     },
     {
       slNo: 3,
       clientName: 'Jabir',
       eventType: 'Birthday',
       location: 'Calicut',
-      reportingTime: '28:00 AM',
+      reportingTime: '10:00 AM',
       status: 'Up coming',
-      date: '25/04/2020'
+      date: '25/04/2024'
     },
     {
-      slNo: 3,
-      clientName: 'Jabir',
-      eventType: 'sitting',
-      location: 'Calicut',
-      reportingTime: '28:00 AM',
-      status: 'Up coming',
-      date: '25/04/2020'
-    },
-    {
-      slNo: 3,
-      clientName: 'Jabir',
-      eventType: 'sitting',
-      location: 'Calicut',
-      reportingTime: '28:00 AM',
-      status: 'Up coming',
-      date: '25/04/2020'
-    },
-    {
-      slNo: 3,
-      clientName: 'Jabir',
-      eventType: 'sitting',
-      location: 'Calicut',
-      reportingTime: '28:00 AM',
-      status: 'Up coming',
-      date: '25/04/2020'
-    },
-    {
-      slNo: 235,
-      clientName: 'Car insurance',
-      eventType: 'Business type 2',
-      location: 'Jesse Thomas',
-      reportingTime: '$1200',
+      slNo: 4,
+      clientName: 'Ravi',
+      eventType: 'Conference',
+      location: 'Cochin',
+      reportingTime: '9:00 AM',
       status: 'Active',
-      date: '25/04/2020'
+      date: '26/04/2024'
     },
     {
-      slNo: 235,
-      clientName: 'Car insurance',
-      eventType: 'Business type 2',
-      location: 'Jesse Thomas',
-      reportingTime: '$1200',
-      status: 'Active',
-      date: '25/04/2020'
-    },
-    {
-      slNo: 235,
-      clientName: 'Car insurance',
-      eventType: 'Business type 2',
-      location: 'Jesse Thomas',
-      reportingTime: '$1200',
+      slNo: 5,
+      clientName: 'Priya',
+      eventType: 'Corporate',
+      location: 'Trivandrum',
+      reportingTime: '11:00 AM',
       status: 'In progress',
-      date: '25/04/2020'
+      date: '27/04/2024'
+    },
+    {
+      slNo: 6,
+      clientName: 'Suresh',
+      eventType: 'Wedding',
+      location: 'Munnar',
+      reportingTime: '3:00 PM',
+      status: 'Up coming',
+      date: '28/04/2024'
+    },
+    {
+      slNo: 7,
+      clientName: 'Maya',
+      eventType: 'Anniversary',
+      location: 'Alleppey',
+      reportingTime: '5:00 PM',
+      status: 'Completed',
+      date: '29/04/2024'
+    },
+    {
+      slNo: 8,
+      clientName: 'Kiran',
+      eventType: 'Birthday',
+      location: 'Wayanad',
+      reportingTime: '1:00 PM',
+      status: 'On going',
+      date: '30/04/2024'
     }
   ];
 
@@ -118,66 +161,183 @@ const Events = () => {
       'In progress': 'bg-status-progress text-white'
     };
 
-    
-
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClasses[status as keyof typeof statusClasses] || 'bg-muted text-muted-foreground'}`}>
+      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusClasses[status as keyof typeof statusClasses] || 'bg-muted text-muted-foreground'}`}>
         {status}
       </span>
     );
   };
 
-  const filteredData = data.filter(item =>
+  const getFilteredDataByDate = (data: TableData[]) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    switch (dateFilter) {
+      case 'last7days': {
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        return data.filter(item => {
+          const itemDate = new Date(item.date.split('/').reverse().join('-'));
+          return itemDate >= sevenDaysAgo && itemDate <= today;
+        });
+      }
+      case 'lastMonth': {
+        const lastMonth = new Date(today);
+        lastMonth.setMonth(lastMonth.getMonth() - 1);
+        return data.filter(item => {
+          const itemDate = new Date(item.date.split('/').reverse().join('-'));
+          return itemDate >= lastMonth && itemDate <= today;
+        });
+      }
+      case 'lastYear': {
+        const lastYear = new Date(today);
+        lastYear.setFullYear(lastYear.getFullYear() - 1);
+        return data.filter(item => {
+          const itemDate = new Date(item.date.split('/').reverse().join('-'));
+          return itemDate >= lastYear && itemDate <= today;
+        });
+      }
+      case 'custom': {
+        if (!customDateFrom || !customDateTo) return data;
+        return data.filter(item => {
+          const itemDate = new Date(item.date.split('/').reverse().join('-'));
+          return itemDate >= customDateFrom && itemDate <= customDateTo;
+        });
+      }
+      default:
+        return data;
+    }
+  };
+
+  const filteredData = getFilteredDataByDate(data).filter(item =>
     item.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.eventType.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
 
   return (
-    <div className="w-full bg-background min-h-screen p-6">
+    <div className="w-full bg-surface min-h-screen p-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">All Works</h1>
+          <h1 className="text-2xl font-semibold text-foreground">All Events</h1>
+          <p className="text-sm text-muted-foreground mt-1">Manage and track your events</p>
         </div>
+        
         <div className="flex items-center gap-4">
           <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search now"
+              placeholder="Search events..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 px-4 py-2 border border-border rounded-lg bg-card text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-64 pl-10 pr-4 py-2.5 bg-white border border-input rounded-lg text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-transparent transition-all"
             />
           </div>
-          <Button className="bg-primary hover:bg-primary-hover text-primary-foreground"
-          onClick={() => setIsModalOpen(true)}>
+
+          <Select value={dateFilter} onValueChange={setDateFilter}>
+            <SelectTrigger className="w-40 bg-white border-input ">
+              <SelectValue placeholder="Filter by date"  />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Time</SelectItem>
+              <SelectItem value="last7days">Last 7 Days</SelectItem>
+              <SelectItem value="lastMonth">Last Month</SelectItem>
+              <SelectItem value="lastYear">Last Year</SelectItem>
+              <SelectItem value="custom">Custom Range</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {dateFilter === 'custom' && (
+            <Popover open={isCustomDateOpen} onOpenChange={setIsCustomDateOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-60 justify-start text-left font-normal bg-card border-input"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {customDateFrom && customDateTo ? (
+                    `${format(customDateFrom, 'MMM dd')} - ${format(customDateTo, 'MMM dd, yyyy')}`
+                  ) : (
+                    <span className="text-muted-foreground">Pick date range</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <div className="flex">
+                  <div className="p-3">
+                    <div className="text-sm font-medium mb-2">From</div>
+                    <CalendarComponent
+                      mode="single"
+                      selected={customDateFrom}
+                      onSelect={setCustomDateFrom}
+                      className="p-3 pointer-events-auto"
+                    />
+                  </div>
+                  <div className="p-3 border-l">
+                    <div className="text-sm font-medium mb-2">To</div>
+                    <CalendarComponent
+                      mode="single"
+                      selected={customDateTo}
+                      onSelect={setCustomDateTo}
+                      className="p-3 pointer-events-auto"
+                    />
+                  </div>
+                </div>
+                <div className="border-t p-3 flex justify-end gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      setCustomDateFrom(undefined);
+                      setCustomDateTo(undefined);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                  <Button 
+                    size="sm"
+                    onClick={() => setIsCustomDateOpen(false)}
+                    disabled={!customDateFrom || !customDateTo}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+          
+          <Button 
+            className="bg-primary hover:bg-primary-hover text-primary-foreground font-medium px-5 py-2.5 shadow-sm"
+            onClick={() => setIsModalOpen(true)}
+          >
             <Plus className="h-4 w-4 mr-2" />
-            Add New Work
+            Add Event
           </Button>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-card rounded-lg border border-border overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-card rounded-xl border border-border shadow-sm">
+        <div className="overflow-x-auto max-h-[350px] overflow-y-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-table-header text-table-header-foreground">
-                <th className="px-6 py-4 text-left text-sm font-medium">Sl No</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Client name</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Event type</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Location</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Reporting time</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Date</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">Actions</th>
+              <tr className="bg-primary/50 text-table-header-foreground">
+                <th className="px-6 py-4 text-left text-sm font-semibold">Sl No</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Client Name</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Event Type</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Location</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Reporting Time</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Date</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -186,10 +346,10 @@ const Events = () => {
                   key={index} 
                   className={`border-b border-table-border ${
                     index % 2 === 0 ? 'bg-table-row-even' : 'bg-table-row-odd'
-                  } hover:bg-accent/50 transition-colors`}
+                  } hover:bg-white transition-colors`}
                 >
-                  <td className="px-6 py-4 text-sm text-card-foreground">{item.slNo}</td>
-                  <td className="px-6 py-4 text-sm text-card-foreground">{item.clientName}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.slNo}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.clientName}</td>
                   <td className="px-6 py-4 text-sm text-card-foreground">{item.eventType}</td>
                   <td className="px-6 py-4 text-sm text-card-foreground">{item.location}</td>
                   <td className="px-6 py-4 text-sm text-card-foreground">{item.reportingTime}</td>
@@ -199,7 +359,7 @@ const Events = () => {
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      className="h-8 w-8 p-0 hover:bg-accent"
+                      className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
                     >
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
@@ -209,24 +369,20 @@ const Events = () => {
             </tbody>
           </table>
         </div>
-         <CreateEventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleEventSubmit}
-      />
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-table-border bg-card">
           <div className="text-sm text-muted-foreground">
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing <span className="font-medium text-foreground">{startIndex + 1}</span> to <span className="font-medium text-foreground">{Math.min(endIndex, filteredData.length)}</span> of <span className="font-medium text-foreground">{filteredData.length}</span> entries
           </div>
+          
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="h-8 w-8 p-0"
+              className="h-9 w-9 p-0"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -251,9 +407,9 @@ const Events = () => {
                     variant={currentPage === pageNum ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`h-8 w-8 p-0 ${
+                    className={`h-9 w-9 p-0 ${
                       currentPage === pageNum 
-                        ? 'bg-primary text-primary-foreground' 
+                        ? 'bg-primary text-primary-foreground hover:bg-primary-hover' 
                         : 'hover:bg-accent'
                     }`}
                   >
@@ -261,28 +417,6 @@ const Events = () => {
                   </Button>
                 );
               })}
-              
-              {totalPages > 5 && (
-                <>
-                  <span className="px-2 text-muted-foreground">...</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(9)}
-                    className="h-8 w-8 p-0 hover:bg-accent"
-                  >
-                    9
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(10)}
-                    className="h-8 w-8 p-0 hover:bg-accent"
-                  >
-                    10
-                  </Button>
-                </>
-              )}
             </div>
 
             <Button
@@ -290,13 +424,19 @@ const Events = () => {
               size="sm"
               onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="h-8 w-8 p-0"
+              className="h-9 w-9 p-0"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </div>
+
+      <CreateEventModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleEventSubmit}
+      />
     </div>
   );
 };

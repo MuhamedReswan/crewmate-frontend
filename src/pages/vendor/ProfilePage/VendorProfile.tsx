@@ -214,7 +214,7 @@ const VendorProfile = () => {
 
 
   return (
-    <div className="max-h-screen mx-auto w-full h-full bg-[#4B49AC]/5 shadow-sm p-8 pt-10 md:p-8 overflow-auto">
+    <div className="max-h-screen mx-auto w-full h-full bg-surface shadow-sm p-8 pt-10 md:p-8 overflow-auto">
       {/* Form */}
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} >
         {/* Header with profile image */}

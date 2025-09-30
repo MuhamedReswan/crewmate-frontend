@@ -1,48 +1,22 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue}
 import { Calendar, MapPin, X } from 'lucide-react';
-import MapPreview from '@/components/common/MapPreview/MapPreview';
+// import MapPreview from '@/components/common/MapPreview/MapPreview';
 import MapPicker from '@/components/common/MapPicker/MapPicker';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CreateEventModalProps, EventFormData, LocationData } from '@/types/form.type';
+import { eventSchema } from '@/validation/validationSchema';
 
 
-const eventSchema = z.object({
-  customerName: z.string().min(1, 'Customer name is required'),
-  typeOfService: z.string().min(1, 'Type of service is required'),
-  typeOfWork: z.string().min(1, 'Type of work is required'),
-  noOfPax: z.string().min(1, 'Number of pax is required'),
-  reportingTime: z.string().min(1, 'Reporting time is required'),
-  numberOfBoys: z.string().min(1, 'Number of boys is required'),
-  location: z.object({
-    lat: z.number(),
-    lng: z.number(),
-    address: z.string().min(1, 'Address is required'),
-  }).nullable().refine(val => val !== null, 'Location is required'),
-  date: z.string().min(1, 'Date is required')
-});
-
-type EventFormData = z.infer<typeof eventSchema>;
-
-interface Location {
-  address: string;
-  coordinates: [number, number];
-}
-
-interface CreateEventModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: EventFormData) => void;
-}
 
 export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModalProps) {
-  const [location, setLocation] = useState<Location | undefined>(undefined);
+  const [location, setLocation] = useState<LocationData | undefined>(undefined);
   const [mapVisible, setMapVisible] = useState(false);
 
   const {
@@ -55,15 +29,19 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      location: undefined
+      eventLocation: undefined
     }
   });
 
-  const handleLocationSelect = (selectedLocation: Location ) => {
+    const formValues = watch();
+  console.log("formValues from event creation", formValues)
+
+  const handleLocationSelect = (selectedLocation: LocationData ) => {
+    console.log("selectedLocation",selectedLocation)
     setLocation(selectedLocation);
-   setValue('location', {
-    lat: selectedLocation.coordinates[0],
-    lng: selectedLocation.coordinates[1],
+   setValue('eventLocation', {
+    lat: selectedLocation.lat,
+    lng: selectedLocation.lng,
     address: selectedLocation.address,
   }, { shouldValidate: true });
     setMapVisible(false);
@@ -86,7 +64,7 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md max-h-[80] bg-background border-border scroll">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] bg-background border-border overflow-y-auto">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
           <DialogTitle className="text-lg font-semibold text-foreground">
             Create New Event
@@ -168,6 +146,7 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
             <Input
               id="noOfPax"
               placeholder="Your First Name"
+             type="number"
               className="bg-accent/10 border-border text-foreground placeholder:text-muted-foreground"
               {...register('noOfPax')}
             />
@@ -206,11 +185,11 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               placeholder="Your First Name"
               type="number"
               className="bg-accent/10 border-border text-foreground placeholder:text-muted-foreground"
-              {...register('numberOfBoys')}
+              {...register('serviceBoys')}
             />
-            {errors.numberOfBoys && (
+            {errors.serviceBoys && (
               <p className="text-destructive text-xs mt-1">
-                {errors.numberOfBoys.message}
+                {errors.serviceBoys.message}
               </p>
             )}
           </div>
@@ -227,9 +206,9 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
                 {location?.address || 'Choose location'}
               </p>
             </div>
-            {errors.location && (
+            {errors.eventLocation && (
               <p className="text-destructive text-xs mt-1">
-                {errors.location.message}
+                {errors.eventLocation.message}
               </p>
             )}
           </div>

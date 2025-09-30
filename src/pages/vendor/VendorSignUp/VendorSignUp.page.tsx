@@ -83,7 +83,7 @@ const VendorSignUpPage = () => {
         setIsModalOpen(!isModalOpen)
       }
 
-      if (registerResponse) {
+      if (registerResponse && registerResponse?.data?.email) {
         console.log("response got on form submit", isModalOpen)
         setEmail(registerResponse.data.email);
         HandleModal();

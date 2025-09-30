@@ -8,6 +8,7 @@ const Test = lazy(() => import("@/Test"));
 const LoginPage = lazy(() => import("@/pages/serviceBoy/Login/Login.page"));
 const SignUpPage = lazy(() => import("@/pages/serviceBoy/SignUp/SignUp.page"));
 const Profile = lazy(() => import("@/pages/serviceBoy/ProfilePage/Profile"));
+const Works = lazy(() => import("@/pages/serviceBoy/Works/Works"));
 const ServiceBoyHomePage = lazy(
     () => import("@/pages/serviceBoy/ServiceBoyHomePage/ServiceBoyHomePage")
 );
@@ -35,6 +36,16 @@ const serviceBoyRoutes = {
                 <ProtectServiceBoy>
                     <Suspense fallback={<div>Loading...</div>}>
                         <Profile />
+                    </Suspense>
+                </ProtectServiceBoy>
+            ),
+        },
+        {
+            path: 'works',
+            element: (
+                <ProtectServiceBoy>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Works />
                     </Suspense>
                 </ProtectServiceBoy>
             ),

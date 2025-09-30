@@ -9,16 +9,24 @@ export enum Messages {
   INVALID_OTP = "Invalid OTP",
   OTP_VERIFIED = "OTP Verified Successfully!",
   ENTER_VALID_OTP = "Please Enter a valid 4-digit OTP",
-  BLOCKED_BY_ADMIN = "You were blocked by admin.",
+  RESEND_OTP_FAILED = "Failed to resend OTP",
+
   FAILED_TO_UPDATE_PROFILE = "Failed to update profile",
   FETCH_PROFILE_FAILED = "Something went wrong. Please login again.",
-  FETCH_USER_FAILED = "Something went wrong while fetch. Please login again.",
   UPDATE_PROFILE_FAILED = "Failed to update profile. Please try again.",
+
+  BLOCKED_BY_ADMIN = "You were blocked by admin.",
+
   LOGOUT_FAILED = "some thing went wrong on logout. please try again",
-  RESEND_OTP_FAILED = "Failed to resend OTP",
+  
+  FETCH_USER_FAILED = "Something went wrong while fetch. Please login again.",
+  FAILED_TO_FETCH_IMAGES = "Failed to fetch images",
+
   FAILED_TO_FETCH_VERIFICATION_SERVICE_BOY ="Failed to fetch service boy verification",
   VERIFCATION_STATUS_CHANGE_FAILED = "Failed verification status change",
-  FAILED_TO_FETCH_IMAGES = "Failed to fetch images"
+
+  FAILED_TO_CREATE_EVENT = "Event creation failed.",
+  EVENT_CREATION_SUCCESS = "Event creation success",
 }
 
 

@@ -5,7 +5,8 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 219 23% 7%;
-    /* --card: 241 40.4% 48% / 0.5; */
+    --surface: 241, 40%, 48%, 0.10;
+    --card: 0 0% 100% / 0.50;
     --card-foreground: 219 23% 7%;
     --popover: 0 0% 100%;
     --popover-foreground: 219 23% 7%;
@@ -24,7 +25,7 @@
 
 
     --input: 220 13% 91%;
-    --ring: 219 23% 7%;
+    --ring: 241 40.4% 48%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;

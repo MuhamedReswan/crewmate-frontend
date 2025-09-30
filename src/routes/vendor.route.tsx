@@ -7,6 +7,7 @@ import VendorProfile from "@/pages/vendor/ProfilePage/VendorProfile";
 const VendorLoginPage = lazy(() => import("@/pages/vendor/VendorLogin/VendorLogin.page"));
 const VendorSignUpPage = lazy(() => import("@/pages/vendor/VendorSignUp/VendorSignUp.page"));
 const VendorHomePage = lazy(() => import("@/pages/vendor/VendorHomePage/VendorHomePage"));
+const Events = lazy(() => import("@/pages/vendor/Events/Event"));
 const VendorResetForgotPassword = lazy(() => import("@/pages/vendor/ResetForgotPassword/VendorResetForgotPassword"));
 
 const vendorRoutes = {
@@ -57,6 +58,16 @@ const vendorRoutes = {
                 <ProtectVendor>
                     <Suspense fallback={<div>Loading...</div>}>
                         <VendorProfile />
+                    </Suspense>
+                </ProtectVendor>
+            )
+        },
+        {
+            path: "events",
+            element: (
+                <ProtectVendor>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Events />
                     </Suspense>
                 </ProtectVendor>
             )

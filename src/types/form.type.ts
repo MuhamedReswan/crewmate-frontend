@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { Role } from "./enum.type";
 import {
+  eventSchema,
   forgotPasswordSchema,
   loginSchema,
   passwordSchema,
@@ -9,6 +10,7 @@ import {
   vendorProfileSchema,
 } from "@/validation/validationSchema";
 import React from "react";
+
 export interface SignUpFormInputs {
   name: string;
   email: string;
@@ -24,17 +26,28 @@ export interface LoginFormInputs {
   rememberMe?: boolean;
 }
 
+export interface LocationData {
+  lat: number;
+  lng: number;
+  address: string;
+}
+
 export interface ForgotPasswordModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   role: Role;
 }
 
-export interface LocationData {
-  lat: number;
-  lng: number;
-  address: string;
+
+export interface CreateEventModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: EventFormData) => void;
 }
+
+
+
+
 
 // Type for form validation
 export type SignupFormData = z.infer<typeof signupSchema>;
@@ -43,3 +56,4 @@ export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type PasswordFormValues = z.infer<typeof passwordSchema>;
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 export type VendrProfileFormValues = z.infer<typeof vendorProfileSchema>;
+export type EventFormData = z.infer<typeof eventSchema>;

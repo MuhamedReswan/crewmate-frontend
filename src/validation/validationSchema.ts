@@ -246,3 +246,32 @@ export const vendorProfileSchema = z.object({
 
   email: z.string().email("Invalid email address"),
 });
+
+// Event creation validation
+export const eventSchema = z.object({
+  customerName: z.string().min(1, 'Customer name is required'),
+  typeOfService: z.string().min(1, 'Type of service is required'),
+  typeOfWork: z.string().min(1, 'Type of work is required'),
+  noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
+  reportingTime: z.string().min(1, 'Reporting time is required'),
+  serviceBoys: z.coerce.number().min(1, 'Number of boys must be at least 1')
+ .min(1, "Number of boys must be at least 1"),
+  eventLocation: z.object({
+    lat: z.number(),
+    lng: z.number(),
+    address: z.string().min(1, 'Address is required'),
+  }).nullable().refine(val => val !== null, 'Location is required'),
+ date: z
+    .string()
+    .min(1, 'Date is required')
+    .refine((val) => {
+      const selectedDate = new Date(val);
+      const today = new Date();
+
+      // Reset time part for "today" comparison
+      today.setHours(0, 0, 0, 0);
+
+      return selectedDate >= today;
+    }, {
+      message: "Date cannot be in the past",
+    }),});
