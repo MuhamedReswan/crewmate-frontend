@@ -201,7 +201,19 @@ export const GetVendorById = async (id: string): Promise<ApiResponse<VendorLogin
 //Events
 export const CreateEvent = async (data:EventFormData): Promise<ApiResponse<Event> | undefined> => {
     try {
-         const response = await API.post<ApiResponse<Event> | undefined>(vendorRoutes.event,data);
+         const response = await API.post<ApiResponse<Event> | undefined>(vendorRoutes.events,data);
+        return response.data; 
+    } catch (error) {
+        throw error;  
+    }
+}
+
+
+export const getEvents = async (params:any,vendorId:string): Promise<ApiResponse<Event[]> | undefined> => {
+    try {
+       const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId)
+         const response = await API.get<ApiResponse<Event[]>>(url,{params});
+         console.log("response of getEvents",response);
         return response.data; 
     } catch (error) {
         throw error;  

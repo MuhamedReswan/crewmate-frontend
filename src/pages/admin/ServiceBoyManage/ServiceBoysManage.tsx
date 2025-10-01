@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 const ServiceBoysManage = () => {
   const [serviceBoys, setServiceBoys] = useState<ServiceBoy[] | []>([]);
   const [search, setSearch] = useState('');
-const debouncedSearch = useDebounce(search, 3000);
+  const debouncedSearch = useDebounce(search, 3000);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotaltPage] = useState(1);
   const limit = 3;

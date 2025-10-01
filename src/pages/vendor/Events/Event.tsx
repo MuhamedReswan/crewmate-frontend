@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Search, Calendar, CalendarIcon } from 'lucide-react';
 
 import { CreateEventModal } from '@/components/vendorComponent/Modals/EventCreateModal';
@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar as CalendarComponent } from '@/components/ui/calender';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { CreateEvent } from '@/api/vendor/vendor';
+import { CreateEvent, getEvents } from '@/api/vendor/vendor';
 import ErrorMessage from '@/components/common/Message/Error.message';
 import { useToast } from '@/hooks/use-toast';
 import { Messages } from '@/types/enum.type';
@@ -16,6 +16,8 @@ import SuccessMessage from '@/components/common/Message/SuccessMessage';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { RootState } from '@/redux/store/store';
 import { useSelector } from 'react-redux';
+import { Event } from '@/types/type';
+import useDebounce from '@/hooks/useDebounce';
 
 interface TableData {
   slNo: number;
@@ -28,17 +30,35 @@ interface TableData {
 }
 
 const Events = () => {
+  // const [searchTerm, setSearchTerm] = useState('');
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [dateFilter, setDateFilter] = useState<string>('all');
+  // const [customDateFrom, setCustomDateFrom] = useState<Date>();
+  // const [customDateTo, setCustomDateTo] = useState<Date>();
+  // const [isCustomDateOpen, setIsCustomDateOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [customDateFrom, setCustomDateFrom] = useState<Date>();
   const [customDateTo, setCustomDateTo] = useState<Date>();
   const [isCustomDateOpen, setIsCustomDateOpen] = useState(false);
+  const [events, setEvents] = useState<Event[] >([]);
+  const [loading, setLoading] = useState(false);
+  // const [totalPages, setTotaltPage] = useState(1);
+  const limit = 5;
+  // let startIndex =1
+  // let endIndex =5
+
+  const debouncedSearch = useDebounce(searchTerm, 3000);
   const vendorData = useSelector((state: RootState) => state.vendor.vendorData);
-
-
   const { toast } = useToast();
+  
+
+   useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const handleEventSubmit = async (data: any) => {
     try {
@@ -75,6 +95,11 @@ const Events = () => {
     console.log('Event created:', data);
     // Here you would typically send the data to your API
   };
+
+  useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm, statusFilter, dateFilter]);
+
 
   // Sample data matching the image
   const data: TableData[] = [
@@ -209,10 +234,14 @@ const Events = () => {
     }
   };
 
-  const filteredData = getFilteredDataByDate(data).filter(item =>
+  const filteredData = getFilteredDataByDate(data)
+  .filter(item =>
     item.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.eventType.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.location.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .filter(item =>
+    statusFilter === 'all' ? true : item.status === statusFilter
   );
 
   const itemsPerPage = 8;
@@ -221,108 +250,177 @@ const Events = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
 
+
+  useEffect(() => {
+fetchEvents(1)
+    }, [debouncedSearch, statusFilter, dateFilter, customDateFrom, customDateTo, currentPage]);
+
+
+  const fetchEvents = async (page: number) => {
+    try {
+      const params: any = {
+        search: debouncedSearch,
+        status: statusFilter !== "all" ? statusFilter : undefined,
+        page: page,
+        limit: limit,
+      };
+
+      if (dateFilter === "custom" && customDateFrom && customDateTo) {
+        params.from = customDateFrom.toISOString();
+        params.to = customDateTo.toISOString();
+      } else if (dateFilter === "last7days") {
+        const to = new Date();
+        const from = new Date();
+        from.setDate(to.getDate() - 7);
+        params.from = from.toISOString();
+        params.to = to.toISOString();
+      } else if (dateFilter === "lastMonth") {
+        const to = new Date();
+        const from = new Date();
+        from.setMonth(to.getMonth() - 1);
+        params.from = from.toISOString();
+        params.to = to.toISOString();
+      } else if (dateFilter === "lastYear") {
+        const to = new Date();
+        const from = new Date();
+        from.setFullYear(to.getFullYear() - 1);
+        params.from = from.toISOString();
+        params.to = to.toISOString();
+      }
+if(vendorData?._id){
+  const response = await getEvents(params,vendorData._id);
+  console.log("api response on event fetc",response)
+  if(response?.data){
+
+    setEvents(response?.data);
+  }
+  // you can also store pagination info
+  // setTotalPages(response.pagination.totalPages);
+}
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
+  };
+
+
   return (
     <div className="w-full bg-surface min-h-screen p-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">All Events</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage and track your events</p>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search events..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2.5 bg-white border border-input rounded-lg text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-transparent transition-all"
+     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4  pe-4">
+ <div className="flex flex-wrap items-center gap-3 mb-4">
+
+    {/* Search Input */}
+  <div className="relative w-52">
+    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+    <input
+      type="text"
+      placeholder="Search..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full pl-9 pr-3 py-2.5 bg-white border border-input rounded-lg text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-transparent transition-all"
+    />
+  </div> 
+
+  {/* Status Filter */}
+  <Select value={statusFilter} onValueChange={setStatusFilter}>
+    <SelectTrigger className="w-36 bg-white border-input">
+      <SelectValue placeholder="Status" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All Status</SelectItem>
+      <SelectItem value="Completed">Completed</SelectItem>
+      <SelectItem value="On going">On going</SelectItem>
+      <SelectItem value="Up coming">Up coming</SelectItem>
+      <SelectItem value="Active">Active</SelectItem>
+      <SelectItem value="In progress">In progress</SelectItem>
+    </SelectContent>
+  </Select>
+
+  {/* Date Filter */}
+  <Select value={dateFilter} onValueChange={setDateFilter}>
+    <SelectTrigger className="w-36 bg-white border-input">
+      <SelectValue placeholder="Date" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All Time</SelectItem>
+      <SelectItem value="last7days">Last 7 Days</SelectItem>
+      <SelectItem value="lastMonth">Last Month</SelectItem>
+      <SelectItem value="lastYear">Last Year</SelectItem>
+      <SelectItem value="custom">Custom Range</SelectItem>
+    </SelectContent>
+  </Select>
+
+  {/* Custom Date Range */}
+  {dateFilter === 'custom' && (
+    <Popover open={isCustomDateOpen} onOpenChange={setIsCustomDateOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className="w-52 justify-start text-left font-normal bg-card border-input"
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {customDateFrom && customDateTo
+            ? `${format(customDateFrom, 'MMM dd')} - ${format(customDateTo, 'MMM dd, yyyy')}`
+            : <span className="text-muted-foreground">Pick date range</span>
+          }
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <div className="flex">
+          <div className="p-3">
+            <div className="text-sm font-medium mb-2">From</div>
+            <CalendarComponent
+              mode="single"
+              selected={customDateFrom}
+              onSelect={setCustomDateFrom}
             />
           </div>
-
-          <Select value={dateFilter} onValueChange={setDateFilter}>
-            <SelectTrigger className="w-40 bg-white border-input ">
-              <SelectValue placeholder="Filter by date"  />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Time</SelectItem>
-              <SelectItem value="last7days">Last 7 Days</SelectItem>
-              <SelectItem value="lastMonth">Last Month</SelectItem>
-              <SelectItem value="lastYear">Last Year</SelectItem>
-              <SelectItem value="custom">Custom Range</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {dateFilter === 'custom' && (
-            <Popover open={isCustomDateOpen} onOpenChange={setIsCustomDateOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-60 justify-start text-left font-normal bg-card border-input"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {customDateFrom && customDateTo ? (
-                    `${format(customDateFrom, 'MMM dd')} - ${format(customDateTo, 'MMM dd, yyyy')}`
-                  ) : (
-                    <span className="text-muted-foreground">Pick date range</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <div className="flex">
-                  <div className="p-3">
-                    <div className="text-sm font-medium mb-2">From</div>
-                    <CalendarComponent
-                      mode="single"
-                      selected={customDateFrom}
-                      onSelect={setCustomDateFrom}
-                      className="p-3 pointer-events-auto"
-                    />
-                  </div>
-                  <div className="p-3 border-l">
-                    <div className="text-sm font-medium mb-2">To</div>
-                    <CalendarComponent
-                      mode="single"
-                      selected={customDateTo}
-                      onSelect={setCustomDateTo}
-                      className="p-3 pointer-events-auto"
-                    />
-                  </div>
-                </div>
-                <div className="border-t p-3 flex justify-end gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => {
-                      setCustomDateFrom(undefined);
-                      setCustomDateTo(undefined);
-                    }}
-                  >
-                    Clear
-                  </Button>
-                  <Button 
-                    size="sm"
-                    onClick={() => setIsCustomDateOpen(false)}
-                    disabled={!customDateFrom || !customDateTo}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
-          
+          <div className="p-3 border-l">
+            <div className="text-sm font-medium mb-2">To</div>
+            <CalendarComponent
+              mode="single"
+              selected={customDateTo}
+              onSelect={setCustomDateTo}
+            />
+          </div>
+        </div>
+        <div className="border-t p-3 flex justify-end gap-2">
           <Button 
-            className="bg-primary hover:bg-primary-hover text-primary-foreground font-medium px-5 py-2.5 shadow-sm"
-            onClick={() => setIsModalOpen(true)}
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+              setCustomDateFrom(undefined);
+              setCustomDateTo(undefined);
+            }}
           >
-            <Plus className="h-4 w-4 mr-2" />
-            Add Event
+            Clear
+          </Button>
+          <Button 
+            size="sm"
+            onClick={() => setIsCustomDateOpen(false)}
+            disabled={!customDateFrom || !customDateTo}
+          >
+            Apply
           </Button>
         </div>
-      </div>
+      </PopoverContent>
+    </Popover>
+  )}
+
+
+
+  {/* Add Event Button */}
+  <Button 
+    className="bg-primary hover:bg-primary-hover text-primary-foreground font-medium px-4 py-2.5 shadow-sm"
+    onClick={() => setIsModalOpen(true)}
+  >
+    <Plus className="h-4 w-4 mr-2" />
+    Add Event
+  </Button>
+</div>
+
+</div>
+
 
       {/* Table */}
       <div className="bg-card rounded-xl border border-border shadow-sm">
@@ -341,15 +439,42 @@ const Events = () => {
               </tr>
             </thead>
             <tbody>
-              {currentData.map((item, index) => (
+               {/* {events && data.map((item, index) => (
                 <tr 
                   key={index} 
                   className={`border-b border-table-border ${
                     index % 2 === 0 ? 'bg-table-row-even' : 'bg-table-row-odd'
                   } hover:bg-white transition-colors`}
                 >
-                  <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.slNo}</td>
-                  <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.clientName}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground font-medium">{index+1}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.customerName}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfWork}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfService}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground">{item.eventLocation.address}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground">{item.reportingTime}</td>
+                  <td className="px-6 py-4 text-sm">{item.status}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground">{format(new Date(item.date), "dd-MM-yyyy")}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))} */}
+
+              {currentData.map((item, index) => (
+                <tr 
+                  key={index} 
+                  className={`border-b border-table-border ${
+                    index % 2 === 0 ? 'bg-table-row-even' : 'bg-table-row-odd'
+                  } hover:bg-accent/50 transition-colors`}
+                >
+                  <td className="px-6 py-4 text-sm text-card-foreground">{item.slNo}</td>
+                  <td className="px-6 py-4 text-sm text-card-foreground">{item.clientName}</td>
                   <td className="px-6 py-4 text-sm text-card-foreground">{item.eventType}</td>
                   <td className="px-6 py-4 text-sm text-card-foreground">{item.location}</td>
                   <td className="px-6 py-4 text-sm text-card-foreground">{item.reportingTime}</td>
@@ -359,7 +484,7 @@ const Events = () => {
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
+                      className="h-8 w-8 p-0 hover:bg-accent"
                     >
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
@@ -373,7 +498,7 @@ const Events = () => {
         {/* Pagination */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-table-border bg-card">
           <div className="text-sm text-muted-foreground">
-            Showing <span className="font-medium text-foreground">{startIndex + 1}</span> to <span className="font-medium text-foreground">{Math.min(endIndex, filteredData.length)}</span> of <span className="font-medium text-foreground">{filteredData.length}</span> entries
+            Showing <span className="font-medium text-foreground">{startIndex + 1}</span> to <span className="font-medium text-foreground">{Math.min(endIndex, events.length)}</span> of <span className="font-medium text-foreground">{events.length}</span> entries
           </div>
           
           <div className="flex items-center gap-2">

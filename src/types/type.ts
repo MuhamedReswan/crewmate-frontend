@@ -7,22 +7,22 @@ export interface MessageProps {
 
 export interface Event {
   _id: string;
-  CustomerName: String;
-  VendorId: string;
-  TypeOfWork: String;
-  TypeOfService: String;
-  NeededBoys: Number;
-  Location: LocationData;
-  BookedBoys: Number;
-  Status: String;
-  PaymentStatus: String;
-  Bookings: string; // to change
-  OverTime: Number;
-  TotalBill: Number;
-  Ratings: string;
-  Date: Date;
-  ReportingTime: String;
-  NoOfPax: Number;
-  Bonus: Number;
+  customerName: String;
+  vendorId: string;
+  typeOfWork: String;
+  typeOfService: String;
+  serviceBoys: Number;
+  eventLocation: LocationData;
+  bookedBoys: Number;
+  status: String;
+  paymentStatus: String;
+  bookings: string; // to change
+  overTime: Number;
+  totalBill: Number;
+  ratings: string;
+  date: Date;
+  reportingTime: String;
+  noOfPax: Number;
+  bonus: Number;
 }
 

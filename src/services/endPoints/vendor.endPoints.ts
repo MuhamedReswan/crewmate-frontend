@@ -10,5 +10,6 @@ export const vendorRoutes = {
     profile:'/vendor/profile',
     retryVerify:'/vendor/retry-verify/:id',
     vendor:'/vendor/:id',
-    event:'/vendor/event'
+    events:'/vendor/events',
+    loadEvents:'/vendor/:vendorId/events'
   };
