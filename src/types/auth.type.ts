@@ -16,13 +16,6 @@ export interface Otp {
   email: string;
 }
 
-// export interface ResponseResult<T = unknown> {
-//   message: string;
-//   statusCode: number;
-//   data: T | null;
-//   role?: Role
-// }
-
 export interface ResetForgotPassword {
   email: string;
   token: string;

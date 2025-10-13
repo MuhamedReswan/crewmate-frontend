@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Login } from '@/api/admin/admin';
 import { serviceBoyLogin } from '@/api/serviceBoy/serviceBoy';
 import { vendorLogin } from '@/api/vendor/vendor';
-import { ApiResponse } from '@/types/ApiResponse';
+import { ApiResponse } from '@/types/apiTypes/ApiResponse';
 import { Role } from '@/types/enum.type';
 import { LoginFormInputs } from '@/types/form.type';
 import { loginSchema } from '@/validation/validationSchema';

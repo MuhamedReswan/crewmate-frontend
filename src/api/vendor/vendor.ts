@@ -1,7 +1,8 @@
 import API from "@/services/axios";
 // error hander
 import { vendorRoutes } from "@/services/endPoints/vendor.endPoints";
-import { ApiResponse } from "@/types/ApiResponse";
+import { ApiResponse, PaginatedResponse } from "@/types/apiTypes/ApiResponse";
+import { VendorLoginDTO } from "@/types/apiTypes/vendorDto.type";
 import {
   GoogleLoginData,
   Otp,
@@ -9,10 +10,13 @@ import {
   VendorProfileData,
 } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
-import { EventFormData, LoginFormInputs, SignupFormData } from "@/types/form.type";
+import {
+  EventFormData,
+  LoginFormInputs,
+  SignupFormData,
+} from "@/types/form.type";
 import { Event } from "@/types/type";
 import { Vendor } from "@/types/users.type";
-import { VendorLoginDTO } from "@/types/vendorDto.type";
 
 export const vendorLogin = async (
   data: LoginFormInputs
@@ -174,48 +178,61 @@ export const VendorFetchProfile = async (
   }
 };
 
+export const RetryVerficationRequestVendor = async (
+  id: string
+): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
+  try {
+    const url = vendorRoutes.retryVerify.replace(":id", id);
+    const response = await API.patch<ApiResponse<Partial<Vendor>> | undefined>(
+      url
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-export const RetryVerficationRequestVendor = async (id: string): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
-    try {
- const url = vendorRoutes.retryVerify.replace(":id", id);
-         const response = await API.patch<ApiResponse<Partial<Vendor>> | undefined>(url);
-        return response.data; 
-    } catch (error) {
-        throw error;  
-
-    }
-}
-
-
-export const GetVendorById = async (id: string): Promise<ApiResponse<VendorLoginDTO> | undefined> => {
-    try {
- const url = vendorRoutes.vendor.replace(":id", id);
-         const response = await API.get<ApiResponse<VendorLoginDTO> | undefined>(url);
-        return response.data; 
-    } catch (error) {
-        throw error;  
-    }
-}
-
+export const GetVendorById = async (
+  id: string
+): Promise<ApiResponse<VendorLoginDTO> | undefined> => {
+  try {
+    const url = vendorRoutes.vendor.replace(":id", id);
+    const response = await API.get<ApiResponse<VendorLoginDTO> | undefined>(
+      url
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 //Events
-export const CreateEvent = async (data:EventFormData): Promise<ApiResponse<Event> | undefined> => {
-    try {
-         const response = await API.post<ApiResponse<Event> | undefined>(vendorRoutes.events,data);
-        return response.data; 
-    } catch (error) {
-        throw error;  
-    }
-}
+export const CreateEvent = async (
+  data: EventFormData
+): Promise<ApiResponse<Event> | undefined> => {
+  try {
+    const response = await API.post<ApiResponse<Event> | undefined>(
+      vendorRoutes.events,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-
-export const getEvents = async (params:any,vendorId:string): Promise<ApiResponse<Event[]> | undefined> => {
-    try {
-       const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId)
-         const response = await API.get<ApiResponse<Event[]>>(url,{params});
-         console.log("response of getEvents",response);
-        return response.data; 
-    } catch (error) {
-        throw error;  
-    }
-}
+export const getEvents = async (
+  params: any,
+  vendorId: string
+): Promise<ApiResponse<PaginatedResponse<Event>> | undefined> => {
+  try {
+    const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId);
+    const response = await API.get<ApiResponse<PaginatedResponse<Event>>>(url, {
+      params,
+    });
+    if (!response) return;
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

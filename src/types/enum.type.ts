@@ -27,6 +27,10 @@ export enum Messages {
 
   FAILED_TO_CREATE_EVENT = "Event creation failed.",
   EVENT_CREATION_SUCCESS = "Event creation success",
+  EVENTS_lOAD_SUCCESS = "Events loaded success",
+
+
+  INVALID_USER_ID = "Invalid user Id"
 }
 
 
@@ -34,5 +38,11 @@ export enum VerificationStatus {
   Pending = "pending",
   Verified = "verified",
   Rejected = "rejected",
+}
+
+export enum EventStatus {
+  Upcoming = "upcoming",
+  Completed = "completed",
+  Created = "created"
 }
 

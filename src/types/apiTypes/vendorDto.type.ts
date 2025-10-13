@@ -1,6 +1,6 @@
-import { Role } from "./enum.type";
+import { Role } from "../enum.type";
 
-export type VendorLoginDTO = {
+export interface VendorLoginDTO {
   _id: string;
   name: string;
   email: string;

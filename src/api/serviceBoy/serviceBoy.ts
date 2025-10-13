@@ -1,7 +1,7 @@
 import API from "@/services/axios";
 // error hander
 import { serviceBoyRoutes } from "@/services/endPoints/serviceBoy.endPoints";
-import { ApiResponse } from "@/types/ApiResponse";
+import { ApiResponse } from "@/types/apiTypes/ApiResponse";
 import {
   GoogleLoginData,
   Otp,
@@ -10,7 +10,7 @@ import {
 } from "@/types/auth.type";
 import { Role, VerificationStatus } from "@/types/enum.type";
 import { LoginFormInputs, SignupFormData } from "@/types/form.type";
-import { ServiceBoyLoginDTO } from "@/types/serviceBoyDto.type";
+import { ServiceBoyLoginDTO } from "@/types/apiTypes/serviceBoyDto.type";
 import { ServiceBoy } from "@/types/users.type";
 
 export const serviceBoyLogin = async (
@@ -218,24 +218,30 @@ export const ServiceBoyFetchProfile = async (
   }
 };
 
+export const RetryVerficationRequestServiceBoy = async (
+  id: string
+): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
+  try {
+    const url = serviceBoyRoutes.retryVerify.replace(":id", id);
+    const response = await API.patch<
+      ApiResponse<Partial<ServiceBoy>> | undefined
+    >(url);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-export const RetryVerficationRequestServiceBoy = async (id: string): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
-    try {
- const url = serviceBoyRoutes.retryVerify.replace(":id", id);
-         const response = await API.patch<ApiResponse<Partial<ServiceBoy>> | undefined>(url);
-        return response.data; 
-    } catch (error) {
-        throw error;  
-
-    }
-}
-
-export const GetServiceBoyById = async (id: string): Promise<ApiResponse<ServiceBoyLoginDTO> | undefined> => {
-    try {
- const url = serviceBoyRoutes.serviceBoyById.replace(":id", id);
-         const response = await API.get<ApiResponse<ServiceBoyLoginDTO> | undefined>(url);
-        return response.data; 
-    } catch (error) {
-        throw error;  
-    }
-}
+export const GetServiceBoyById = async (
+  id: string
+): Promise<ApiResponse<ServiceBoyLoginDTO> | undefined> => {
+  try {
+    const url = serviceBoyRoutes.serviceBoyById.replace(":id", id);
+    const response = await API.get<ApiResponse<ServiceBoyLoginDTO> | undefined>(
+      url
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

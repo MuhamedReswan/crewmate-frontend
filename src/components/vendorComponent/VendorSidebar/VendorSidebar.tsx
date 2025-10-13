@@ -69,7 +69,7 @@ const VendorSidebar = () => {
 
   const navItems = [
     { icon: <LayoutDashboard size={20} />, text: 'Dashboard', path: '' },
-    { icon: <Briefcase size={20} />, text: 'Products', path: 'events' },
+    { icon: <Briefcase size={20} />, text: 'Events', path: 'events' },
     { icon: <User size={20} />, text: 'Profile', path: 'profile' },
     { icon: <MessageSquareText size={20} />, text: 'Messages', path: 'messages' },
     { icon: <Bell size={20} />, text: 'Notifications', path: 'notification' },

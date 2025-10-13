@@ -1,20 +1,19 @@
-import { ServiceBoyLoginDTO } from "@/types/serviceBoyDto.type";
+import { ServiceBoyLoginDTO } from "@/types/apiTypes/serviceBoyDto.type";
 
 export const serviceBoyLoginShape: ServiceBoyLoginDTO = {
-  _id: '',
-  name: '',
-  email: '',
+  _id: "",
+  name: "",
+  email: "",
   isVerified: false,
   isBlocked: false,
-  role: '',
+  role: "",
 };
 
-
 export const VendorLoginShape: ServiceBoyLoginDTO = {
-  _id: '',
-  name: '',
-  email: '',
+  _id: "",
+  name: "",
+  email: "",
   isVerified: false,
   isBlocked: false,
-  role:'',
+  role: "",
 };

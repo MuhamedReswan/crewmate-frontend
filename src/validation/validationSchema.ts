@@ -6,7 +6,7 @@ export const signupSchema = z
   .object({
     name: z
       .string()
-      .min(3, { message: "Name must be at least 3 characters long" })
+      .min(3, { message: "Name must be at least 3 characters long" }).max(20, 'Name cannot exceed 20 characters')
       .regex(/^[a-zA-Z\s]+$/, {
         message: "Name can only contain letters and spaces",
       })
@@ -102,7 +102,7 @@ export const passwordSchema = z
   //service boy profile validation
 export const profileSchema = z.object({
   _id: z.string().optional(),
-  name: z.string().min(1, "Full name is required"),
+  name: z.string().min(1, "Full name is required").max(20, 'Name cannot exceed 20 characters'),
   qualification: z.string().min(1, "Qualification is required"),
   aadharNumber: z
     .string()
@@ -174,7 +174,7 @@ export const profileSchema = z.object({
 export const vendorProfileSchema = z.object({
   _id: z.string().optional(),
 
-  name: z.string().min(3, "Full name is required"),
+  name: z.string().min(3, "Full name is required").max(20, 'Name cannot exceed 20 characters'),
 
   licenceImage: z.any().refine(
     (val) => {
@@ -249,7 +249,7 @@ export const vendorProfileSchema = z.object({
 
 // Event creation validation
 export const eventSchema = z.object({
-  customerName: z.string().min(1, 'Customer name is required'),
+  customerName: z.string().min(1, 'Customer name is required').max(20, 'Customer name cannot exceed 20 characters'),
   typeOfService: z.string().min(1, 'Type of service is required'),
   typeOfWork: z.string().min(1, 'Type of work is required'),
   noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
