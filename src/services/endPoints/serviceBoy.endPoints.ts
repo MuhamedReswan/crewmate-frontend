@@ -12,4 +12,5 @@ export const serviceBoyRoutes = {
   profile:"/service-boy/profile",
   serviceBoyById:"/service-boy/:id",
   retryVerify:"/service-boy/retry-verify/:id",
+  loadWorks:"/service-boy/works",
 };

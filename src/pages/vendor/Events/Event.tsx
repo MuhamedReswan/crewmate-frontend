@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Search, CalendarIcon, Loader2 } from 'lucide-react';
-
+import { ChevronLeft, ChevronRight, MoreHorizontal, Search, CalendarIcon, Loader2, Plus } from 'lucide-react';
 import { CreateEventModal } from '@/components/vendorComponent/Modals/EventCreateModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -91,7 +90,7 @@ const Events = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, statusFilter, dateFilter]);
-
+  
   const startIndex = (currentPage - 1) * pagination?.limit;
   const endIndex = startIndex + pagination?.limit;
 
@@ -262,24 +261,18 @@ const Events = () => {
 
           {/* Add Event Button */}
           <Button
-            className="bg-primary hover:bg-primary-hover text-primary-foreground font-medium px-4 py-2.5 shadow-sm"
+            className="bg-primary/20 hover:bg-primary hover:text-white text-primary font-medium px-4 py-2.5 shadow-sm"
             onClick={() => setIsModalOpen(true)}
           >
-            Clear
-          </Button>
-          <Button 
-            size="sm"
-            onClick={() => setIsCustomDateOpen(false)}
-            disabled={!customDateFrom || !customDateTo}
-          >
-            Apply
+            <Plus/>
+            Add New Event
           </Button>
         </div>
       </div>
 
       {/* Table */}
       <div className="bg-card rounded-xl border border-border shadow-sm">
-        <div className="overflow-x-auto max-h-[350px] overflow-y-auto">
+        <div className="overflow-x-auto max-h-screen overflow-y-auto">
           <table className="w-full">
             <thead className="sticky top-0 z-10">
               <tr className="bg-primary/50 text-table-header-foreground">

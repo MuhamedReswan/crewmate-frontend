@@ -1,14 +1,14 @@
 import API from "@/services/axios";
 // error hander
 import { serviceBoyRoutes } from "@/services/endPoints/serviceBoy.endPoints";
-import { ApiResponse } from "@/types/apiTypes/ApiResponse";
+import { ApiResponse, PaginatedResponse } from "@/types/apiTypes/ApiResponse";
 import {
   GoogleLoginData,
   Otp,
   ProfileData,
   ResetForgotPassword,
 } from "@/types/auth.type";
-import { Role, VerificationStatus } from "@/types/enum.type";
+import { Role } from "@/types/enum.type";
 import { LoginFormInputs, SignupFormData } from "@/types/form.type";
 import { ServiceBoyLoginDTO } from "@/types/apiTypes/serviceBoyDto.type";
 import { ServiceBoy } from "@/types/users.type";
@@ -240,6 +240,26 @@ export const GetServiceBoyById = async (
     const response = await API.get<ApiResponse<ServiceBoyLoginDTO> | undefined>(
       url
     );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const getWorks = async (
+  params: any,
+  serviceBoyId: string
+): Promise<ApiResponse<PaginatedResponse<Event>> | undefined> => {
+  try {
+    console.log("serviceBoyId",serviceBoyId)
+    // const url = serviceBoyRoutes.loadWorks.replace(":serviceBoyId", serviceBoyId);
+    const url = serviceBoyRoutes.loadWorks
+    const response = await API.get<ApiResponse<PaginatedResponse<Event>>>(url, {
+      params,
+    });
+    console.log("getWorks response",response);
+    if (!response) return;
     return response.data;
   } catch (error) {
     throw error;
