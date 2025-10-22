@@ -135,6 +135,7 @@ const VendorProfile = () => {
 
     setLocation(profileData.location || undefined);
   }, [profileData, reset]);
+  console.log("profileData",profileData);
 
   const watchedValues = watch();
   console.log("watchedValues", watchedValues)

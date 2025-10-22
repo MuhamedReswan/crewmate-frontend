@@ -64,7 +64,7 @@ const Events = () => {
 
       const payload = {
         ...data,
-        vendorId: vendorData._id,
+        vendor: vendorData._id,
       };
 
       const response = await CreateEvent(payload);
@@ -77,6 +77,7 @@ const Events = () => {
       }
       if (response && response?.statusCode === 201) {
         toast({ description: <SuccessMessage message={response.message || Messages.EVENT_CREATION_SUCCESS} /> });
+        fetchEvents(currentPage);
       }
 
     } catch (error) {

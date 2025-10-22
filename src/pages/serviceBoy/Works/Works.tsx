@@ -273,7 +273,7 @@ const Works = () => {
                       <td className="px-6 py-4 text-sm text-card-foreground font-medium">
                         {(pagination.limit * (pagination.page - 1)) + index + 1}
                       </td>
-                      <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.vendorId}</td>
+                      <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.vendor.name}</td>
                       <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfWork}</td>
                       <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfService}</td>
                       <td className="px-6 py-4 text-sm text-card-foreground">{item?.eventLocation?.address ?? "location"}</td>

@@ -254,8 +254,7 @@ export const eventSchema = z.object({
   typeOfWork: z.string().min(1, 'Type of work is required'),
   noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
   reportingTime: z.string().min(1, 'Reporting time is required'),
-  serviceBoys: z.coerce.number().min(1, 'Number of boys must be at least 1')
- .min(1, "Number of boys must be at least 1"),
+  serviceBoys: z.coerce.number().min(1, 'Number of boys must be at least 1'),
   eventLocation: z.object({
     lat: z.number(),
     lng: z.number(),
@@ -274,4 +273,21 @@ export const eventSchema = z.object({
       return selectedDate >= today;
     }, {
       message: "Date cannot be in the past",
-    }),});
+    }),})
+ .superRefine((data, ctx) => {
+    if (data.noOfPax > 1000 && data.serviceBoys > Math.ceil(data.noOfPax * 0.07)) {
+      ctx.addIssue({
+        path: ["serviceBoys"],
+        message: "For events over 1000 pax, service boys cannot exceed 7% of the pax count",
+        code: "custom",
+      });
+    }
+
+    if (data.noOfPax <= 1000 && data.serviceBoys > 100) {
+      ctx.addIssue({
+        path: ["serviceBoys"],
+        message: "For events below 1000 pax, a maximum of 100 service boys is allowed",
+        code: "custom",
+      });
+    }
+  });
