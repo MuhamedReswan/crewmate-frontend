@@ -1,22 +1,27 @@
 import * as z from "zod";
 import { Role } from "@/types/enum.type";
+const nameRegex = /^[A-Za-z ]+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const mobileRegex = /^[0-9]{10}$/;
 
 //Singup validation
 export const signupSchema = z
   .object({
-    name: z
-      .string()
-      .min(3, { message: "Name must be at least 3 characters long" }).max(20, 'Name cannot exceed 20 characters')
-      .regex(/^[a-zA-Z\s]+$/, {
-        message: "Name can only contain letters and spaces",
-      })
-      .trim(),
-
+    name: z.string()
+  .trim() 
+  .min(3, 'Full name is required')
+  .max(20, 'Name cannot exceed 20 characters')
+  .regex(nameRegex, 'Name can only contain alphabets and spaces')
+  .refine(
+    (value) => (value.match(/ /g) || []).length <= 2,
+    'Name cannot contain more than 2 spaces'
+  ),
+      
     email: z.string().email({ message: "Invalid email address" }),
 
     mobile: z
       .string()
-      .regex(/^[0-9]{10}$/, {
+      .regex(mobileRegex, {
         message: "Mobile number must be exactly 10 digits",
       }),
 
@@ -24,7 +29,7 @@ export const signupSchema = z
       .string()
       .min(8, { message: "Password must be at least 8 characters long" })
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        passwordRegex,
         {
           message:
             "Password must include uppercase, lowercase, number, and special character",
@@ -58,7 +63,7 @@ export const loginSchema = z.object({
     .min(1, { message: "Password is required" })
     .min(8, { message: "Password must be at least 8 characters long" })
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      passwordRegex,
       {
         message:
           "Password must include uppercase, lowercase, number, and special character",
@@ -84,7 +89,7 @@ export const passwordSchema = z
       .min(1, { message: "Password is required" })
       .min(8, { message: "Password must be at least 8 characters long" })
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        passwordRegex,
         {
           message:
             "Password must include uppercase, lowercase, number, and special character",
@@ -102,7 +107,15 @@ export const passwordSchema = z
   //service boy profile validation
 export const profileSchema = z.object({
   _id: z.string().optional(),
-  name: z.string().min(1, "Full name is required").max(20, 'Name cannot exceed 20 characters'),
+  name:z.string()
+  .trim() 
+  .min(3, 'Full name is required')
+  .max(20, 'Name cannot exceed 20 characters')
+  .regex(nameRegex, 'Name can only contain alphabets and spaces')
+  .refine(
+    (value) => (value.match(/ /g) || []).length <= 2,
+    'Name cannot contain more than 2 spaces'
+  ),
   qualification: z.string().min(1, "Qualification is required"),
   aadharNumber: z
     .string()
@@ -116,7 +129,7 @@ export const profileSchema = z.object({
   mobile: z
     .string()
     .min(1, "Mobile number is required")
-    .regex(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+    .regex(mobileRegex, "Mobile number must be 10 digits"),
   profileImage: z.any().refine(
     (val) => {
       // If it's a string with length > 3, pass validation
@@ -174,7 +187,15 @@ export const profileSchema = z.object({
 export const vendorProfileSchema = z.object({
   _id: z.string().optional(),
 
-  name: z.string().min(3, "Full name is required").max(20, 'Name cannot exceed 20 characters'),
+  name: z.string()
+  .trim() 
+  .min(3, 'Full name is required')
+  .max(20, 'Name cannot exceed 20 characters')
+  .regex(nameRegex, 'Name can only contain alphabets and spaces')
+  .refine(
+    (value) => (value.match(/ /g) || []).length <= 2,
+    'Name cannot contain more than 2 spaces'
+  ),
 
   licenceImage: z.any().refine(
     (val) => {
@@ -211,7 +232,7 @@ export const vendorProfileSchema = z.object({
   mobile: z
     .string()
     .min(1, "Mobile number is required")
-    .regex(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+    .regex(mobileRegex, "Mobile number must be 10 digits"),
 
     location: z.any().refine(
       (val) => {
@@ -248,8 +269,17 @@ export const vendorProfileSchema = z.object({
 });
 
 // Event creation validation
+
 export const eventSchema = z.object({
-  customerName: z.string().min(1, 'Customer name is required').max(20, 'Customer name cannot exceed 20 characters'),
+  customerName: z.string()
+  .trim() 
+  .min(3, 'Customer name must have at least 2 characters')
+  .max(20, 'Customer name cannot exceed 20 characters')
+  .regex(nameRegex, 'Customer name can only contain alphabets and spaces')
+  .refine(
+    (value) => (value.match(/ /g) || []).length <= 2,
+    'Customer name cannot contain more than 2 spaces'
+  ),  
   typeOfService: z.string().min(1, 'Type of service is required'),
   typeOfWork: z.string().min(1, 'Type of work is required'),
   noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
