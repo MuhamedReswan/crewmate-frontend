@@ -109,7 +109,6 @@ export default function ServiceBoyVerfication() {
       columns={columns}
       currentPage={currentPage}
       limit={limit}
-      onVerify={handleVerify}
       onRowClick={handleServiceBoyDocumentPage}
       
     />

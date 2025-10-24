@@ -31,6 +31,7 @@ export interface ServiceBoy extends CommonDetails {
   date: Date;
   walletId: string;
   workHistoryId: string;
+  rejectionReason: string | null;
 }
 
 export interface Vendor extends CommonDetails {

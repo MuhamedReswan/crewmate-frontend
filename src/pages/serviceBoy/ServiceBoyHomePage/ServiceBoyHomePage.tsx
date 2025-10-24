@@ -1,4 +1,3 @@
-// original
 import { useDispatch, useSelector } from 'react-redux';
 import StatCard from '@/components/common/StatCard/StatCard';
 import { RootState } from '@/redux/store/store';
@@ -12,14 +11,15 @@ import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import ErrorMessage from '@/components/common/Message/Error.message';
 import { updateServiceBoyData } from '@/redux/slice/serviceBoyAuth.slice';
 import { useVerificationSync } from '@/hooks/useVerificationSync';
-
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 function ServiceBoyHomePage() {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const serviceBoy = useSelector((state: RootState) => state.serviceBoy.serviceBoyData);
+  const date = new Date(Date.now());
+const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()}`;
 
-     useVerificationSync({
+  useVerificationSync({
     user: serviceBoy,
     fetchById: GetServiceBoyById,
     updateAction: updateServiceBoyData,
@@ -31,56 +31,74 @@ function ServiceBoyHomePage() {
 
       if (!serviceBoy || !serviceBoy._id) return;
       const result = await RetryVerficationRequestServiceBoy(serviceBoy._id);
-      console.log("handleRetryVerification", result)
+      console.log("handleRetryVerification", result);
       if (result && result.statusCode === 200) {
         dispatch(updateServiceBoyData({ isVerified: VerificationStatus.Pending }));
         toast({ description: <SuccessMessage message={result.message} /> });
       } else {
         toast({
           description: <ErrorMessage message={Messages.VERIFCATION_STATUS_CHANGE_FAILED} />,
-        })
+        });
       }
     } catch (error) {
       toast({
         description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} />,
-      })
+      });
     }
+  };
 
-  }
-
+  console.log("serviceBoy ====",serviceBoy)
   return (
     <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+    
+
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Welcome {serviceBoy?.name}</h1>
-
-          {serviceBoy?.isVerified === VerificationStatus.Rejected ? (
-            <div className="flex flex-col gap-2">
-    <p className="text-sm text-red-500 font-medium">
-      Your request has been rejected.
-    </p>
-    <Button
-      variant="ghost"
-      size="sm"
-      className="bg-[#4B49AC]/20"
-      onClick={handleRetryVerification}
-    >
-      Re submit
-    </Button>
-  </div>
-          ) : (
-            <Link to="/service-boy/profile" className="text-sm text-gray-600 ">
-              Please update your profile for admin verification.
+          {serviceBoy?.isVerified === VerificationStatus.Pending && (
+            <Link to="/service-boy/profile" className="text-sm text-gray-600 hover:text-gray-800">
+              Please update your profile for admin verification and Wait for verification.
             </Link>
           )}
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          <span>Today (10 Jan 2021)</span>
-          <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
+          
+          <span>Today ( {formattedDate} )</span>
         </div>
       </div>
+        {/* Rejection Alert Banner */}
+      {serviceBoy?.isVerified === VerificationStatus.Rejected && (
+        <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-sm">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-6 w-6 text-red-500" />
+            </div>
+            <div className="ml-4 flex-1">
+              <h3 className="text-lg font-semibold text-red-800 mb-1">
+                Verification Request Rejected
+              </h3>
+              <p className="text-sm text-red-700 mb-4">
+                Your verification request has been rejected by the admin.due to {serviceBoy.rejectionReason}. Please review your profile information and submit a new verification request.
+              </p>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={handleRetryVerification}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  size="sm"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Resubmit Verification
+                </Button>
+                <Link to="/service-boy/profile">
+                  <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-50">
+                    Update Profile
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Section - Illustration */}
@@ -93,7 +111,7 @@ function ServiceBoyHomePage() {
         </div>
 
         {/* Right Section - Stats */}
-        <div className="grid-rows-2  lg:col-span-2 grid grid-cols-2 gap-4 ">
+        <div className="grid-rows-2 lg:col-span-2 grid grid-cols-2 gap-4">
           {/* Total Works Allocated */}
           <StatCard
             title="Total Works Allocated"
@@ -135,7 +153,5 @@ function ServiceBoyHomePage() {
   );
 }
 
-
-
-
 export default ServiceBoyHomePage;
+

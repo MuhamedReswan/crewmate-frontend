@@ -45,6 +45,12 @@ export interface CreateEventModalProps {
   onSubmit: (data: EventFormData) => void;
 }
 
+export interface VerificationRejectionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (reason: string) => void;
+}
+
 
 
 

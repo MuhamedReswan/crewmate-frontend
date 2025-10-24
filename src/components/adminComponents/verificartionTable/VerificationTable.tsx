@@ -1,8 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { VerificationStatus } from '@/types/enum.type';
-import { ServiceBoy, Vendor } from '@/types/users.type';
 
 interface Column<T> {
   key: string;
@@ -15,7 +13,6 @@ interface VerificationTableProps<T> {
   columns: Column<T>[];
   currentPage: number;
   limit: number;
-  onVerify: (id: string, status: VerificationStatus) => void;
   onRowClick: (data:T) => void;
 }
 
@@ -24,7 +21,6 @@ export function VerificationTable<T extends { _id?: string }>({
   columns,
   currentPage,
   limit,
-  onVerify,
   onRowClick
 }: VerificationTableProps<T>) {
   return (
@@ -36,7 +32,7 @@ export function VerificationTable<T extends { _id?: string }>({
             {columns.map(col => (
               <TableHead key={col.key} className="text-text-foreground  font-semibold">{col.label}</TableHead>
             ))}
-            <TableHead className="text-foreground  font-semibold">Approved</TableHead>
+            <TableHead className="text-foreground  font-semibold">More Info</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -54,20 +50,14 @@ export function VerificationTable<T extends { _id?: string }>({
               ))}
               <TableCell>
                 <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    onClick={() => onVerify(item._id!, VerificationStatus.Verified)}
-                    className="bg-accent hover:bg-white/50 text-accent-foreground px-3 py-1 text-xs"
-                  >
-                    Accept
-                  </Button>
+              
+                   
                   <Button
                     size="sm"
                     variant="destructive"
-                    onClick={() => onVerify(item._id!, VerificationStatus.Rejected)}
-                    className="bg-destructive hover:bg-[#EF4444]/90 text-destructive-foreground px-3 py-1 text-xs"
+                    className="bg-accent hover:bg-white/50 text-accent-foreground px-3 py-1 text-xs"
                   >
-                    Decline
+                    More details
                   </Button>
                 </div>
               </TableCell>

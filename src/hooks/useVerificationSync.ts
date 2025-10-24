@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { VerificationStatus } from "@/types/enum.type";
+import { ApiResponse } from "@/types/apiTypes/ApiResponse";
 
 interface BaseUser {
   _id?: string;
@@ -10,7 +11,7 @@ interface BaseUser {
 
 interface UseVerificationSyncProps<T extends BaseUser> {
   user: T | null; // serviceBoy or vendor data
-  fetchById: (id: string) => Promise<T | undefined>;
+  fetchById: (id: string) => Promise<ApiResponse<T> | undefined>;
   updateAction: (data: T) => any; // redux action
   intervalMs?: number;
 }
@@ -35,12 +36,11 @@ export function useVerificationSync<T extends BaseUser>({
       try {
         if (!user?._id) return;
         const latest = await fetchById(user._id);
-        if(!latest || !latest)
         console.log("latest",latest)
         console.log("user",user)
         console.log("is this same",(latest && isMounted && JSON.stringify(latest) !== JSON.stringify(user)))
-        if (latest && isMounted && JSON.stringify(latest) !== JSON.stringify(user)) {
-          dispatch(updateAction(latest));
+        if (latest?.data && isMounted && JSON.stringify(latest) !== JSON.stringify(user)) {
+          dispatch(updateAction(latest.data));
         }
       } catch (err) {
         console.error("Failed to sync verification", err);

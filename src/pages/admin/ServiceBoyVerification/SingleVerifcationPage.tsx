@@ -14,28 +14,29 @@ import ErrorMessage from '@/components/common/Message/Error.message';
 import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { Messages } from '@/types/enum.type';
 import { DocumentViewer } from '@/components/adminComponents/DocumentViewer/DocumentViewer';
-import { getImageUrl } from '@/api/common/common';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { fetchImages } from '@/utils/fetchImages';
+import VerificationRejectionModal from '@/components/adminComponents/Modals/RejectionModal';
 
 export default function ServiceBoyVerificationDetails() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
 
   const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
   const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>(undefined);
   const [backAadharImage, setBackAadharImage] = useState<string | undefined>(undefined);
-  
+
   const serviceBoyData = location.state as ServiceBoy;
 
-  const handleVerify = useCallback(async (status: VerificationStatus) => {
+  const handleVerify = useCallback(async (status: VerificationStatus, reason?: string) => {
     if (!id) return;
-    
+
     setIsLoading(true);
     try {
-      const result = await verifyServiceBoyByAdmin(id, status);
+      const result = await verifyServiceBoyByAdmin(id, status, reason);
       if (result?.statusCode === 200) {
         toast({ description: <SuccessMessage message={result.message} /> });
         navigate(-1);
@@ -47,21 +48,26 @@ export default function ServiceBoyVerificationDetails() {
     }
   }, [id, navigate]);
 
-useEffect(() => {
-  fetchImages(serviceBoyData, [
-    ["profileImage", setProfileImage],
-    ["aadharImageFront", setFrontAadharImage],
-    ["aadharImageBack", setBackAadharImage],
-  ]).catch((error) => {
-    toast({
-      description: (
-        <ErrorMessage
-          message={getApiErrorMessage(error, Messages.FAILED_TO_FETCH_IMAGES)}
-        />
-      ),
+  const handleRejectWithReason = useCallback((reason: string) => {
+    handleVerify(VerificationStatus.Rejected, reason);
+    setIsRejectModalOpen(false);
+  }, [handleVerify]);
+
+  useEffect(() => {
+    fetchImages(serviceBoyData, [
+      ["profileImage", setProfileImage],
+      ["aadharImageFront", setFrontAadharImage],
+      ["aadharImageBack", setBackAadharImage],
+    ]).catch((error) => {
+      toast({
+        description: (
+          <ErrorMessage
+            message={getApiErrorMessage(error, Messages.FAILED_TO_FETCH_IMAGES)}
+          />
+        ),
+      });
     });
-  });
-}, [serviceBoyData]);
+  }, [serviceBoyData]);
 
 
   if (!serviceBoyData) {
@@ -70,8 +76,8 @@ useEffect(() => {
         <Card className="bg-surface border-border">
           <CardContent className="p-6 text-center">
             <p className="text-muted-foreground">Service boy data not found</p>
-            <Button 
-              onClick={() => navigate(-1)} 
+            <Button
+              onClick={() => navigate(-1)}
               className="mt-4 bg-primary hover:bg-primary/90"
             >
               Go Back
@@ -115,35 +121,35 @@ useEffect(() => {
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                     <Avatar className="w-32 h-32 ring-4 ring-primary/20">
-            <AvatarImage src={profileImage} alt={serviceBoyData.name} />
-            <AvatarFallback className="text-2xl font-bold">
-              {serviceBoyData.name?.split(' ').map(n => n[0]).join('') || 'SW'}
-            </AvatarFallback>
-          </Avatar>
+                  <Avatar className="w-32 h-32 ring-4 ring-primary/20">
+                    <AvatarImage src={profileImage} alt={serviceBoyData.name} />
+                    <AvatarFallback className="text-2xl font-bold">
+                      {serviceBoyData.name?.split(' ').map(n => n[0]).join('') || 'SW'}
+                    </AvatarFallback>
+                  </Avatar>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Full Name</label>
                     <p className="text-surface-foreground font-medium">{serviceBoyData.name || 'N/A'}</p>
                   </div>
-                   <div>
+                  <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       Email Address
                     </label>
                     <p className="text-surface-foreground">{serviceBoyData.email || 'N/A'}</p>
                   </div>
-                  
+
                 </div>
-                
+
                 <div className="space-y-4">
-                    <div>
+                  <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Mobile Number
                     </label>
                     <p className="text-primary font-medium">{serviceBoyData.mobile || 'N/A'}</p>
                   </div>
-                 
+
                   <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
@@ -166,25 +172,18 @@ useEffect(() => {
                     <p className="text-surface-foreground">{serviceBoyData.location?.address || 'N/A'}</p>
                   </div>
                 </div>
-                 <div className="space-y-4">
+                <div className="space-y-4">
 
-                 </div>
+                </div>
               </CardContent>
             </Card>
-
-            {/* Documents Section */}
-            {/* <DocumentViewer 
-              aadharImageFront={frontAadharImage}
-              aadharImageBack={backAadharImage}
-              documentType="Aadhar Card"
-            /> */}
             <DocumentViewer
-  title="Aadhar Card"
-  documents={[
-    { label: "Front Side", url: frontAadharImage },
-    { label: "Back Side", url: backAadharImage },
-  ]}
-/>
+              title="Aadhar Card"
+              documents={[
+                { label: "Front Side", url: frontAadharImage },
+                { label: "Back Side", url: backAadharImage },
+              ]}
+            />
 
           </div>
 
@@ -199,7 +198,7 @@ useEffect(() => {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="text-center p-3">
-                  <Badge 
+                  <Badge
                     // variant={serviceBoyData.isVerified ? "default" : "secondary"}
                     // className={
                     //   serviceBoyData.isVerified 
@@ -211,25 +210,35 @@ useEffect(() => {
                     {serviceBoyData.isVerified}
                   </Badge>
                 </div>
-                
+
                 <div className="space-y-3">
                   <p className="text-sm text-muted-foreground text-center">
                     Review the information and documents above, then choose an action:
                   </p>
-                  
+
                   <div className="space-y-2">
                     <Button
                       onClick={() => handleVerify(VerificationStatus.Verified)}
                       disabled={isLoading}
-                     variant="constructive"
+                      variant="constructive"
                       className="w-full"
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Approve Verification
                     </Button>
-                    
-                    <Button
+
+                    {/* <Button
                       onClick={() => handleVerify(VerificationStatus.Rejected)}
+                      disabled={isLoading}
+                      variant="destructive"
+                      className="w-full"
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Reject Application
+                    </Button> */}
+
+                    <Button
+                      onClick={() => setIsRejectModalOpen(true)}
                       disabled={isLoading}
                       variant="destructive"
                       className="w-full"
@@ -245,6 +254,11 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <VerificationRejectionModal
+        isOpen={isRejectModalOpen}
+        onClose={() => setIsRejectModalOpen(false)}
+        onSubmit={handleRejectWithReason}
+      />
     </div>
   );
 }
