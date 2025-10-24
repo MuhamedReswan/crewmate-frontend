@@ -12,13 +12,15 @@ import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { updateVendorData } from '@/redux/slice/vendorAuth.slice';
 import { GetVendorById, RetryVerficationRequestVendor } from '@/api/vendor/vendor';
 import { useVerificationSync } from '@/hooks/useVerificationSync';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 
 function VendorHomePage() {
   const vendor = useSelector((state: RootState) => state.vendor.vendorData);
   const dispatch = useDispatch();
   const {toast} = useToast();
-  console.log("VendorHomePage vendor",vendor)
+  const date = new Date(Date.now());
+  const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()}`;
 
   useVerificationSync({
     user: vendor,
@@ -48,6 +50,7 @@ function VendorHomePage() {
     }
 
   }
+    console.log("VendorHomePage vendor",vendor);
 
 
 
@@ -56,34 +59,45 @@ function VendorHomePage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Welcome {vendor?.name}</h1>
-          {/* <p className="text-gray-600 text-sm">Please update your profile for admin verification.</p> */}
-           {vendor?.isVerified === VerificationStatus.Rejected ? (
-           <div className="flex flex-col gap-2">
-    <p className="text-sm text-red-500 font-medium">
-      Your request has been rejected.
-    </p>
-    <Button
-      variant="ghost"
-      size="sm"
-      className="bg-[#4B49AC]/20"
-      onClick={handleRetryVerification}
-    >
-      Re submit
-    </Button>
-  </div>
-          ) : (
-            <Link to="/vendor/profile" className="text-sm text-gray-600 ">
-              Please update your profile for admin verification.
-            </Link>
-          )}
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          <span>Today (10 Jan 2021)</span>
-          <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
+          <span>Today ( {formattedDate} )</span>
         </div>
       </div>
+
+            {/* Rejection Alert Banner */}
+      {vendor?.isVerified === VerificationStatus.Rejected && (
+        <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-sm">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-6 w-6 text-red-500" />
+            </div>
+            <div className="ml-4 flex-1">
+              <h3 className="text-lg font-semibold text-red-800 mb-1">
+                Verification Request Rejected
+              </h3>
+              <p className="text-sm text-red-700 mb-4">
+                Your verification request has been rejected by the admin.due to {vendor.rejectionReason}. Please review your profile information and submit a new verification request.
+              </p>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={handleRetryVerification}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  size="sm"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Resubmit Verification
+                </Button>
+                <Link to="/service-boy/profile">
+                  <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-50">
+                    Update Profile
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Section - Illustration */}

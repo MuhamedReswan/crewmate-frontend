@@ -151,13 +151,16 @@ export const getVendorVerificationRequests = async (): Promise<
 
 export const verifyVendorByAdmin = async (
   id: string,
-  status: VerificationStatus
+  status: VerificationStatus,
+  reason?:string
 ): Promise<ApiResponse<Partial<ServiceBoy>> | undefined> => {
   try {
     const url = adminRoutes.verifyVendorById.replace(":id", id);
+    const queryParams = new URLSearchParams({ status });
+     if (reason) queryParams.append("reason", reason);
     const response = await API.patch<
       ApiResponse<Partial<ServiceBoy>> | undefined
-    >(`${url}?status=${status}`);
+    >(`${url}?${queryParams.toString()}`);
     return response.data;
   } catch (error) {
     throw error;

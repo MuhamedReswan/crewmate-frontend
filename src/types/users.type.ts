@@ -8,6 +8,7 @@ export interface CommonDetails {
   mobile: string;
   password: string;
   isVerified: VerificationStatus;
+  rejectionReason?: string | null;
   isBlocked: boolean;
   role: Role;
 }
@@ -31,7 +32,6 @@ export interface ServiceBoy extends CommonDetails {
   date: Date;
   walletId: string;
   workHistoryId: string;
-  rejectionReason: string | null;
 }
 
 export interface Vendor extends CommonDetails {

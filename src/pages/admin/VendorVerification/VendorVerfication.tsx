@@ -56,17 +56,17 @@ export default function VendorVerfication() {
     return filtered.slice(start, start + limit);
   }, [filtered, currentPage, limit]);
 
-  const onVerify = useCallback(async (id: string, status: VerificationStatus) => {
-    try {
-      const res = await verifyVendorByAdmin(id, status);
-      if (res?.statusCode === 200) {
-        setAllData(prev => prev.filter(x => x._id !== id));
-        toast({ description: <SuccessMessage message={res.message} /> });
-      }
-    } catch (error) {
-      toast({ description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} /> });
-    }
-  }, []);
+  // const onVerify = useCallback(async (id: string, status: VerificationStatus) => {
+  //   try {
+  //     const res = await verifyVendorByAdmin(id, status);
+  //     if (res?.statusCode === 200) {
+  //       setAllData(prev => prev.filter(x => x._id !== id));
+  //       toast({ description: <SuccessMessage message={res.message} /> });
+  //     }
+  //   } catch (error) {
+  //     toast({ description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} /> });
+  //   }
+  // }, []);
 
   const handleVendorDocumentPage = async (VendprData: Vendor) => {
       try {
@@ -100,7 +100,7 @@ export default function VendorVerfication() {
         columns={columns}
         currentPage={currentPage}
         limit={limit}
-        onVerify={onVerify}
+        // onVerify={onVerify}
         onRowClick={handleVendorDocumentPage}
       />
 
