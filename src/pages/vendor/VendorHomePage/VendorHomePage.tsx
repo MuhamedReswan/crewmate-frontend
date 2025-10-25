@@ -59,6 +59,11 @@ function VendorHomePage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Welcome {vendor?.name}</h1>
+              {vendor?.isVerified === VerificationStatus.Pending && (
+                      <Link to="/vendor/profile" className="text-sm text-gray-600 hover:text-gray-800">
+                        Please update your profile for admin verification and Wait for verification.
+                      </Link>
+                    )}
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <span>Today ( {formattedDate} )</span>
