@@ -62,17 +62,17 @@ export default function ServiceBoyVerfication() {
     return filtered.slice(start, start + limit);
   }, [filtered, currentPage, limit]);
 
-  const handleVerify = useCallback(async (id: string, status: VerificationStatus) => {
-    try {
-      const result = await verifyServiceBoyByAdmin(id, status);
-      if (result?.statusCode === 200) {
-        setData(prev => prev.filter(item => item._id !== id));
-        toast({ description: <SuccessMessage message={result.message} /> });
-      }
-    } catch (error) {
-      toast({ description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} /> });
-    }
-  }, []);
+  // const handleVerify = useCallback(async (id: string, status: VerificationStatus) => {
+  //   try {
+  //     const result = await verifyServiceBoyByAdmin(id, status);
+  //     if (result?.statusCode === 200) {
+  //       setData(prev => prev.filter(item => item._id !== id));
+  //       toast({ description: <SuccessMessage message={result.message} /> });
+  //     }
+  //   } catch (error) {
+  //     toast({ description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} /> });
+  //   }
+  // }, []);
 
 
   const handleServiceBoyDocumentPage = async (serviceBoyData: ServiceBoy) => {
@@ -109,7 +109,6 @@ export default function ServiceBoyVerfication() {
       columns={columns}
       currentPage={currentPage}
       limit={limit}
-      onVerify={handleVerify}
       onRowClick={handleServiceBoyDocumentPage}
       
     />

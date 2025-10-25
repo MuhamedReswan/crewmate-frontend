@@ -7,4 +7,5 @@ export type ServiceBoyLoginDTO = {
   isVerified: VerificationStatus;
   isBlocked: boolean;
   role: Role;
+  rejectionReason:string | null;
 };

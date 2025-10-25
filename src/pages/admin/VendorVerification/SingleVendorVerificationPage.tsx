@@ -16,12 +16,15 @@ import { Messages } from '@/types/enum.type';
 import { DocumentViewer } from '@/components/adminComponents/DocumentViewer/DocumentViewer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { fetchImages } from '@/utils/fetchImages';
+import VerificationRejectionModal from '@/components/adminComponents/Modals/RejectionModal';
 
 export default function VendorVerificationDetails() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  
 
   const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
   const [licenceImage, setLicenceImage ] = useState<string | undefined>(undefined);
@@ -29,12 +32,12 @@ export default function VendorVerificationDetails() {
   
   const VendorData = location.state as Vendor;
 
-  const handleVerify = useCallback(async (status: VerificationStatus) => {
+  const handleVerify = useCallback(async (status: VerificationStatus, reason?: string ) => {
     if (!id) return;
     
     setIsLoading(true);
     try {
-      const result = await verifyVendorByAdmin(id, status);
+      const result = await verifyVendorByAdmin(id, status,reason);
       if (result?.statusCode === 200) {
         toast({ description: <SuccessMessage message={result.message} /> });
         navigate(-1);
@@ -45,6 +48,11 @@ export default function VendorVerificationDetails() {
       setIsLoading(false);
     }
   }, [id, navigate]);
+
+  const handleRejectWithReason = useCallback((reason: string) => {
+    handleVerify(VerificationStatus.Rejected, reason);
+    setIsRejectModalOpen(false);
+  }, [handleVerify]);
 
    useEffect(() => {
   fetchImages(VendorData, [
@@ -228,7 +236,7 @@ export default function VendorVerificationDetails() {
                     </Button>
                     
                     <Button
-                      onClick={() => handleVerify(VerificationStatus.Rejected)}
+                      onClick={() => setIsRejectModalOpen(true)}
                       disabled={isLoading}
                       variant="destructive"
                       className="w-full"
@@ -244,6 +252,11 @@ export default function VendorVerificationDetails() {
           </div>
         </div>
       </div>
+       <VerificationRejectionModal
+              isOpen={isRejectModalOpen}
+              onClose={() => setIsRejectModalOpen(false)}
+              onSubmit={handleRejectWithReason}
+            />
     </div>
   );
 }

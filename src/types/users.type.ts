@@ -8,6 +8,7 @@ export interface CommonDetails {
   mobile: string;
   password: string;
   isVerified: VerificationStatus;
+  rejectionReason?: string | null;
   isBlocked: boolean;
   role: Role;
 }
