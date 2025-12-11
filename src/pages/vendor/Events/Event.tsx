@@ -17,6 +17,7 @@ import { RootState } from '@/redux/store/store';
 import { useSelector } from 'react-redux';
 import { Event } from '@/types/type';
 import useDebounce from '@/hooks/useDebounce';
+import { useNavigate } from 'react-router-dom';
 
 
 const Events = () => {
@@ -39,6 +40,8 @@ const Events = () => {
     hasNext: false,
     hasPrev: false,
   });
+
+  const navigate = useNavigate()
 
   const debouncedSearch = useDebounce(searchTerm, 3000);
   const vendorData = useSelector((state: RootState) => state.vendor.vendorData);
@@ -329,6 +332,7 @@ const Events = () => {
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <Button
+                        onClick={() => navigate(`/vendor/events/${item._id}`, { state: item })}
                           variant="ghost"
                           size="sm"
                           className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"

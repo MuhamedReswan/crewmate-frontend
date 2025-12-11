@@ -3,6 +3,8 @@ import ProtectVendor from "./privateRoutes/ProtectVendor";
 import ProtectVendorIsLogin from "./privateRoutes/ProtectVendorIsLogin";
 import VendorLayout from "@/layouts/VendorLayout";
 import VendorProfile from "@/pages/vendor/ProfilePage/VendorProfile";
+import Test from "@/Test";
+import EventManagementPage from "@/pages/vendor/Events/EventManagement";
 
 const VendorLoginPage = lazy(() => import("@/pages/vendor/VendorLogin/VendorLogin.page"));
 const VendorSignUpPage = lazy(() => import("@/pages/vendor/VendorSignUp/VendorSignUp.page"));
@@ -63,11 +65,32 @@ const vendorRoutes = {
             )
         },
         {
+            path: "events/:id",
+            element: (
+                <ProtectVendor>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <EventManagementPage />
+                    </Suspense>
+                </ProtectVendor>
+            )
+        },
+        {
             path: "events",
             element: (
                 <ProtectVendor>
                     <Suspense fallback={<div>Loading...</div>}>
                         <Events />
+                    </Suspense>
+                </ProtectVendor>
+            )
+        },
+        {
+            path: "test",
+            element: (
+                <ProtectVendor>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        {/* <Test /> */}
+                        <EventManagementPage/>
                     </Suspense>
                 </ProtectVendor>
             )

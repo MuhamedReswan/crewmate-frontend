@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Role } from "./enum.type";
 import {
   eventSchema,
+  eventUpdateSchema,
   forgotPasswordSchema,
   loginSchema,
   passwordSchema,
@@ -63,3 +64,4 @@ export type PasswordFormValues = z.infer<typeof passwordSchema>;
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 export type VendrProfileFormValues = z.infer<typeof vendorProfileSchema>;
 export type EventFormData = z.infer<typeof eventSchema>;
+export type EventUpdateFormValues = z.infer<typeof eventUpdateSchema>;

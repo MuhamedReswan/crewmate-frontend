@@ -11,5 +11,7 @@ export const vendorRoutes = {
     retryVerify:'/vendor/retry-verify/:id',
     vendor:'/vendor/:id',
     events:'/vendor/events',
-    loadEvents:'/vendor/:vendorId/events'
+    loadEvents:'/vendor/:vendorId/events',
+    updateEvent:'/vendor/events/:eventId',
+    updateBookingStatus: '/vendor/events/:eventId/booking-status',
   };
