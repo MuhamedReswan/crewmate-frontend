@@ -3,7 +3,6 @@ import { Edit, MapPin } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { getImageUrl } from '@/api/common/common';
 import { VendorFetchProfile, VendorUpdateProfile } from '@/api/vendor/vendor';
 import MapPicker from '@/components/common/MapPicker/MapPicker';
 import MapPreview from '@/components/common/MapPreview/MapPreview';
@@ -21,6 +20,7 @@ import { pickDTOFields } from '@/utils/dtoMapper';
 import { VendorLoginShape } from '@/utils/dtoShapes';
 import { handleLocationSelect } from '@/utils/handleLocationSelection';
 import { vendorProfileSchema } from '@/validation/validationSchema';
+import { useSecureImage } from '@/hooks/useSecureImage';
 
 const VendorProfile = () => {
   const { vendorData } = useSelector((state: RootState) => state.vendor);
@@ -36,8 +36,15 @@ const VendorProfile = () => {
 
 
   // State for images
-  const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
-  const [licenceImage, setLicenceImage] = useState<string | undefined>(undefined);
+  // const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
+  // const [licenceImage, setLicenceImage] = useState<string | undefined>(undefined);
+
+  const licenceImage = useSecureImage(profileData?.licenceImage?.publicId);
+
+  const [profileImagePreview, setProfileImagePreview] = useState<string>();
+  const [licencePreview, setLicencePreview] = useState<string>();
+
+   const licenceImageSrc = licencePreview || licenceImage;
 
   // Create references for file inputs
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -69,17 +76,17 @@ const VendorProfile = () => {
           }
 
 
-          const fetchImage = async () => {
-            if (profile.profileImage) {
-              const profileImageResponse = await getImageUrl(profile.profileImage);
-              setProfileImage(profileImageResponse.data)
-            }
+          // const fetchImage = async () => {
+          //   if (profile.profileImage) {
+          //     const profileImageResponse = await getImageUrl(profile.profileImage);
+          //     setProfileImage(profileImageResponse.data)
+          //   }
 
-            if (profile.licenceImage) {
-              const licenceImageImageResponse = await getImageUrl(profile.licenceImage);
-              setLicenceImage(licenceImageImageResponse.data)
-            }
-          }
+          //   if (profile.licenceImage) {
+          //     const licenceImageImageResponse = await getImageUrl(profile.licenceImage);
+          //     setLicenceImage(licenceImageImageResponse.data)
+          //   }
+          // }
 
           const filteredData = pickDTOFields(VendorLoginShape, profile);
           const keys = Object.keys(filteredData) as (keyof typeof filteredData)[];
@@ -89,7 +96,7 @@ const VendorProfile = () => {
             dispatch(vendorLogin(filteredData));
           }
 
-          await fetchImage()
+          // await fetchImage()
           setProfileData(profile);
         }
       } catch (error) {
@@ -125,12 +132,12 @@ const VendorProfile = () => {
       name: profileData.name || "",
       mobile: profileData.mobile || "",
       licenceNumber: profileData.licenceNumber || "",
-      licenceImage: profileData.licenceImage || undefined,
-      profileImage: profileData.profileImage || undefined,
       location: profileData.location || undefined,
       estd: profileData.estd || "",
       email: profileData.email || "",
       instaId: profileData.instaId || "",
+      licenceImage: profileData.licenceImage || undefined,
+      profileImage: profileData.profileImage || undefined,
     });
 
     setLocation(profileData.location || undefined);
@@ -178,15 +185,23 @@ const VendorProfile = () => {
         }
       });
 
-      // Add image files only if they exist
-      if (data.profileImage) {
+        // remove invalid string values
+      if (data.licenceImage === "[object Object]") {
+        delete data.licenceImage;
+      }
+
+      if (data.profileImage === "[object Object]") {
+        delete data.profileImage;
+      }
+
+   // Add image files only if they exist AND are File
+      if (data.profileImage instanceof File) {
         formData.append("profileImage", data.profileImage);
       }
-      if (data.licenceImage) {
+
+      if (data.licenceImage instanceof File) {
         formData.append("licenceImage", data.licenceImage);
       }
-
-
 
       console.log("form data-----------------------------------------", formData)
       const response = await VendorUpdateProfile(formData);
@@ -223,7 +238,7 @@ const VendorProfile = () => {
           <div className="flex items-center gap-3">
             <div className="relative">
               <img
-                src={profileImage ? profileImage : defaultImage}
+                src={profileImagePreview || profileData?.profileImage?.url || defaultImage}
                 alt="Profile"
                 className="w-14 h-14 rounded-full object-cover bg-gray-300"
               />
@@ -231,7 +246,7 @@ const VendorProfile = () => {
               <input
                 type="file"
                 ref={profileInputRef}
-                onChange={(e) => handleImageChange(e, setProfileImage, 'profileImage',)}
+                onChange={(e) => handleImageChange(e, setProfileImagePreview, 'profileImage',)}
                 accept="image/*"
                 className="hidden"
               />
@@ -341,18 +356,18 @@ const VendorProfile = () => {
                     type="file"
                     accept="image/*"
                     className={`w-full px-4 py-2.5 bg-white border rounded-lg text-sm placeholder-gray-400 focus:ring-1 
-                    focus:ring-[#4B49AC] ${licenceImage && 'hidden'} border-[#4B49AC]/20
+                    focus:ring-[#4B49AC] ${licenceImageSrc && 'hidden'} border-[#4B49AC]/20
                     ${errors.licenceImage
                         ? "border-red-500"
                         : "border-[#4B49AC]/20"
                       }`}
-                    onChange={(e) => handleImageChange(e, setLicenceImage, 'licenceImage')}
+                    onChange={(e) => handleImageChange(e, setLicencePreview, 'licenceImage')}
                     disabled={!editMode}
                   />
-                  {licenceImage && (
+                  {licenceImageSrc && (
                     <div className="relative inline-block mt-2">
                       <img
-                        src={licenceImage}
+                        src={licenceImageSrc}
                         alt="licenceImage"
                         className="w-52 h-52 rounded-lg object-cover border border-gray-200"
                       />

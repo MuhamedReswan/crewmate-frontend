@@ -40,9 +40,20 @@ export enum VerificationStatus {
   Rejected = "rejected",
 }
 
-export enum EventStatus {
-  Upcoming = "upcoming",
-  Completed = "completed",
-  Created = "created"
+
+
+export enum BookingStatus {
+  Active= "Active",
+  Stopped = "Stopped",
+  Cancelled = "Cancelled",
+  Completed = "Completed"
 }
 
+
+export enum EventStatus {
+  Pending = "Pending",    
+  Upcoming = "Upcoming",   
+  Ongoing = "Ongoing",   
+  Completed = "Completed", 
+  Cancelled = "Cancelled", 
+}

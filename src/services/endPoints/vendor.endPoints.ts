@@ -10,6 +10,8 @@ export const vendorRoutes = {
     profile:'/vendor/profile',
     retryVerify:'/vendor/retry-verify/:id',
     vendor:'/vendor/:id',
-    events:'/vendor/events',
-    loadEvents:'/vendor/:vendorId/events'
+    events:'/events',
+    // loadEvents:'/:vendorId/events',
+    updateEvent:'/vendor/events/:eventId',
+    updateBookingStatus: '/vendor/events/:eventId/booking-status',
   };

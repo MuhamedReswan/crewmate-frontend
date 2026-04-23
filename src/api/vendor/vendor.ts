@@ -9,13 +9,13 @@ import {
   ResetForgotPassword,
   VendorProfileData,
 } from "@/types/auth.type";
-import { Role } from "@/types/enum.type";
+import { BookingStatus, Role } from "@/types/enum.type";
 import {
   EventFormData,
   LoginFormInputs,
   SignupFormData,
 } from "@/types/form.type";
-import { Event } from "@/types/type";
+import { Event, EventQueryParams } from "@/types/type";
 import { Vendor } from "@/types/users.type";
 
 export const vendorLogin = async (
@@ -222,15 +222,66 @@ export const CreateEvent = async (
 };
 
 export const getEvents = async (
-  params: any,
+  params: EventQueryParams,
   vendorId: string
 ): Promise<ApiResponse<PaginatedResponse<Event>> | undefined> => {
   try {
-    const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId);
+    // const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId);
+    const url = vendorRoutes.events;
     const response = await API.get<ApiResponse<PaginatedResponse<Event>>>(url, {
       params,
     });
     if (!response) return;
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// export const updateEvent = async (
+//   params: any,
+//   eventId: string
+// ): Promise<ApiResponse<PaginatedResponse<Event>> | undefined> => {
+//   try {
+//     const url = vendorRoutes.updateEvent.replace(":vendorId", eventId);
+//     const response = await API.post<ApiResponse<Event> | undefined>(url, {
+//       params,
+//     });
+//     if (!response) return;
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+export const UpdateEvent = async (
+  eventId: string,
+  data: Partial<EventFormData>
+): Promise<ApiResponse<Event> | undefined> => {
+  try {
+    const url = vendorRoutes.updateEvent.replace(":eventId", eventId);
+
+    const response = await API.patch<ApiResponse<Event>>(url, data);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const ChangeBookingStatus = async (
+  eventId: string,
+  bookingStatus: BookingStatus
+): Promise<ApiResponse<Event> | undefined> => {
+  try {
+    const url = vendorRoutes.updateBookingStatus.replace(":eventId", eventId);
+    console.log("data on ChangeBookingStatus",bookingStatus)
+
+    const response = await API.patch<ApiResponse<Event>>(url, {
+  bookingStatus: bookingStatus
+});
+
     return response.data;
   } catch (error) {
     throw error;

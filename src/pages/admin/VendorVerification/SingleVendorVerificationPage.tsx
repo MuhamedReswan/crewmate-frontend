@@ -15,8 +15,8 @@ import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
 import { Messages } from '@/types/enum.type';
 import { DocumentViewer } from '@/components/adminComponents/DocumentViewer/DocumentViewer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { fetchImages } from '@/utils/fetchImages';
 import VerificationRejectionModal from '@/components/adminComponents/Modals/RejectionModal';
+import { useSecureImage } from '@/hooks/useSecureImage';
 
 export default function VendorVerificationDetails() {
   const { id } = useParams();
@@ -26,11 +26,12 @@ export default function VendorVerificationDetails() {
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   
 
-  const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
-  const [licenceImage, setLicenceImage ] = useState<string | undefined>(undefined);
+  
 
   
   const VendorData = location.state as Vendor;
+  const licenceImage = useSecureImage(VendorData?.licenceImage?.publicId);
+  const licenceImageSrc = licenceImage || "";
 
   const handleVerify = useCallback(async (status: VerificationStatus, reason?: string ) => {
     if (!id) return;
@@ -54,20 +55,20 @@ export default function VendorVerificationDetails() {
     setIsRejectModalOpen(false);
   }, [handleVerify]);
 
-   useEffect(() => {
-  fetchImages(VendorData, [
-    ["profileImage", setProfileImage],
-    ["licenceImage", setLicenceImage],
-  ]).catch((error) => {
-    toast({
-      description: (
-        <ErrorMessage
-          message={getApiErrorMessage(error, Messages.FAILED_TO_FETCH_IMAGES)}
-        />
-      ),
-    });
-  });
-}, [VendorData]); 
+//    useEffect(() => {
+//   fetchImages(VendorData, [
+//     ["profileImage", setProfileImage],
+//     ["licenceImage", setLicenceImage],
+//   ]).catch((error) => {
+//     toast({
+//       description: (
+//         <ErrorMessage
+//           message={getApiErrorMessage(error, Messages.FAILED_TO_FETCH_IMAGES)}
+//         />
+//       ),
+//     });
+//   });
+// }, [VendorData]); 
 
 
 
@@ -123,7 +124,7 @@ export default function VendorVerificationDetails() {
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                      <Avatar className="w-32 h-32 ring-4 ring-primary/20">
-            <AvatarImage src={profileImage} alt={VendorData.name} />
+            <AvatarImage src={VendorData.profileImage.url} alt={VendorData.name} />
             <AvatarFallback className="text-2xl font-bold">
               {VendorData.name?.split(' ').map(n => n[0]).join('') || 'SW'}
             </AvatarFallback>
@@ -190,7 +191,7 @@ export default function VendorVerificationDetails() {
           <DocumentViewer
   title="Licence Image"
   documents={[
-    { label: "Licence", url: licenceImage },
+    { label: "Licence", url: licenceImageSrc },
   ]}
 />
           </div>

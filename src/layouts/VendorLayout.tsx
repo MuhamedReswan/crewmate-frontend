@@ -12,7 +12,7 @@ const VendorLayout = () => {
   return (
     <div className="flex h-screen bg-white">
       {!shouldHideLayout && <VendorSidebar />}
-      <div className={`flex-1 flex flex-col overflow-hidden`}>
+      <div className={`flex-1 flex flex-col min-h-screen overflow-y-auto`}>
         {!shouldHideLayout && <VendorHeader />}
         <Outlet />
       </div>

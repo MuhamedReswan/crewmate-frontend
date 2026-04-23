@@ -17,6 +17,7 @@ import { DocumentViewer } from '@/components/adminComponents/DocumentViewer/Docu
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { fetchImages } from '@/utils/fetchImages';
 import VerificationRejectionModal from '@/components/adminComponents/Modals/RejectionModal';
+import { useSecureImage } from '@/hooks/useSecureImage';
 
 export default function ServiceBoyVerificationDetails() {
   const { id } = useParams();
@@ -25,11 +26,18 @@ export default function ServiceBoyVerificationDetails() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
 
-  const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
-  const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>(undefined);
-  const [backAadharImage, setBackAadharImage] = useState<string | undefined>(undefined);
-
+  // const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
+  // const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>(undefined);
+  // const [backAadharImage, setBackAadharImage] = useState<string | undefined>(undefined);
+  
   const serviceBoyData = location.state as ServiceBoy;
+  
+  const profileImage = serviceBoyData.profileImage.url;
+  const frontAadharImage = useSecureImage(serviceBoyData.aadharImageFront.publicId);
+  const backAadharImage = useSecureImage(serviceBoyData.aadharImageBack.publicId);
+
+  const backAadharSrc = backAadharImage || "";
+  const frontAadharSrc = frontAadharImage || "";
 
   const handleVerify = useCallback(async (status: VerificationStatus, reason?: string) => {
     if (!id) return;
@@ -53,21 +61,21 @@ export default function ServiceBoyVerificationDetails() {
     setIsRejectModalOpen(false);
   }, [handleVerify]);
 
-  useEffect(() => {
-    fetchImages(serviceBoyData, [
-      ["profileImage", setProfileImage],
-      ["aadharImageFront", setFrontAadharImage],
-      ["aadharImageBack", setBackAadharImage],
-    ]).catch((error) => {
-      toast({
-        description: (
-          <ErrorMessage
-            message={getApiErrorMessage(error, Messages.FAILED_TO_FETCH_IMAGES)}
-          />
-        ),
-      });
-    });
-  }, [serviceBoyData]);
+  // useEffect(() => {
+  //   fetchImages(serviceBoyData, [
+  //     ["profileImage", setProfileImage],
+  //     ["aadharImageFront", setFrontAadharImage],
+  //     ["aadharImageBack", setBackAadharImage],
+  //   ]).catch((error) => {
+  //     toast({
+  //       description: (
+  //         <ErrorMessage
+  //           message={getApiErrorMessage(error, Messages.FAILED_TO_FETCH_IMAGES)}
+  //         />
+  //       ),
+  //     });
+  //   });
+  // }, [serviceBoyData]);
 
 
   if (!serviceBoyData) {
@@ -180,8 +188,8 @@ export default function ServiceBoyVerificationDetails() {
             <DocumentViewer
               title="Aadhar Card"
               documents={[
-                { label: "Front Side", url: frontAadharImage },
-                { label: "Back Side", url: backAadharImage },
+                { label: "Front Side", url: frontAadharSrc },
+                { label: "Back Side", url: backAadharSrc },
               ]}
             />
 

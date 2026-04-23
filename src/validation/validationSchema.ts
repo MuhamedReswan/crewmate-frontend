@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { Role } from "@/types/enum.type";
+import { imageValidation } from "./helpers/imageValidation";
 const nameRegex = /^[A-Za-z ]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const mobileRegex = /^[0-9]{10}$/;
@@ -130,38 +131,50 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Mobile number is required")
     .regex(mobileRegex, "Mobile number must be 10 digits"),
-  profileImage: z.any().refine(
-    (val) => {
-      // If it's a string with length > 3, pass validation
-      if (typeof val === "string" && val.length > 3) return true;
-      // Otherwise, check if it's a valid File
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Profile image is required ",
-    }
-  ),
+  // profileImage: z.any().refine(
+  //   (val) => {
+  //     // If it's a string with length > 3, pass validation
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     // Otherwise, check if it's a valid File
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Profile image is required ",
+  //   }
+  // ),
 
-  aadharImageFront: z.any().refine(
-    (val) => {
-      if (typeof val === "string" && val.length > 3) return true;
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Aadhar front image is required ",
-    }
-  ),
+  // aadharImageFront: z.any().refine(
+  //   (val) => {
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Aadhar front image is required ",
+  //   }
+  // ),
+  // aadharImageBack: z.any().refine(
+  //   (val) => {
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Aadhar back image is required ",
+  //   }
+  // ),
+profileImage: z.any().refine(
+  imageValidation(),
+  { message: "Profile image is required" }
+),
 
-  aadharImageBack: z.any().refine(
-    (val) => {
-      if (typeof val === "string" && val.length > 3) return true;
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Aadhar back image is required ",
-    }
-  ),
+aadharImageFront: z.any().refine(
+  imageValidation(),
+  { message: "Aadhar front image is required" }
+),
 
+aadharImageBack: z.any().refine(
+  imageValidation(),
+  { message: "Aadhar back image is required" }
+),
 
   location: z.any().refine(
     (val) => {
@@ -197,28 +210,25 @@ export const vendorProfileSchema = z.object({
     'Name cannot contain more than 2 spaces'
   ),
 
-  licenceImage: z.any().refine(
-    (val) => {
-      if (typeof val === "string" && val.length > 3) return true;
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Licence image is required",
-    }
-  ),
+  // licenceImage: z.any().refine(
+  //   (val) => {
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Licence image is required",
+  //   }
+  // ),
 
-  profileImage: z
-    .any()
-    .refine(
-      (val) => {
-        // if (val === undefined) return true; // Optional field
-        if (typeof val === "string" && val.length > 3) return true;
-        return val instanceof File && val !== undefined && val.size > 0;
-      },
-      {
-        message: "Invalid profile image",
-      }
-    ),
+  licenceImage: z.any().refine(
+  imageValidation(),
+  { message: "Licence Image  is required" }
+),
+
+  profileImage: z.any().refine(
+  imageValidation(),
+  { message: "Profile image is required" }
+),
 
   licenceNumber: z
     .string()
@@ -269,7 +279,6 @@ export const vendorProfileSchema = z.object({
 });
 
 // Event creation validation
-
 export const eventSchema = z.object({
   customerName: z.string()
   .trim() 
@@ -321,3 +330,63 @@ export const eventSchema = z.object({
       });
     }
   });
+
+  // Event Updation 
+ export const eventUpdateSchema = z.object({
+    customerName: z.string()
+      .trim() 
+      .min(3, 'Customer name must have at least 3 characters')
+      .max(20, 'Customer name cannot exceed 20 characters')
+      .regex(nameRegex, 'Customer name can only contain alphabets and spaces')
+      .refine(
+        (value) => (value.match(/ /g) || []).length <= 2,
+        'Customer name cannot contain more than 2 spaces'
+      ),  
+    typeOfWork: z.string().min(1, "Type of work is required"),
+    typeOfService: z.string().min(1, "Type of service is required"),
+    noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
+    serviceBoys: z.number().min(1, "Number of service boys must be at least 1"),
+    reportingDateTime: z.date(),
+    eventLocation: z.object({
+      lat: z.number(),
+      lng: z.number(),
+      address: z.string(),
+    }),
+    status: z.string(),
+    totalBill: z.number().min(0, "Total bill cannot be negative"),
+    bonus: z.number().min(0, "Bonus cannot be negative"),
+    overTime: z.number().min(0, "Overtime cannot be negative"),
+    travelExpense: z.number().min(0, "Travel expense cannot be negative"),
+  })
+  .superRefine((data, ctx) => {
+    // Validate past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(data.reportingDateTime);
+    selectedDate.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      ctx.addIssue({
+        path: ["reportingDateTime"],
+        message: "Date cannot be in the past",
+        code: "custom",
+      });
+    }
+      // Service boys validation based on pax count
+      if (data.noOfPax > 1000 && data.serviceBoys > Math.ceil(data.noOfPax * 0.07)) {
+        ctx.addIssue({
+          path: ["serviceBoys"],
+          message: "For events over 1000 pax, service boys cannot exceed 7% of the pax count",
+          code: "custom",
+        });
+      }
+    
+      if (data.noOfPax <= 1000 && data.serviceBoys > 100) {
+        ctx.addIssue({
+          path: ["serviceBoys"],
+          message: "For events below 1000 pax, a maximum of 100 service boys is allowed",
+          code: "custom",
+        });
+      }
+    });
+  
