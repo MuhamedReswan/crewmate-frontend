@@ -1,11 +1,13 @@
 import { Role, VerificationStatus } from "./enum.type";
 import { LocationData } from "./form.type";
+import { IImage, ISecureImage } from "./type";
 
 export interface CommonDetails {
   _id: string;
   name: string;
   email: string;
   mobile: string;
+  profileImage: IImage;
   password: string;
   isVerified: VerificationStatus;
   rejectionReason?: string | null;
@@ -18,10 +20,10 @@ export interface UnAvailable {
   reason: string;
 }
 export interface ServiceBoy extends CommonDetails {
-  profileImage: string;
+
   aadharNumber: string;
-  aadharImageFront: string;
-  aadharImageBack: string;
+  aadharImageFront: ISecureImage;
+  aadharImageBack: ISecureImage;
   servicerId: string;
   location: LocationData;
   age: number;
@@ -36,8 +38,7 @@ export interface ServiceBoy extends CommonDetails {
 
 export interface Vendor extends CommonDetails {
   location: LocationData;
-  profileImage: string;
-  licenceImage: string;
+  licenceImage: ISecureImage;
   licenceNumber: string;
   estd: string;
   instaId: string;

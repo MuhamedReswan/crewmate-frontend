@@ -226,7 +226,8 @@ export const getEvents = async (
   vendorId: string
 ): Promise<ApiResponse<PaginatedResponse<Event>> | undefined> => {
   try {
-    const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId);
+    // const url = vendorRoutes.loadEvents.replace(":vendorId", vendorId);
+    const url = vendorRoutes.events;
     const response = await API.get<ApiResponse<PaginatedResponse<Event>>>(url, {
       params,
     });

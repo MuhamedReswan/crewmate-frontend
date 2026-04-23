@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { Role } from "@/types/enum.type";
+import { imageValidation } from "./helpers/imageValidation";
 const nameRegex = /^[A-Za-z ]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const mobileRegex = /^[0-9]{10}$/;
@@ -130,38 +131,50 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Mobile number is required")
     .regex(mobileRegex, "Mobile number must be 10 digits"),
-  profileImage: z.any().refine(
-    (val) => {
-      // If it's a string with length > 3, pass validation
-      if (typeof val === "string" && val.length > 3) return true;
-      // Otherwise, check if it's a valid File
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Profile image is required ",
-    }
-  ),
+  // profileImage: z.any().refine(
+  //   (val) => {
+  //     // If it's a string with length > 3, pass validation
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     // Otherwise, check if it's a valid File
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Profile image is required ",
+  //   }
+  // ),
 
-  aadharImageFront: z.any().refine(
-    (val) => {
-      if (typeof val === "string" && val.length > 3) return true;
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Aadhar front image is required ",
-    }
-  ),
+  // aadharImageFront: z.any().refine(
+  //   (val) => {
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Aadhar front image is required ",
+  //   }
+  // ),
+  // aadharImageBack: z.any().refine(
+  //   (val) => {
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Aadhar back image is required ",
+  //   }
+  // ),
+profileImage: z.any().refine(
+  imageValidation(),
+  { message: "Profile image is required" }
+),
 
-  aadharImageBack: z.any().refine(
-    (val) => {
-      if (typeof val === "string" && val.length > 3) return true;
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Aadhar back image is required ",
-    }
-  ),
+aadharImageFront: z.any().refine(
+  imageValidation(),
+  { message: "Aadhar front image is required" }
+),
 
+aadharImageBack: z.any().refine(
+  imageValidation(),
+  { message: "Aadhar back image is required" }
+),
 
   location: z.any().refine(
     (val) => {
@@ -197,28 +210,25 @@ export const vendorProfileSchema = z.object({
     'Name cannot contain more than 2 spaces'
   ),
 
-  licenceImage: z.any().refine(
-    (val) => {
-      if (typeof val === "string" && val.length > 3) return true;
-      return val instanceof File && val !== undefined && val.size > 0;
-    },
-    {
-      message: "Licence image is required",
-    }
-  ),
+  // licenceImage: z.any().refine(
+  //   (val) => {
+  //     if (typeof val === "string" && val.length > 3) return true;
+  //     return val instanceof File && val !== undefined && val.size > 0;
+  //   },
+  //   {
+  //     message: "Licence image is required",
+  //   }
+  // ),
 
-  profileImage: z
-    .any()
-    .refine(
-      (val) => {
-        // if (val === undefined) return true; // Optional field
-        if (typeof val === "string" && val.length > 3) return true;
-        return val instanceof File && val !== undefined && val.size > 0;
-      },
-      {
-        message: "Invalid profile image",
-      }
-    ),
+  licenceImage: z.any().refine(
+  imageValidation(),
+  { message: "Licence Image  is required" }
+),
+
+  profileImage: z.any().refine(
+  imageValidation(),
+  { message: "Profile image is required" }
+),
 
   licenceNumber: z
     .string()

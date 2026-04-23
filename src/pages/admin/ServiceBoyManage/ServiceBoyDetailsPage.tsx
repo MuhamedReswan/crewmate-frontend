@@ -144,7 +144,7 @@ const ServiceBoyDetailsPage = () => {
                   <div className="text-center pb-4">
                     <div className="flex flex-col items-center">
                       <Avatar className="h-24 w-24 mb-4 ring-4 ring-primary/20">
-                        <AvatarImage src={user.profileImage} alt={user.name} />
+                        <AvatarImage src={user.profileImage.url} alt={user.name} />
                         <AvatarFallback className="bg-primary text-foreground text-2xl font-bold">
                           {getInitials(user.name)}
                         </AvatarFallback>

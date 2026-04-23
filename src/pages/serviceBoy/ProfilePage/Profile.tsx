@@ -3,7 +3,6 @@ import { Edit, MapPin, } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { getImageUrl } from "@/api/common/common";
 import { ServiceBoyFetchProfile, ServiceBoyUpdateProfile } from "@/api/serviceBoy/serviceBoy";
 import MapPicker from "@/components/common/MapPicker/MapPicker";
 import MapPreview from "@/components/common/MapPreview/MapPreview";
@@ -22,6 +21,7 @@ import { pickDTOFields } from "@/utils/dtoMapper";
 import { serviceBoyLoginShape } from "@/utils/dtoShapes";
 import { handleLocationSelect } from "@/utils/handleLocationSelection";
 import { profileSchema } from "@/validation/validationSchema";
+import { useSecureImage } from "@/hooks/useSecureImage";
 
 
 
@@ -41,10 +41,16 @@ const Profile = () => {
   const [location, setLocation] = useState<LocationData | undefined>(undefined);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // State for images
-  const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
-  const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>(undefined);
-  const [backAadharImage, setBackAadharImage] = useState<string | undefined>(undefined);
+  const [profileImagePreview, setProfileImagePreview] = useState<string>();
+  const [frontPreview, setFrontPreview] = useState<string>();
+  const [backPreview, setBackPreview] = useState<string>();
+
+  const frontAadharImage = useSecureImage(profileData?.aadharImageFront?.publicId);
+  const backAadharImage = useSecureImage(profileData?.aadharImageBack?.publicId);
+
+  const backImageSrc = backPreview || backAadharImage;
+  const frontImageSrc = frontPreview || frontAadharImage;
+
 
   const dispatch = useDispatch();
 
@@ -87,23 +93,6 @@ const Profile = () => {
             dispatch(login(filteredData));
           }
 
-          const fetchImage = async () => {
-            if (profile.profileImage) {
-              const profileImageResponse = await getImageUrl(profile.profileImage);
-              setProfileImage(profileImageResponse.data)
-            }
-
-            if (profile.aadharImageFront) {
-              const frontAadharImageResponse = await getImageUrl(profile.aadharImageFront);
-              setFrontAadharImage(frontAadharImageResponse.data)
-            }
-
-            if (profile.aadharImageBack) {
-              const backAadharImageResponse = await getImageUrl(profile.aadharImageBack);
-              setBackAadharImage(backAadharImageResponse.data)
-            }
-          }
-          await fetchImage()
           setProfileData(profile)
 
         }
@@ -118,6 +107,7 @@ const Profile = () => {
 
     fetchProfile();
   }, [serviceBoyData, toast, dispatch]);  // }, [serviceBoyData?._id, dispatch]);
+
 
   const {
     register,
@@ -144,8 +134,8 @@ const Profile = () => {
         location: profileData.location || undefined,
         email: profileData.email || "",
         profileImage: profileData.profileImage || undefined,
-        aadharImageBack: profileData.aadharImageBack || undefined,
         aadharImageFront: profileData.aadharImageFront || undefined,
+        aadharImageBack: profileData.aadharImageBack || undefined,
       });
 
       setLocation(profileData.location || undefined);
@@ -194,16 +184,29 @@ const Profile = () => {
         }
       });
 
-      // Add image files only if they exist
-      if (data.profileImage) {
+      // remove invalid string values
+      if (data.aadharImageBack === "[object Object]") {
+        delete data.aadharImageBack;
+      }
+
+      if (data.aadharImageFront === "[object Object]") {
+        delete data.aadharImageFront;
+      }
+
+      if (data.profileImage === "[object Object]") {
+        delete data.profileImage;
+      }
+
+      // Add image files only if they exist AND are File
+      if (data.profileImage instanceof File) {
         formData.append("profileImage", data.profileImage);
       }
 
-      if (data.aadharImageFront) {
+      if (data.aadharImageFront instanceof File) {
         formData.append("aadharImageFront", data.aadharImageFront);
       }
 
-      if (data.aadharImageBack) {
+      if (data.aadharImageBack instanceof File) {
         formData.append("aadharImageBack", data.aadharImageBack);
       }
 
@@ -239,7 +242,7 @@ const Profile = () => {
           <div className="flex items-center gap-3">
             <div className="relative">
               <img
-                src={profileImage ? profileImage : defaultImage}
+                src={profileImagePreview || profileData?.profileImage?.url || defaultImage}
                 alt="Profile"
                 className="w-14 h-14 rounded-full object-cover bg-gray-300"
               />
@@ -255,7 +258,7 @@ const Profile = () => {
               <input
                 type="file"
                 ref={profileInputRef}
-                onChange={(e) => handleImageChange(e, setProfileImage, 'profileImage',)}
+                onChange={(e) => handleImageChange(e, setProfileImagePreview, 'profileImage',)}
                 accept="image/*"
                 className="hidden"
               />
@@ -362,16 +365,16 @@ const Profile = () => {
                     type="file"
                     ref={frontAadharInputRef}
                     accept="image/*"
-                    className={`w-full px-4 py-2.5 bg-white border ${frontAadharImage && 'hidden'}  ${errors.aadharImageFront ? "border-red-500" : "border-[#4B49AC]/20"
+                    className={`w-full px-4 py-2.5 bg-white border ${frontImageSrc && 'hidden'}  ${errors.aadharImageFront ? "border-red-500" : "border-[#4B49AC]/20"
                       } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
-                    onChange={(e) => handleImageChange(e, setFrontAadharImage, 'aadharImageFront')}
+                    onChange={(e) => handleImageChange(e, setFrontPreview, 'aadharImageFront')}
                     disabled={!editMode}
                   />
                 </div>
-                {frontAadharImage && (
+                {frontImageSrc && (
                   <div className="relative inline-block mt-2">
                     <img
-                      src={frontAadharImage}
+                      src={frontImageSrc}
                       alt="Aadhar Front"
                       className="w-52 h-52 rounded-lg object-cover border border-gray-200"
                     />
@@ -389,9 +392,9 @@ const Profile = () => {
                   </div>
                 )}
 
-                {typeof errors.profileImage?.message === "string" && (
+                {typeof errors.aadharImageFront?.message === "string" && (
                   <p className="text-red-500 text-xs">
-                    {errors.profileImage.message}
+                    {errors.aadharImageFront.message}
                   </p>
                 )}
 
@@ -408,16 +411,16 @@ const Profile = () => {
                     ref={backAadharInputRef}
 
                     accept="image/*"
-                    className={`w-full px-4 py-2.5 bg-white border ${backAadharImage && 'hidden'}  ${errors.aadharImageBack ? "border-red-500" : "border-[#4B49AC]/20"
+                    className={`w-full px-4 py-2.5 bg-white border ${backImageSrc && 'hidden'}  ${errors.aadharImageBack ? "border-red-500" : "border-[#4B49AC]/20"
                       } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
-                    onChange={(e) => handleImageChange(e, setBackAadharImage, 'aadharImageBack')}
+                    onChange={(e) => handleImageChange(e, setBackPreview, 'aadharImageBack')}
                     disabled={!editMode}
                   />
                 </div>
-                {backAadharImage && (
+                {backImageSrc && (
                   <div className="relative inline-block mt-2 text-center">
                     <img
-                      src={backAadharImage}
+                      src={backImageSrc}
                       alt="Aadhar Back"
                       className="w-52 h-52 rounded-lg object-cover border border-gray-200"
                     />

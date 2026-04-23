@@ -39,3 +39,12 @@ export interface EventQueryParams {
   to?: string;
 }
 
+export interface IImage {
+  publicId: string;
+  url: string;
+}
+
+export interface ISecureImage {
+  publicId: string;
+  uploadedAt?: Date;
+}
