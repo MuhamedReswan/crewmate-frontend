@@ -36,7 +36,7 @@ const adminRoutes = {
       ),
     },
     {
-      path: "vendors/verify",
+      path: "vendor/verify",
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>

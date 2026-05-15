@@ -1,6 +1,7 @@
 import { getServiceBoys, GetServiceBoysParams, updateServiceBoyBlockStatus } from '@/api/admin/admin';
 import { Pagination } from '@/components/adminComponents/Pagination/Paginatio';
 import { UserManagementTable } from '@/components/adminComponents/userManagement/UserManagementTable';
+import ConfirmDialog from '@/components/common/Confirmation/ConfirmDialog';
 import ErrorMessage from '@/components/common/Message/Error.message';
 import SuccessMessage from '@/components/common/Message/SuccessMessage';
 import { Button } from '@/components/ui/button';
@@ -144,13 +145,24 @@ const ServiceBoysManage = () => {
       key: 'action',
       label: 'Action',
       render: (row: ServiceBoy) => (
-        <Button
-          size="sm"
-          variant={row.isBlocked ? 'constructive' : 'destructive'}
-          onClick={() => handleBlockToggle(row._id, row.isBlocked ? 'unblock' : 'block')}
-        >
-          {row.isBlocked ? 'Unblock' : 'Block'}
-        </Button>
+ 
+        <ConfirmDialog
+  title={`Are you sure you want to ${row.isBlocked ? "unblock" : "block"} this user?`}
+  description="This action can be reversed later."
+  confirmText={row.isBlocked ? "Unblock" : "Block"}
+  variant="destructive"
+  onConfirm={() =>
+    handleBlockToggle(row._id, row.isBlocked ? "unblock" : "block")
+  }
+  trigger={
+    <Button
+      size="sm"
+      variant={row.isBlocked ? "constructive" : "destructive"}
+    >
+      {row.isBlocked ? "Unblock" : "Block"}
+    </Button>
+  }
+/>
       ),
     },
     {

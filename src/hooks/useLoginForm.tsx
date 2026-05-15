@@ -10,6 +10,7 @@ import { ApiResponse } from '@/types/apiTypes/ApiResponse';
 import { Role } from '@/types/enum.type';
 import { LoginFormInputs } from '@/types/form.type';
 import { loginSchema } from '@/validation/validationSchema';
+import { clearAllAuthState } from '@/utils/auth.utils';
 
 
 
@@ -44,7 +45,9 @@ export const useLoginForm = <T extends ApiResponse = ApiResponse>({
     try {
       console.log("data from the useLogin on submit", data)
       setIsLoading(true);
+      
       let result: T | undefined;
+
       if (loginType === Role.VENDOR) {
         result = await vendorLogin(data) as T
       } else if (loginType === Role.SERVICE_BOY) {
@@ -55,6 +58,9 @@ export const useLoginForm = <T extends ApiResponse = ApiResponse>({
       }
       console.log("result of login", result)
       if (result && result.statusCode === 200) {
+        // clear previous session
+        await clearAllAuthState();
+
         onLoginSuccess?.(result);
       }
     } catch (error) {
