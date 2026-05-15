@@ -4,6 +4,7 @@ import { logout } from "@/redux/slice/serviceBoyAuth.slice";
 import { vendorLogout } from "@/redux/slice/vendorAuth.slice";
 import store from "@/redux/store/store";
 import { getRoleFromUrl } from "@/utils/getRoleFromUrl";
+import { getCurrentUserRole } from "@/utils/auth.utils";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -29,9 +30,10 @@ API.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
-      // Find user role from url
-      const role = getRoleFromUrl(error.config?.url);
-      console.log("Role from URL:", role);
+      const role = getCurrentUserRole(store.getState());
+
+      console.log("Full state:", store.getState());
+ if (!role) return Promise.reject(error);
 
       switch (role) {
         case "admin":
@@ -43,10 +45,9 @@ API.interceptors.response.use(
         case "service-boy":
           store.dispatch(logout());
           break;
-        default:
-          console.error("Could not determine role from URL");
-          return Promise.reject(error);
       }
+
+      console.log("role from interceptor", role)
 
       return API(originalRequest);
     }

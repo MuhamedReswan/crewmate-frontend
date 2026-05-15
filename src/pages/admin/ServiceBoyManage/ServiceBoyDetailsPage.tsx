@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ServiceBoy } from '@/types/users.type';
 import { getServiceBoyById, updateServiceBoyBlockStatus } from '@/api/admin/admin';
 import SuccessMessage from '@/components/common/Message/SuccessMessage';
+import ConfirmDialog from '@/components/common/Confirmation/ConfirmDialog';
 
 
 
@@ -123,9 +124,9 @@ const ServiceBoyDetailsPage = () => {
                   </div>
                 </div>
                 <Badge
-                  className={`text-sm px-3 py-1 hover:bg-foreground/30 ${user.isBlocked 
-                      ? 'bg-destructive text-destructive-foreground'
-                      : 'bg-accent text-accent-foreground'
+                  className={`text-sm px-3 py-1 hover:bg-foreground/30 ${user.isBlocked
+                    ? 'bg-destructive text-destructive-foreground'
+                    : 'bg-accent text-accent-foreground'
                     }`}
                 >
                   {user.isBlocked ? 'Blocked' : 'Active'}
@@ -154,17 +155,29 @@ const ServiceBoyDetailsPage = () => {
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <Button
-                      onClick={handleBlockToggle}
-                      className={`w-full ${user.isBlocked
-                          ? 'bg-[#22C55E] hover:bg-[#22C55E]/90 text-muted-foreground'
-                          : 'bg-[#EF4444] hover:bg-[#EF4444]/90 text-muted-foreground'
-                        }`}
-                      size="lg"
-                    >
-                      <Shield className="h-4 w-4 mr-2" />
-                      {user.isBlocked ? 'Unblock User' : 'Block User'}
-                    </Button>
+
+                    <ConfirmDialog
+                      title={`Are you sure you want to ${user.isBlocked ? "unblock" : "block"} this user?`}
+                      description={
+                        user.isBlocked
+                          ? "This user will regain access to the platform."
+                          : "This user will be restricted from accessing the platform."
+                      }
+                      confirmText={user.isBlocked ? "Unblock User" : "Block User"}
+                      variant="destructive"
+                      onConfirm={handleBlockToggle}
+                      trigger={
+                        <Button
+                          className={`w-full ${user.isBlocked
+                              ? 'bg-[#22C55E] hover:bg-[#22C55E]/90'
+                              : 'bg-[#EF4444] hover:bg-[#EF4444]/90'
+                            } text-muted-foreground`}
+                          size="lg"
+                        >
+                          {user.isBlocked ? 'Unblock User' : 'Block User'}
+                        </Button>
+                      }
+                    />
                   </div>
                 </div>
 
@@ -270,8 +283,8 @@ const ServiceBoyDetailsPage = () => {
                         <div>
                           <p className="text-muted text-sm">Account Status</p>
                           <span className={`mt-1 px-3 py-1 rounded-md text-sm ${user.isBlocked
-                      ? 'bg-destructive text-destructive-foreground'
-                      : 'bg-accent text-accent-foreground'
+                            ? 'bg-destructive text-destructive-foreground'
+                            : 'bg-accent text-accent-foreground'
                             }`}>
                             {user.isBlocked ? 'Blocked Account' : 'Active Account'}
                           </span>
@@ -330,7 +343,7 @@ const ServiceBoyDetailsPage = () => {
                         {user.points !== undefined && (
                           <div className="space-y-2">
                             <p className="text-muted text-sm">Work Attended</p>
-                            <p className="text-foreground font-bold">{user.totalWorkAttended ? user.totalWorkAttended :0}</p>
+                            <p className="text-foreground font-bold">{user.totalWorkAttended ? user.totalWorkAttended : 0}</p>
                           </div>
                         )}
                       </div>
@@ -344,6 +357,7 @@ const ServiceBoyDetailsPage = () => {
       ) : (
         <p>Loading...</p>
       )}
+      
     </div>
   );
 };
