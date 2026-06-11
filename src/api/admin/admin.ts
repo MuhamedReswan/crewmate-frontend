@@ -204,7 +204,7 @@ export const updateVendorBlockStatus = async (
 ): Promise<ApiResponse<Partial<Vendor>> | undefined> => {
   try {
     console.log("status", status);
-    const url = adminRoutes.updateStatusServiceBoyById
+    const url = adminRoutes.updateStatusVendorById
       .replace(":id", id)
       .replace(":status", status);
     const response = await API.patch<ApiResponse<Partial<Vendor>> | undefined>(

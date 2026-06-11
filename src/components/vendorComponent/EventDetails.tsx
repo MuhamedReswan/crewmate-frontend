@@ -770,8 +770,9 @@ const EventDetails = ({
                     <SelectContent>
                       <SelectItem value="islamicBuffet">Islamic Buffet</SelectItem>
                       <SelectItem value="regularBuffet">Regular Buffet</SelectItem>
-                      <SelectItem value="platedService">Plated Service</SelectItem>
-                      <SelectItem value="cocktailService">Cocktail Service</SelectItem>
+                      <SelectItem value="sitting">Sitting</SelectItem>
+                      <SelectItem value="combined">Combined</SelectItem>
+                      <SelectItem value="others">Others</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.typeOfService && (
@@ -885,8 +886,7 @@ const EventDetails = ({
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="created">Created</SelectItem>
-                    <SelectItem value="confirmed">Confirmed</SelectItem>
+                    <SelectItem value="upcoming">UpComing</SelectItem>
                     <SelectItem value="ongoing">Ongoing</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                     <SelectItem value="cancelled">Cancelled</SelectItem>

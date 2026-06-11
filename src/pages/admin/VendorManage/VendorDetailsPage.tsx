@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Vendor } from '@/types/users.type';
 import { getVendorById, updateVendorBlockStatus, } from '@/api/admin/admin';
 import SuccessMessage from '@/components/common/Message/SuccessMessage';
+import ConfirmDialog from '@/components/common/Confirmation/ConfirmDialog';
 
 
 
@@ -155,17 +156,28 @@ const VendorDetailsPage = () => {
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <Button
-                      onClick={handleBlockToggle}
-                      className={`w-full ${user.isBlocked
-                          ? 'bg-[#22C55E] hover:bg-[#22C55E]/90 text-muted-foreground'
-                          : 'bg-[#EF4444] hover:bg-[#EF4444]/90 text-muted-foreground'
-                        }`}
-                      size="lg"
-                    >
-                      <Shield className="h-4 w-4 mr-2" />
-                      {user.isBlocked ? 'Unblock User' : 'Block User'}
-                    </Button>
+                         <ConfirmDialog
+                      title={`Are you sure you want to ${user.isBlocked ? "unblock" : "block"} this user?`}
+                      description={
+                        user.isBlocked
+                          ? "This user will regain access to the platform."
+                          : "This user will be restricted from accessing the platform."
+                      }
+                      confirmText={user.isBlocked ? "Unblock User" : "Block User"}
+                      variant="destructive"
+                      onConfirm={handleBlockToggle}
+                      trigger={
+                        <Button
+                          className={`w-full ${user.isBlocked
+                              ? 'bg-[#22C55E] hover:bg-[#22C55E]/90'
+                              : 'bg-[#EF4444] hover:bg-[#EF4444]/90'
+                            } text-muted-foreground`}
+                          size="lg"
+                        >
+                          {user.isBlocked ? 'Unblock User' : 'Block User'}
+                        </Button>
+                      }
+                    />
                   </div>
                 </div>
 

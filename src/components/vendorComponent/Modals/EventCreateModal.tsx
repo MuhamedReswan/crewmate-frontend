@@ -107,8 +107,10 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               </SelectTrigger>
               <SelectContent className="bg-background border-border">
                 <SelectItem value="islamicBuffet">Islamic Buffet</SelectItem>
-                <SelectItem value="buffet">Buffet</SelectItem>
+                <SelectItem value="regularBuffet">Regular Buffet</SelectItem>
                 <SelectItem value="sitting">Sitting</SelectItem>
+                <SelectItem value="combined">Combined</SelectItem>
+                <SelectItem value="others">Others</SelectItem>
               </SelectContent>
             </Select>
             {errors.typeOfService && (
