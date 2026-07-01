@@ -1,6 +1,13 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Column<T> {
   key: string;
@@ -13,7 +20,7 @@ interface VerificationTableProps<T> {
   columns: Column<T>[];
   currentPage: number;
   limit: number;
-  onRowClick: (data:T) => void;
+  onRowClick: (data: T) => void;
 }
 
 export function VerificationTable<T extends { _id?: string }>({
@@ -21,7 +28,7 @@ export function VerificationTable<T extends { _id?: string }>({
   columns,
   currentPage,
   limit,
-  onRowClick
+  onRowClick,
 }: VerificationTableProps<T>) {
   return (
     <div className="rounded-lg border border-primary/20 overflow-hidden">
@@ -29,8 +36,10 @@ export function VerificationTable<T extends { _id?: string }>({
         <TableHeader>
           <TableRow className="border-b border-primary/20 hover:bg-primary/20">
             <TableHead className="text-foreground font-semibold">S.no</TableHead>
-            {columns.map(col => (
-              <TableHead key={col.key} className="text-text-foreground  font-semibold">{col.label}</TableHead>
+            {columns.map((col) => (
+              <TableHead key={col.key} className="text-text-foreground  font-semibold">
+                {col.label}
+              </TableHead>
             ))}
             <TableHead className="text-foreground  font-semibold">More Info</TableHead>
           </TableRow>
@@ -42,16 +51,16 @@ export function VerificationTable<T extends { _id?: string }>({
               className="border-b border-primary/20 hover:bg-primary/20 transition-colors"
               onClick={() => onRowClick(item)}
             >
-              <TableCell className="text-muted font-medium">{limit * (currentPage - 1) + index + 1}</TableCell>
-              {columns.map(col => (
+              <TableCell className="text-muted font-medium">
+                {limit * (currentPage - 1) + index + 1}
+              </TableCell>
+              {columns.map((col) => (
                 <TableCell key={col.key} className="text-muted">
                   {col.render ? col.render(item) : (item as any)[col.key]}
                 </TableCell>
               ))}
               <TableCell>
                 <div className="flex gap-2">
-              
-                   
                   <Button
                     size="sm"
                     variant="destructive"

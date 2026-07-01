@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
 interface Column<T> {
   key: string;
@@ -15,49 +15,44 @@ interface Column<T> {
   render?: (row: T) => React.ReactNode;
 }
 
-
 interface UserManagementTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  serialStart?: number; 
+  serialStart?: number;
   showSerialNo?: boolean;
 }
 
-export function UserManagementTable<T extends { _id: string; isBlocked: boolean}>({
+export function UserManagementTable<T extends { _id: string; isBlocked: boolean }>({
   data,
   columns,
   serialStart = 1,
   showSerialNo = true,
 }: UserManagementTableProps<T>) {
-    console.log("usermanagement Table",data)
-    
+  console.log("usermanagement Table", data);
+
   return (
     <div className="rounded-lg border border-primary/20 overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-primary/20 hover:bg-primary/20">
-            {showSerialNo && (
-              <TableHead className="text-foregound font-semibold">S.no</TableHead>
-            )}
+            {showSerialNo && <TableHead className="text-foregound font-semibold">S.no</TableHead>}
             {columns.map((col) => (
               <TableHead key={col.key} className="text-foregound font-semibold">
                 {col.label}
               </TableHead>
             ))}
-         
           </TableRow>
         </TableHeader>
-              <TableBody>
+        <TableBody>
           {data.length === 0 ? (
-            <TableRow
-            className="border-b border-primary/10 hover:bg-primary/20 transition-colors">
-             <TableCell
+            <TableRow className="border-b border-primary/10 hover:bg-primary/20 transition-colors">
+              <TableCell
                 colSpan={columns.length + (showSerialNo ? 1 : 0)}
                 className="text-center text-gray-400 py-8"
               >
-                   <span className="text-lg md:text-xl font-semibold tracking-wide">
-         No users found
-      </span>
+                <span className="text-lg md:text-xl font-semibold tracking-wide">
+                  No users found
+                </span>
               </TableCell>
             </TableRow>
           ) : (
@@ -67,9 +62,7 @@ export function UserManagementTable<T extends { _id: string; isBlocked: boolean}
                 className="border-b border-primary/20 hover:bg-primary/20 transition-colors"
               >
                 {showSerialNo && (
-                  <TableCell className="text-muted font-medium">
-                    {serialStart + index}
-                  </TableCell>
+                  <TableCell className="text-muted font-medium">{serialStart + index}</TableCell>
                 )}
                 {columns.map((col) => (
                   <TableCell key={col.key} className="text-muted">

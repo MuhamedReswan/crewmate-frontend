@@ -1,20 +1,24 @@
 export const adminAuthRoutes = {
-    login: "/auth/admin/login",
-    logout: "/auth/admin/logout",
-}
+  login: "/auth/admin/login",
+  logout: "/auth/admin/logout",
+};
 
 export const adminRoutes = {
-    serviceBoyVerificationRequest : "admin/service-boys/verify",
-    verifyServiceBoyById : "admin/service-boys/:id/verify",
-    updateStatusServiceBoyById : "admin/service-boys/:id/:status",
-    getServiceBoyById : "admin/service-boys/:id",
-    LoadServiceBoys : "admin/service-boys",
-    
-    
-    vendorVerificationRequest : "admin/vendors/verify",
-    verifyVendorById : "admin/vendors/:id/verify",
-    LoadVendors : "admin/vendors",
-    getVendorById : "admin/vendors/:id",
-    updateStatusVendorById : "admin/vendors/:id/:status"
-}
+  serviceBoyVerificationRequest: "admin/service-boys/verify",
+  verifyServiceBoyById: "admin/service-boys/:id/verify",
+  updateStatusServiceBoyById: "admin/service-boys/:id/:status",
+  getServiceBoyById: "admin/service-boys/:id",
+  LoadServiceBoys: "admin/service-boys",
 
+  vendorVerificationRequest: "admin/vendors/verify",
+  verifyVendorById: "admin/vendors/:id/verify",
+  LoadVendors: "admin/vendors",
+  getVendorById: "admin/vendors/:id",
+  updateStatusVendorById: "admin/vendors/:id/:status",
+
+  userVerificationRequest: "admin/:userType/pending-verification",
+  verifyUserById: "admin/:userType/:id/verify",
+  LoadUsers: "admin/:userType",
+  updateUserStatusById: "admin/:userType/:id/:status",
+  getUserById: "admin/vendors/:id",
+};

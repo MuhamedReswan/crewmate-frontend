@@ -1,11 +1,11 @@
 // old signup
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
-import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png";
 import { vendorRegister } from "@/api/vendor/vendor";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
@@ -16,18 +16,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
 import { Role } from "@/types/enum.type";
 import { SignupFormData } from "@/types/form.type";
 import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
-import { signupSchema } from '@/validation/validationSchema';
-
-
-
+import { signupSchema } from "@/validation/validationSchema";
 
 const VendorSignUpPage = () => {
-
   const {
     register,
     handleSubmit,
@@ -38,10 +34,10 @@ const VendorSignUpPage = () => {
     resolver: zodResolver(signupSchema),
     defaultValues: {
       terms: false,
-    }
+    },
   });
   const { toast } = useToast();
-  const { googleLogin } = useGoogleAuth(Role.VENDOR)
+  const { googleLogin } = useGoogleAuth(Role.VENDOR);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -51,9 +47,7 @@ const VendorSignUpPage = () => {
 
   const navigate = useNavigate();
 
-
   const onSubmit = async (data: SignupFormData) => {
-
     try {
       console.log("form submitted");
       setLoading(true);
@@ -64,33 +58,24 @@ const VendorSignUpPage = () => {
       console.log("registerResponse on service boy fronty", registerResponse);
       if (registerResponse && registerResponse.statusCode === 201) {
         toast({
-          description: (
-            <SuccessMessage
-              className="" message={registerResponse?.message} />
-          )
-        })
+          description: <SuccessMessage className="" message={registerResponse?.message} />,
+        });
       } else {
         toast({
-          description: (
-            <ErrorMessage
-              className="" message={registerResponse?.message || "Bad"} />
-          )
-        })
+          description: <ErrorMessage className="" message={registerResponse?.message || "Bad"} />,
+        });
       }
 
-
       function HandleModal() {
-        setIsModalOpen(!isModalOpen)
+        setIsModalOpen(!isModalOpen);
       }
 
       if (registerResponse && registerResponse?.data?.email) {
-        console.log("response got on form submit", isModalOpen)
+        console.log("response got on form submit", isModalOpen);
         setEmail(registerResponse.data.email);
         HandleModal();
       }
-      console.log("registerResponse", registerResponse)
-
-
+      console.log("registerResponse", registerResponse);
     } catch (error: unknown) {
       const message = getApiErrorMessage(error, "Registration failed. Please try again.");
       toast({
@@ -101,9 +86,8 @@ const VendorSignUpPage = () => {
     }
   };
 
-
   const formValues = watch();
-  console.log("formValues", formValues)
+  console.log("formValues", formValues);
 
   return (
     <div className="h-screen flex overflow-hidden  relative">
@@ -111,12 +95,7 @@ const VendorSignUpPage = () => {
       <div className="w-full md:w-1/2 flex flex-col h-full p-4">
         {/* Logo and Brand Name */}
         <div className="flex items-center gap-2 z-50 ">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 400 400"
-            className="text-[#4B49AC]"
-          />
+          <svg width="32" height="32" viewBox="0 0 400 400" className="text-[#4B49AC]" />
           <img src={crewmateLogo} alt="logo" className="w-[45px] h-[45px]" />
           <span className="text-xl font-bold text-[#4B49AC]">Crewmate</span>
         </div>
@@ -129,17 +108,24 @@ const VendorSignUpPage = () => {
             </CardHeader>
             <CardContent className="">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
-
                 <div className="space-y-1">
                   <Tabs defaultValue={Role.VENDOR}>
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value={Role.SERVICE_BOY} onClick={() => navigate('/service-boy/register')}>Service boy</TabsTrigger>
                       <TabsTrigger
-                        value={Role.VENDOR} className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white">Vendor</TabsTrigger>
+                        value={Role.SERVICE_BOY}
+                        onClick={() => navigate("/service-boy/register")}
+                      >
+                        Service boy
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value={Role.VENDOR}
+                        className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white"
+                      >
+                        Vendor
+                      </TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
-
 
                 <div className="space-y-1">
                   <Label htmlFor="name">Comany Name</Label>
@@ -147,11 +133,9 @@ const VendorSignUpPage = () => {
                     id="name"
                     placeholder="Enter your full name"
                     className="p-1.5 h-8"
-                    {...register('name')}
+                    {...register("name")}
                   />
-                  {errors.name && (
-                    <p className="text-xs text-red-500">{errors.name.message}</p>
-                  )}
+                  {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
                 </div>
 
                 <div className="space-y-1">
@@ -161,11 +145,9 @@ const VendorSignUpPage = () => {
                     type="email"
                     placeholder="Enter your email"
                     className="p-1.5 h-8"
-                    {...register('email')}
+                    {...register("email")}
                   />
-                  {errors.email && (
-                    <p className="text-xs text-red-500 ">{errors.email.message}</p>
-                  )}
+                  {errors.email && <p className="text-xs text-red-500 ">{errors.email.message}</p>}
                 </div>
 
                 <div className="space-y-1">
@@ -174,11 +156,9 @@ const VendorSignUpPage = () => {
                     id="mobile"
                     placeholder="Enter your mobile number"
                     className="p-1.5 h-8"
-                    {...register('mobile')}
+                    {...register("mobile")}
                   />
-                  {errors.mobile && (
-                    <p className="text-xs text-red-500">{errors.mobile.message}</p>
-                  )}
+                  {errors.mobile && <p className="text-xs text-red-500">{errors.mobile.message}</p>}
                 </div>
 
                 <div className="space-y-1">
@@ -189,7 +169,7 @@ const VendorSignUpPage = () => {
                       type={showPassword ? "text" : "password"}
                       placeholder="Create password"
                       className="p-1.5 h-8"
-                      {...register('password')}
+                      {...register("password")}
                     />
                     <button
                       type="button"
@@ -213,7 +193,7 @@ const VendorSignUpPage = () => {
                       type={showConfirm ? "text" : "password"}
                       placeholder="Confirm password"
                       className="p-1.5 h-8"
-                      {...register('confirmPassword')}
+                      {...register("confirmPassword")}
                     />
                     <button
                       type="button"
@@ -234,14 +214,11 @@ const VendorSignUpPage = () => {
                     id="terms"
                     checked={watch("terms")} //  Watch state for real-time updates
                     onCheckedChange={(checked) => setValue("terms", checked as boolean)}
-
                   />
                   <Label htmlFor="terms" className="text-xs">
                     I agree to the terms & policy
                   </Label>
-                  {errors.terms && (
-                    <p className="text-xs text-red-500">{errors.terms.message}</p>
-                  )}
+                  {errors.terms && <p className="text-xs text-red-500">{errors.terms.message}</p>}
                 </div>
 
                 <Button type="submit" className="w-full bg-[#4B49AC] hover:bg-[#3f3d91] h-8">
@@ -253,9 +230,7 @@ const VendorSignUpPage = () => {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-gray-500">
-                      Or continue with
-                    </span>
+                    <span className="bg-white px-2 text-gray-500">Or continue with</span>
                   </div>
                 </div>
 
@@ -290,7 +265,7 @@ const VendorSignUpPage = () => {
                 </Button>
 
                 <div className="text-center text-xs text-gray-500">
-                  Already have an account?{' '}
+                  Already have an account?{" "}
                   <Link to="/vendor/login" className="text-[#4B49AC] hover:text-[#3f3d91]">
                     Sign in
                   </Link>
@@ -311,9 +286,14 @@ const VendorSignUpPage = () => {
           />
         </div>
       </div>
-      {isModalOpen && <OtpModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} email={email} role={Role.VENDOR} />}
-
-
+      {isModalOpen && (
+        <OtpModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          email={email}
+          role={Role.VENDOR}
+        />
+      )}
     </div>
   );
 };

@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
-import { useToast } from '@/hooks/use-toast';
-import ErrorMessage from '@/components/common/Message/Error.message';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
 
 const EventDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [eventData, setEventData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ const EventDetails = () => {
         // TODO: Replace with your actual API call
         // const response = await getEventById(id);
         // const event = response.data;
-        
+
         // Mock data for now
         const event = {
           _id: id,
@@ -34,7 +34,7 @@ const EventDetails = () => {
           eventLocation: {
             lat: 10.911688645781085,
             lng: 76.37409411278787,
-            address: 'Kerala, India'
+            address: "Kerala, India",
           },
           status: "created",
         };
@@ -44,7 +44,7 @@ const EventDetails = () => {
         toast({
           description: <ErrorMessage message="Failed to load event details" />,
         });
-        navigate('/events');
+        navigate("/events");
       } finally {
         setLoading(false);
       }
@@ -56,17 +56,17 @@ const EventDetails = () => {
   }, [id, navigate, toast]);
 
   const handleStopBooking = async () => {
-    if (!confirm('Are you sure you want to stop slot booking for this event?')) return;
-    
+    if (!confirm("Are you sure you want to stop slot booking for this event?")) return;
+
     try {
       // TODO: Replace with your actual API call
       // await stopEventBooking(id);
-      
+
       toast({
         description: <SuccessMessage message="Slot booking stopped successfully" />,
       });
-      
-      navigate('/events');
+
+      navigate("/events");
     } catch (error) {
       toast({
         description: <ErrorMessage message="Failed to stop booking" />,
@@ -75,17 +75,17 @@ const EventDetails = () => {
   };
 
   const handleCancelWork = async () => {
-    if (!confirm('Are you sure you want to cancel this work?')) return;
-    
+    if (!confirm("Are you sure you want to cancel this work?")) return;
+
     try {
       // TODO: Replace with your actual API call
       // await cancelEvent(id);
-      
+
       toast({
         description: <SuccessMessage message="Work cancelled successfully" />,
       });
-      
-      navigate('/events');
+
+      navigate("/events");
     } catch (error) {
       toast({
         description: <ErrorMessage message="Failed to cancel work" />,
@@ -111,7 +111,7 @@ const EventDetails = () => {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-semibold text-foreground">Event Details</h1>
           <button
-            onClick={() => navigate('/events')}
+            onClick={() => navigate("/events")}
             className="px-5 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors"
           >
             Go Back
@@ -125,28 +125,28 @@ const EventDetails = () => {
             <div>
               <label className="block text-sm text-muted-foreground mb-2">Customer Name</label>
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
-                {eventData?.customerName || 'N/A'}
+                {eventData?.customerName || "N/A"}
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-muted-foreground mb-2">Type of Service</label>
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
-                {eventData?.typeOfService || 'N/A'}
+                {eventData?.typeOfService || "N/A"}
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-muted-foreground mb-2">Type of Work</label>
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
-                {eventData?.typeOfWork || 'N/A'}
+                {eventData?.typeOfWork || "N/A"}
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-muted-foreground mb-2">No of Pax</label>
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
-                {eventData?.noOfPax || 'N/A'}
+                {eventData?.noOfPax || "N/A"}
               </div>
             </div>
           </div>
@@ -158,7 +158,7 @@ const EventDetails = () => {
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
                 {eventData?.reportingDateTime
                   ? format(new Date(eventData.reportingDateTime), "dd-MM-yyyy")
-                  : 'N/A'}
+                  : "N/A"}
               </div>
             </div>
 
@@ -167,21 +167,21 @@ const EventDetails = () => {
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
                 {eventData?.reportingDateTime
                   ? format(new Date(eventData.reportingDateTime), "hh:mm a")
-                  : 'N/A'}
+                  : "N/A"}
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-muted-foreground mb-2">Number of Boys</label>
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
-                {eventData?.serviceBoys || 'N/A'}
+                {eventData?.serviceBoys || "N/A"}
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-muted-foreground mb-2">Location</label>
               <div className="w-full px-4 py-3 bg-primary/10 rounded-lg text-sm text-foreground">
-                {eventData?.eventLocation?.address || 'Location name'}
+                {eventData?.eventLocation?.address || "Location name"}
               </div>
             </div>
           </div>

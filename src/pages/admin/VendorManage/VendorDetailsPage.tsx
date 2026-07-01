@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Mail, Phone, MapPin, Calendar, Award, Briefcase, User, Shield } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Vendor } from '@/types/users.type';
-import { getVendorById, updateVendorBlockStatus, } from '@/api/admin/admin';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import ConfirmDialog from '@/components/common/Confirmation/ConfirmDialog';
-
-
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Award,
+  Briefcase,
+  User,
+  Shield,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Vendor } from "@/types/users.type";
+import { getUserById, updateUserStatus } from "@/api/admin/admin";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import ConfirmDialog from "@/components/common/Confirmation/ConfirmDialog";
+import { UserType } from "@/types/enum.type";
 
 const VendorDetailsPage = () => {
   const location = useLocation();
@@ -18,23 +27,22 @@ const VendorDetailsPage = () => {
   const { toast } = useToast();
   const initialUser = location.state as Vendor | undefined;
 
-  const [user, setUser] = useState<Vendor | null>(
-    location.state as Vendor ?? null
-  ); const [loading, setLoading] = useState<boolean>(!initialUser);
+  const [user, setUser] = useState<Vendor | null>(initialUser ?? null);
+  const [loading, setLoading] = useState<boolean>(!initialUser);
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (initialUser) return; // already set from location.state
+      // if (initialUser) return; // already set from location.state
       //   if (!id) return; // no id, nothing to fetch
 
       try {
         setLoading(true);
-        const result = await getVendorById(location.pathname);
-        console.log("getVendorById result", result);
+        const result = await getUserById(location.pathname);
+        console.log("getUserById result", result);
 
         if (result?.data) {
           setUser(result.data as Vendor);
-          console.log('user------',user)
+          console.log("user------", user);
           toast({
             description: <SuccessMessage message={result.message} />,
           });
@@ -57,15 +65,11 @@ const VendorDetailsPage = () => {
     fetchUser();
   }, [initialUser, toast]);
 
-
-
-
-
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(word => word.charAt(0))
-      .join('')
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -73,16 +77,29 @@ const VendorDetailsPage = () => {
   const handleBlockToggle = async () => {
     try {
       if (!user) return;
-      const action = user.isBlocked ? 'unblock' : 'block';
+      const action = user.isBlocked ? "unblock" : "block";
       // Here you would call your API
-      await updateVendorBlockStatus(user._id, action);
+      await updateUserStatus(user._id, action, UserType.VENDOR);
 
       toast({
-        description: <SuccessMessage message={`User has been ${!user.isBlocked ? "blocked" : "unblocked"}.`} className="" />,
-      })
+        description: (
+          <SuccessMessage
+            message={`User has been ${!user.isBlocked ? "blocked" : "unblocked"}.`}
+            className=""
+          />
+        ),
+      });
 
       // Update the user state (in real app, you'd refetch or update state)
-      user.isBlocked = !user.isBlocked;
+      // user.isBlocked = !user.isBlocked;
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              isBlocked: !prev.isBlocked,
+            }
+          : prev
+      );
     } catch (error) {
       console.error("Error updating block status:", error);
       toast({
@@ -92,7 +109,6 @@ const VendorDetailsPage = () => {
       });
     }
   };
-
 
   const handleBack = () => {
     if (window.history.state && window.history.state.idx > 0) {
@@ -104,7 +120,7 @@ const VendorDetailsPage = () => {
 
   return (
     <div>
-      {user ? (
+      {user && !loading ? (
         <div className="min-h-screen bg-background">
           {/* Header */}
           <div className="bg-surface border-b border-primary/20 sticky top-0 z-10">
@@ -125,12 +141,13 @@ const VendorDetailsPage = () => {
                   </div>
                 </div>
                 <Badge
-                  className={`text-sm px-3 py-1 hover:bg-foreground/30 ${user.isBlocked 
-                      ? 'bg-destructive text-destructive-foreground'
-                      : 'bg-accent text-accent-foreground'
-                    }`}
+                  className={`text-sm px-3 py-1 hover:bg-foreground/30 ${
+                    user.isBlocked
+                      ? "bg-destructive text-destructive-foreground"
+                      : "bg-accent text-accent-foreground"
+                  }`}
                 >
-                  {user.isBlocked ? 'Blocked' : 'Active'}
+                  {user.isBlocked ? "Blocked" : "Active"}
                 </Badge>
               </div>
             </div>
@@ -139,7 +156,6 @@ const VendorDetailsPage = () => {
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-6 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
               {/* Left Column - Profile Overview */}
               <div className="lg:col-span-1">
                 <div className="bg-surface border border-primary/20 rounded-xl p-6">
@@ -156,7 +172,7 @@ const VendorDetailsPage = () => {
                     </div>
                   </div>
                   <div className="space-y-4">
-                         <ConfirmDialog
+                    <ConfirmDialog
                       title={`Are you sure you want to ${user.isBlocked ? "unblock" : "block"} this user?`}
                       description={
                         user.isBlocked
@@ -168,13 +184,14 @@ const VendorDetailsPage = () => {
                       onConfirm={handleBlockToggle}
                       trigger={
                         <Button
-                          className={`w-full ${user.isBlocked
-                              ? 'bg-[#22C55E] hover:bg-[#22C55E]/90'
-                              : 'bg-[#EF4444] hover:bg-[#EF4444]/90'
-                            } text-muted-foreground`}
+                          className={`w-full ${
+                            user.isBlocked
+                              ? "bg-[#22C55E] hover:bg-[#22C55E]/90"
+                              : "bg-[#EF4444] hover:bg-[#EF4444]/90"
+                          } text-muted-foreground`}
                           size="lg"
                         >
-                          {user.isBlocked ? 'Unblock User' : 'Block User'}
+                          {user.isBlocked ? "Unblock User" : "Block User"}
                         </Button>
                       }
                     />
@@ -215,7 +232,6 @@ const VendorDetailsPage = () => {
               {/* Right Column - Detailed Information */}
               <div className="lg:col-span-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                   {/* Contact Information */}
                   <div className="bg-[#12132D] border border-surface/20 rounded-xl p-6">
                     <div className="mb-4">
@@ -282,11 +298,14 @@ const VendorDetailsPage = () => {
                         <Shield className="h-4 w-4 text-muted" />
                         <div>
                           <p className="text-muted text-sm">Account Status</p>
-                          <span className={`mt-1 px-3 py-1 rounded-md text-sm ${user.isBlocked
-                      ? 'bg-destructive text-destructive-foreground'
-                      : 'bg-accent text-accent-foreground'
-                            }`}>
-                            {user.isBlocked ? 'Blocked Account' : 'Active Account'}
+                          <span
+                            className={`mt-1 px-3 py-1 rounded-md text-sm ${
+                              user.isBlocked
+                                ? "bg-destructive text-destructive-foreground"
+                                : "bg-accent text-accent-foreground"
+                            }`}
+                          >
+                            {user.isBlocked ? "Blocked Account" : "Active Account"}
                           </span>
                         </div>
                       </div>
@@ -296,7 +315,9 @@ const VendorDetailsPage = () => {
                   {/* Additional Details Card */}
                   <div className="bg-[#12132D] border border-surface/20 rounded-xl p-6 md:col-span-2">
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-foreground">Complete Information</h3>
+                      <h3 className="text-lg font-semibold text-foreground">
+                        Complete Information
+                      </h3>
                     </div>
                     <div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -349,7 +370,9 @@ const VendorDetailsPage = () => {
                         {user.points !== undefined && (
                           <div className="space-y-2">
                             <p className="text-muted text-sm">Work Attended</p>
-                            <p className="text-foreground font-bold">{user.totalWorkAttended ? user.totalWorkAttended :0}</p>
+                            <p className="text-foreground font-bold">
+                              {user.totalWorkAttended ? user.totalWorkAttended : 0}
+                            </p>
                           </div>
                         )}
                       </div>

@@ -1,23 +1,34 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, User, Phone, Mail, MapPin, Calendar, GraduationCap, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Calendar,
+  GraduationCap,
+  Clock,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
-import { ServiceBoy } from '@/types/users.type';
-import { VerificationStatus } from '@/types/enum.type';
-import { verifyServiceBoyByAdmin } from '@/api/admin/admin';
-import { toast } from '@/hooks/use-toast';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import ErrorMessage from '@/components/common/Message/Error.message';
-import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
-import { Messages } from '@/types/enum.type';
-import { DocumentViewer } from '@/components/adminComponents/DocumentViewer/DocumentViewer';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { fetchImages } from '@/utils/fetchImages';
-import VerificationRejectionModal from '@/components/adminComponents/Modals/RejectionModal';
-import { useSecureImage } from '@/hooks/useSecureImage';
+import { ServiceBoy } from "@/types/users.type";
+import { UserType, VerificationStatus } from "@/types/enum.type";
+import { verifyUserByAdmin } from "@/api/admin/admin";
+import { toast } from "@/hooks/use-toast";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { Messages } from "@/types/enum.type";
+import { DocumentViewer } from "@/components/adminComponents/DocumentViewer/DocumentViewer";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fetchImages } from "@/utils/fetchImages";
+import VerificationRejectionModal from "@/components/adminComponents/Modals/RejectionModal";
+import { useSecureImage } from "@/hooks/useSecureImage";
 
 export default function ServiceBoyVerificationDetails() {
   const { id } = useParams();
@@ -29,9 +40,9 @@ export default function ServiceBoyVerificationDetails() {
   // const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
   // const [frontAadharImage, setFrontAadharImage] = useState<string | undefined>(undefined);
   // const [backAadharImage, setBackAadharImage] = useState<string | undefined>(undefined);
-  
+
   const serviceBoyData = location.state as ServiceBoy;
-  
+
   const profileImage = serviceBoyData.profileImage.url;
   const frontAadharImage = useSecureImage(serviceBoyData.aadharImageFront.publicId);
   const backAadharImage = useSecureImage(serviceBoyData.aadharImageBack.publicId);
@@ -39,27 +50,39 @@ export default function ServiceBoyVerificationDetails() {
   const backAadharSrc = backAadharImage || "";
   const frontAadharSrc = frontAadharImage || "";
 
-  const handleVerify = useCallback(async (status: VerificationStatus, reason?: string) => {
-    if (!id) return;
+  const handleVerify = useCallback(
+    async (status: VerificationStatus, reason?: string) => {
+      if (!id) return;
 
-    setIsLoading(true);
-    try {
-      const result = await verifyServiceBoyByAdmin(id, status, reason);
-      if (result?.statusCode === 200) {
-        toast({ description: <SuccessMessage message={result.message} /> });
-        navigate(-1);
+      setIsLoading(true);
+      try {
+        const result = await verifyUserByAdmin(UserType.SERVICE_BOY, id, status, reason);
+        if (result?.statusCode === 200) {
+          toast({ description: <SuccessMessage message={result.message} /> });
+          navigate(-1);
+        }
+      } catch (error) {
+        toast({
+          description: (
+            <ErrorMessage
+              message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)}
+            />
+          ),
+        });
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      toast({ description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} /> });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id, navigate]);
+    },
+    [id, navigate]
+  );
 
-  const handleRejectWithReason = useCallback((reason: string) => {
-    handleVerify(VerificationStatus.Rejected, reason);
-    setIsRejectModalOpen(false);
-  }, [handleVerify]);
+  const handleRejectWithReason = useCallback(
+    (reason: string) => {
+      handleVerify(VerificationStatus.Rejected, reason);
+      setIsRejectModalOpen(false);
+    },
+    [handleVerify]
+  );
 
   // useEffect(() => {
   //   fetchImages(serviceBoyData, [
@@ -77,17 +100,13 @@ export default function ServiceBoyVerificationDetails() {
   //   });
   // }, [serviceBoyData]);
 
-
   if (!serviceBoyData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="bg-surface border-border">
           <CardContent className="p-6 text-center">
             <p className="text-muted-foreground">Service boy data not found</p>
-            <Button
-              onClick={() => navigate(-1)}
-              className="mt-4 bg-primary hover:bg-primary/90"
-            >
+            <Button onClick={() => navigate(-1)} className="mt-4 bg-primary hover:bg-primary/90">
               Go Back
             </Button>
           </CardContent>
@@ -111,7 +130,9 @@ export default function ServiceBoyVerificationDetails() {
             Back to Verifications
           </Button>
           <div className="px-4 py-2">
-            <h1 className="text-2xl font-bold text-foreground text-center">Service Boy Verification Details</h1>
+            <h1 className="text-2xl font-bold text-foreground text-center">
+              Service Boy Verification Details
+            </h1>
             <p className="text-muted-foreground">Review and verify service boy application</p>
           </div>
         </div>
@@ -132,21 +153,25 @@ export default function ServiceBoyVerificationDetails() {
                   <Avatar className="w-32 h-32 ring-4 ring-primary/20">
                     <AvatarImage src={profileImage} alt={serviceBoyData.name} />
                     <AvatarFallback className="text-2xl font-bold">
-                      {serviceBoyData.name?.split(' ').map(n => n[0]).join('') || 'SW'}
+                      {serviceBoyData.name
+                        ?.split(" ")
+                        .map((n) => n[0])
+                        .join("") || "SW"}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Full Name</label>
-                    <p className="text-surface-foreground font-medium">{serviceBoyData.name || 'N/A'}</p>
+                    <p className="text-surface-foreground font-medium">
+                      {serviceBoyData.name || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       Email Address
                     </label>
-                    <p className="text-surface-foreground">{serviceBoyData.email || 'N/A'}</p>
+                    <p className="text-surface-foreground">{serviceBoyData.email || "N/A"}</p>
                   </div>
-
                 </div>
 
                 <div className="space-y-4">
@@ -155,7 +180,7 @@ export default function ServiceBoyVerificationDetails() {
                       <Phone className="h-4 w-4" />
                       Mobile Number
                     </label>
-                    <p className="text-primary font-medium">{serviceBoyData.mobile || 'N/A'}</p>
+                    <p className="text-primary font-medium">{serviceBoyData.mobile || "N/A"}</p>
                   </div>
 
                   <div>
@@ -163,26 +188,30 @@ export default function ServiceBoyVerificationDetails() {
                       <Calendar className="h-4 w-4" />
                       Age
                     </label>
-                    <p className="text-surface-foreground font-medium">{serviceBoyData.age || 'N/A'}</p>
+                    <p className="text-surface-foreground font-medium">
+                      {serviceBoyData.age || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <GraduationCap className="h-4 w-4" />
                       Qualification
                     </label>
-                    <p className="text-surface-foreground font-medium">{serviceBoyData.qualification || 'N/A'}</p>
+                    <p className="text-surface-foreground font-medium">
+                      {serviceBoyData.qualification || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <MapPin className="h-4 w-4" />
                       Location
                     </label>
-                    <p className="text-surface-foreground">{serviceBoyData.location?.address || 'N/A'}</p>
+                    <p className="text-surface-foreground">
+                      {serviceBoyData.location?.address || "N/A"}
+                    </p>
                   </div>
                 </div>
-                <div className="space-y-4">
-
-                </div>
+                <div className="space-y-4"></div>
               </CardContent>
             </Card>
             <DocumentViewer
@@ -192,7 +221,6 @@ export default function ServiceBoyVerificationDetails() {
                 { label: "Back Side", url: backAadharSrc },
               ]}
             />
-
           </div>
 
           {/* Verification Actions */}
@@ -209,8 +237,8 @@ export default function ServiceBoyVerificationDetails() {
                   <Badge
                     // variant={serviceBoyData.isVerified ? "default" : "secondary"}
                     // className={
-                    //   serviceBoyData.isVerified 
-                    //     ? "bg-success text-success-foreground" 
+                    //   serviceBoyData.isVerified
+                    //     ? "bg-success text-success-foreground"
                     //     : "bg-warning text-warning-foreground"
                     // }
                     className="bg-muted/70 text-backgound"
@@ -258,7 +286,6 @@ export default function ServiceBoyVerificationDetails() {
                 </div>
               </CardContent>
             </Card>
-
           </div>
         </div>
       </div>

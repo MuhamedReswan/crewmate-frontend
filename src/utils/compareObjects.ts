@@ -1,8 +1,4 @@
-export function isDataChanged<T>(
-  original: T,
-  updated: T,
-  keysToCompare: (keyof T)[]
-): boolean {
+export function isDataChanged<T>(original: T, updated: T, keysToCompare: (keyof T)[]): boolean {
   return keysToCompare.some((key) => {
     const originalValue = original[key];
     const updatedValue = updated[key];

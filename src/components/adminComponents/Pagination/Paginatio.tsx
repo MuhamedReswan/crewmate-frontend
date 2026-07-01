@@ -1,4 +1,3 @@
-
 import React from "react";
 
 interface PaginationProps {
@@ -26,18 +25,14 @@ export const Pagination: React.FC<PaginationProps> = ({
       {/* Page numbers (only show nearby pages) */}
       {Array.from({ length: totalPages }, (_, i) => i + 1)
         .filter(
-          (p) =>
-            p >= Math.max(1, currentPage - 1) &&
-            p <= Math.min(totalPages, currentPage + 1)
+          (p) => p >= Math.max(1, currentPage - 1) && p <= Math.min(totalPages, currentPage + 1)
         )
         .map((p) => (
           <button
             key={p}
             onClick={() => onPageChange(p)}
             className={`px-3 py-1 rounded-md ${
-              p === currentPage
-                ? 'bg-primary text-white'
-                : 'border border-primary/30 text-white'
+              p === currentPage ? "bg-primary text-white" : "border border-primary/30 text-white"
             }`}
           >
             {p}

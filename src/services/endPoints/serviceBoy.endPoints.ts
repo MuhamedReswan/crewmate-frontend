@@ -1,4 +1,3 @@
-
 export const serviceBoyRoutes = {
   login: "/auth/service-boy/login",
   register: "/auth/service-boy/register",
@@ -9,8 +8,8 @@ export const serviceBoyRoutes = {
   forgotPassword: "/auth/service-boy/forgot-password",
   resetPassword: "/auth/service-boy/reset-password",
   refreshToken: "auth/service-boy/refresh-token",
-  profile:"/service-boy/profile",
-  serviceBoyById:"/service-boy/:id",
-  retryVerify:"/service-boy/retry-verify/:id",
-  loadWorks:"/events",
+  profile: "/service-boy/profile",
+  serviceBoyById: "/service-boy/:id",
+  retryVerify: "/service-boy/retry-verify/:id",
+  loadWorks: "/events",
 };

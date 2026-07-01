@@ -1,10 +1,9 @@
-
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
-import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
@@ -15,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
-import { useLoginForm } from '@/hooks/useLoginForm';
+import { useLoginForm } from "@/hooks/useLoginForm";
 import { vendorLogin } from "@/redux/slice/vendorAuth.slice";
 import { Role } from "@/types/enum.type";
 import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
@@ -27,39 +26,29 @@ const VendorLoginPage = () => {
   const [forgotModal, setForgotModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-
-  const {
-    register,
-    onSubmit,
-    errors,
-    isLoading,
-    watch
-  } = useLoginForm({
+  const { register, onSubmit, errors, isLoading, watch } = useLoginForm({
     loginType: Role.VENDOR,
     onLoginSuccess: (response) => {
-      console.log('Login successful data', response);
+      console.log("Login successful data", response);
       toast({
         description: <SuccessMessage message={response.message} />,
-      })
-      console.log("vendor login result data", response)
+      });
+      console.log("vendor login result data", response);
       dispatch(vendorLogin(response.data));
-      navigate('/vendor/');
+      navigate("/vendor/");
     },
     onLoginError: (error) => {
-      console.error('Login failed', error);
+      console.error("Login failed", error);
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error)
-        } />,
-      })
-    }
+        description: <ErrorMessage message={getApiErrorMessage(error)} />,
+      });
+    },
   });
 
-  const { googleLogin } = useGoogleAuth(Role.VENDOR
-
-  )
+  const { googleLogin } = useGoogleAuth(Role.VENDOR);
 
   const loginFormValues = watch();
-  console.log(";loginFormValues", loginFormValues)
+  console.log(";loginFormValues", loginFormValues);
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -67,12 +56,7 @@ const VendorLoginPage = () => {
       <div className="w-full md:w-1/2 flex flex-col h-full p-6">
         {/* Logo and Brand Name */}
         <div className="flex items-center gap-2 mb-4">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 400 400"
-            className="text-[#4B49AC]"
-          />
+          <svg width="32" height="32" viewBox="0 0 400 400" className="text-[#4B49AC]" />
           <img src={crewmateLogo} alt="logo" className="w-[45px] h-[45px]" />
           <span className="text-xl font-bold text-[#4B49AC]">CrewMate</span>
         </div>
@@ -86,10 +70,20 @@ const VendorLoginPage = () => {
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-2">
                 <div className="space-y-1">
-                  <Tabs defaultValue={Role.VENDOR} >
+                  <Tabs defaultValue={Role.VENDOR}>
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value={Role.SERVICE_BOY} onClick={() => navigate('/service-boy/login')} >Service Boy</TabsTrigger>
-                      <TabsTrigger value={Role.VENDOR} className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white ">Vendor</TabsTrigger>
+                      <TabsTrigger
+                        value={Role.SERVICE_BOY}
+                        onClick={() => navigate("/service-boy/login")}
+                      >
+                        Service Boy
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value={Role.VENDOR}
+                        className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white "
+                      >
+                        Vendor
+                      </TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
@@ -101,7 +95,7 @@ const VendorLoginPage = () => {
                     type="email"
                     placeholder="Enter your email"
                     className="p-1.5 h-8"
-                    {...register('email')}
+                    {...register("email")}
                   />
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
@@ -116,7 +110,7 @@ const VendorLoginPage = () => {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       className="p-1.5 h-8"
-                      {...register('password')}
+                      {...register("password")}
                     />
                     <button
                       type="button"
@@ -137,7 +131,6 @@ const VendorLoginPage = () => {
                     type="button"
                     className="text-sm text-[#4B49AC] hover:text-[#3f3d91]"
                     onClick={() => setForgotModal(true)}
-
                   >
                     Forgot password?
                   </button>
@@ -148,7 +141,7 @@ const VendorLoginPage = () => {
                   className="w-full bg-[#4B49AC] hover:bg-[#3f3d91] h-8"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Signing in...' : 'Sign in'}
+                  {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
 
                 <div className="relative">
@@ -156,9 +149,7 @@ const VendorLoginPage = () => {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-gray-500">
-                      Or continue with
-                    </span>
+                    <span className="bg-white px-2 text-gray-500">Or continue with</span>
                   </div>
                 </div>
 
@@ -190,11 +181,11 @@ const VendorLoginPage = () => {
                 </Button>
 
                 <div className="text-center text-sm text-gray-500">
-                  Don&apos;t have an account?{' '}
+                  Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     className="text-[#4B49AC] hover:text-[#3f3d91] font-medium"
-                    onClick={() => navigate('/vendor/register')}
+                    onClick={() => navigate("/vendor/register")}
                   >
                     Sign up
                   </button>
@@ -215,7 +206,9 @@ const VendorLoginPage = () => {
           />
         </div>
       </div>
-      {forgotModal && <ForgotPasswordModal open={forgotModal} setOpen={setForgotModal} role={Role.VENDOR} />}
+      {forgotModal && (
+        <ForgotPasswordModal open={forgotModal} setOpen={setForgotModal} role={Role.VENDOR} />
+      )}
     </div>
   );
 };

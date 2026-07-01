@@ -1,76 +1,76 @@
-
-import { useDispatch, useSelector } from 'react-redux';
-import StatCard from '@/components/common/StatCard/StatCard';
-import { RootState } from '@/redux/store/store';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { Messages, VerificationStatus } from '@/types/enum.type';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import ErrorMessage from '@/components/common/Message/Error.message';
-import { useToast } from '@/hooks/use-toast';
-import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
-import { updateVendorData } from '@/redux/slice/vendorAuth.slice';
-import { GetVendorById, RetryVerficationRequestVendor } from '@/api/vendor/vendor';
-import { useVerificationSync } from '@/hooks/useVerificationSync';
-import { AlertCircle, RefreshCw } from 'lucide-react';
-
+import { useDispatch, useSelector } from "react-redux";
+import StatCard from "@/components/common/StatCard/StatCard";
+import { RootState } from "@/redux/store/store";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Messages, VerificationStatus } from "@/types/enum.type";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import { useToast } from "@/hooks/use-toast";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { updateVendorData } from "@/redux/slice/vendorAuth.slice";
+import { RetryVerficationRequestVendor } from "@/api/vendor/vendor";
+import { useVerificationSync } from "@/hooks/useVerificationSync";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { getUserById } from "@/api/admin/admin";
 
 function VendorHomePage() {
   const vendor = useSelector((state: RootState) => state.vendor.vendorData);
   const dispatch = useDispatch();
-  const {toast} = useToast();
+  const { toast } = useToast();
   const date = new Date(Date.now());
-  const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()}`;
+  const formattedDate = `${date.getDate().toString().padStart(2, "0")}-${date.toLocaleString("default", { month: "short" })}-${date.getFullYear()}`;
 
   useVerificationSync({
     user: vendor,
-    fetchById: GetVendorById,
+    fetchById: getUserById,
     updateAction: updateVendorData,
   });
 
-    const handleRetryVerification = async () => {
+  const handleRetryVerification = async () => {
     try {
       if (!vendor?._id) return;
 
       if (!vendor || !vendor._id) return;
       const result = await RetryVerficationRequestVendor(vendor._id);
-      console.log("handleRetryVerification", result)
+      console.log("handleRetryVerification", result);
       if (result && result.statusCode === 200) {
         dispatch(updateVendorData({ isVerified: VerificationStatus.Pending }));
         toast({ description: <SuccessMessage message={result.message} /> });
       } else {
         toast({
           description: <ErrorMessage message={Messages.VERIFCATION_STATUS_CHANGE_FAILED} />,
-        })
+        });
       }
     } catch (error) {
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} />,
-      })
+        description: (
+          <ErrorMessage
+            message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)}
+          />
+        ),
+      });
     }
-
-  }
-    console.log("VendorHomePage vendor",vendor);
-
-
+  };
+  console.log("VendorHomePage vendor", vendor);
 
   return (
     <main className="flex-1 overflow-y-auto p-6 bg-surface">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Welcome {vendor?.name}</h1>
-              {vendor?.isVerified === VerificationStatus.Pending && (
-                      <Link to="/vendor/profile" className="text-sm text-gray-600 hover:text-gray-800">
-                        Please update your profile for admin verification and Wait for verification.
-                      </Link>
-                    )}
+          {vendor?.isVerified === VerificationStatus.Pending && (
+            <Link to="/vendor/profile" className="text-sm text-gray-600 hover:text-gray-800">
+              Please update your profile for admin verification and Wait for verification.
+            </Link>
+          )}
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <span>Today ( {formattedDate} )</span>
         </div>
       </div>
 
-            {/* Rejection Alert Banner */}
+      {/* Rejection Alert Banner */}
       {vendor?.isVerified === VerificationStatus.Rejected && (
         <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-sm">
           <div className="flex items-start">
@@ -82,7 +82,9 @@ function VendorHomePage() {
                 Verification Request Rejected
               </h3>
               <p className="text-sm text-red-700 mb-4">
-                Your verification request has been rejected by the admin.due to {vendor.rejectionReason}. Please review your profile information and submit a new verification request.
+                Your verification request has been rejected by the admin.due to{" "}
+                {vendor.rejectionReason}. Please review your profile information and submit a new
+                verification request.
               </p>
               <div className="flex items-center gap-3">
                 <Button
@@ -94,7 +96,11 @@ function VendorHomePage() {
                   Resubmit Verification
                 </Button>
                 <Link to="/service-boy/profile">
-                  <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-50">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-300 text-red-700 hover:bg-red-50"
+                  >
                     Update Profile
                   </Button>
                 </Link>
@@ -156,6 +162,5 @@ function VendorHomePage() {
     </main>
   );
 }
-
 
 export default VendorHomePage;

@@ -7,12 +7,8 @@ interface ProtectServiceBoyIsLoginProps {
   children: ReactNode;
 }
 
-const ProtectServiceBoyIsLogin: React.FC<ProtectServiceBoyIsLoginProps> = ({
-  children,
-}) => {
-  const serviceBoyIsLoggedIn = useSelector(
-    (state: RootState) => state.serviceBoy.serviceBoyStatus
-  );
+const ProtectServiceBoyIsLogin: React.FC<ProtectServiceBoyIsLoginProps> = ({ children }) => {
+  const serviceBoyIsLoggedIn = useSelector((state: RootState) => state.serviceBoy.serviceBoyStatus);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +20,6 @@ const ProtectServiceBoyIsLogin: React.FC<ProtectServiceBoyIsLoginProps> = ({
   if (!serviceBoyIsLoggedIn) {
     return <>{children}</>;
   }
-
 
   return null;
 };

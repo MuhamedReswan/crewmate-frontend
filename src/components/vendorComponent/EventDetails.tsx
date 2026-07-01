@@ -42,26 +42,26 @@
 //   onBack?: () => void;
 // }
 
-// const EventDetails = ({ 
-//   event, 
-//   onCancel, 
-//   onUpdate, 
+// const EventDetails = ({
+//   event,
+//   onCancel,
+//   onUpdate,
 //   onCloseBooking,
-//   onBack 
+//   onBack
 // }: EventDetailsProps) => {
 
 //   const formatDateTime = (dateString: string) => {
 //     const date = new Date(dateString);
 //     return {
-//       date: date.toLocaleDateString('en-US', { 
-//         year: 'numeric', 
-//         month: '2-digit', 
-//         day: '2-digit' 
+//       date: date.toLocaleDateString('en-US', {
+//         year: 'numeric',
+//         month: '2-digit',
+//         day: '2-digit'
 //       }),
-//       time: date.toLocaleTimeString('en-US', { 
-//         hour: '2-digit', 
+//       time: date.toLocaleTimeString('en-US', {
+//         hour: '2-digit',
 //         minute: '2-digit',
-//         hour12: true 
+//         hour12: true
 //       })
 //     };
 //   };
@@ -250,38 +250,39 @@
 
 // export default EventDetails;
 
-
-import { ArrowLeft, MapPin, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarComponent } from '@/components/ui/calender';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { format } from 'date-fns';
-import { EventUpdateFormValues } from '@/types/form.type';
-import { eventUpdateSchema } from '@/validation/validationSchema';
-import { BookingStatus, EventStatus } from '@/types/enum.type';
-import { Label } from '../ui/label';
-import MapPicker from '../common/MapPicker/MapPicker';
-import { useLocationSelector } from '@/hooks/useLocationSelector';
-import { Event } from '@/types/type';
-
-
+import { ArrowLeft, MapPin, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calender";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { format } from "date-fns";
+import { EventUpdateFormValues } from "@/types/form.type";
+import { eventUpdateSchema } from "@/validation/validationSchema";
+import { BookingStatus, EventStatus } from "@/types/enum.type";
+import { Label } from "../ui/label";
+import MapPicker from "../common/MapPicker/MapPicker";
+import { useLocationSelector } from "@/hooks/useLocationSelector";
+import { Event } from "@/types/type";
 
 interface EventDetailsProps {
   event: Event;
   onCancel?: () => void;
-  onUpdate?: (data:  Partial<EventUpdateFormValues>) => void;
+  onUpdate?: (data: Partial<EventUpdateFormValues>) => void;
   onCloseBooking?: () => void;
   onBack?: () => void;
-  isUpdating ?: boolean;
+  isUpdating?: boolean;
 }
-
-
 
 const EventDetails = ({
   event,
@@ -289,14 +290,15 @@ const EventDetails = ({
   onUpdate,
   onCloseBooking,
   onBack,
-  isUpdating
+  isUpdating,
 }: EventDetailsProps) => {
   const [editMode, setEditMode] = useState(false);
   // const [isUpdating, setIsUpdating] = useState(false);
-  const [completedEvent, setCompletedEvent] = useState(event?.status == EventStatus.Completed || false);
+  const [completedEvent, setCompletedEvent] = useState(
+    event?.status == EventStatus.Completed || false
+  );
   const [mapVisible, setMapVisible] = useState(false);
   const initialEventRef = useRef<Event | null>(null);
-  
 
   const {
     register,
@@ -311,12 +313,11 @@ const EventDetails = ({
   });
 
   const { handleLocationSelect } = useLocationSelector(
-  setValue,
-  "eventLocation",
-  undefined,
-  setMapVisible
-);
-
+    setValue,
+    "eventLocation",
+    undefined,
+    setMapVisible
+  );
 
   // Initialize form with event data
   useEffect(() => {
@@ -339,22 +340,22 @@ const EventDetails = ({
     }
   }, [event, reset]);
 
-  const watchedDate = watch('reportingDateTime');
-  const watchedLocation = watch('eventLocation');
+  const watchedDate = watch("reportingDateTime");
+  const watchedLocation = watch("eventLocation");
 
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     return {
-      date: date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
+      date: date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
       }),
-      time: date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      })
+      time: date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }),
     };
   };
 
@@ -362,30 +363,29 @@ const EventDetails = ({
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'completed':
-        return 'bg-success text-success-foreground';
-      case 'created':
-        return 'bg-primary text-primary-foreground';
-      case 'cancelled':
-        return 'bg-destructive text-destructive-foreground';
+      case "completed":
+        return "bg-success text-success-foreground";
+      case "created":
+        return "bg-primary text-primary-foreground";
+      case "cancelled":
+        return "bg-destructive text-destructive-foreground";
       default:
-        return 'bg-muted text-muted-foreground';
+        return "bg-muted text-muted-foreground";
     }
   };
 
   const getPaymentStatusColor = (totalBill: number) => {
-    return totalBill > 0 ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground';
+    return totalBill > 0 ? "bg-success text-success-foreground" : "bg-muted text-muted-foreground";
   };
 
   const getPaymentStatusText = (totalBill: number) => {
-    return totalBill > 0 ? 'Paid' : 'Paid or Pending';
+    return totalBill > 0 ? "Paid" : "Paid or Pending";
   };
 
   // const handleLocationSelect = (location: EventLocation) => {
   //   setValue('eventLocation', location);
   // };
 
-  
   // const onSubmit = async (data: EventUpdateFormValues) => {
   //   setIsUpdating(true);
   //   try {
@@ -401,77 +401,76 @@ const EventDetails = ({
   // };
 
   const onSubmit = async (data: EventUpdateFormValues) => {
-  const initial = initialEventRef.current;
-  if (!initial) return;
+    const initial = initialEventRef.current;
+    if (!initial) return;
 
-  const changedValues: Partial<EventUpdateFormValues> = {};
+    const changedValues: Partial<EventUpdateFormValues> = {};
 
-  // 1️⃣ Compare customerName
-  if (data.customerName !== initial.customerName) {
-    changedValues.customerName = data.customerName;
-  }
+    // 1️⃣ Compare customerName
+    if (data.customerName !== initial.customerName) {
+      changedValues.customerName = data.customerName;
+    }
 
-  // 2️⃣ Compare status
-  if (data.status !== initial.status) {
-    changedValues.status = data.status;
-  }
+    // 2️⃣ Compare status
+    if (data.status !== initial.status) {
+      changedValues.status = data.status;
+    }
 
-  // 3️⃣ Compare typeOfWork
-  if (data.typeOfWork !== initial.typeOfWork) {
-    changedValues.typeOfWork = data.typeOfWork;
-  }
+    // 3️⃣ Compare typeOfWork
+    if (data.typeOfWork !== initial.typeOfWork) {
+      changedValues.typeOfWork = data.typeOfWork;
+    }
 
-  // 4️⃣ Compare typeOfService
-  if (data.typeOfService !== initial.typeOfService) {
-    changedValues.typeOfService = data.typeOfService;
-  }
+    // 4️⃣ Compare typeOfService
+    if (data.typeOfService !== initial.typeOfService) {
+      changedValues.typeOfService = data.typeOfService;
+    }
 
-  // 5️⃣ Compare noOfPax
-  if (data.noOfPax !== initial.noOfPax) {
-    changedValues.noOfPax = data.noOfPax;
-  }
+    // 5️⃣ Compare noOfPax
+    if (data.noOfPax !== initial.noOfPax) {
+      changedValues.noOfPax = data.noOfPax;
+    }
 
-  // 6️⃣ Compare serviceBoys
-  if (data.serviceBoys !== initial.serviceBoys) {
-    changedValues.serviceBoys = data.serviceBoys;
-  }
+    // 6️⃣ Compare serviceBoys
+    if (data.serviceBoys !== initial.serviceBoys) {
+      changedValues.serviceBoys = data.serviceBoys;
+    }
 
-  // 7️⃣ Compare reportingDateTime (as Date)
-  const initialDate = new Date(initial.reportingDateTime);
-  if (initialDate.getTime() !== data.reportingDateTime.getTime()) {
-    changedValues.reportingDateTime = data.reportingDateTime;
-  }
+    // 7️⃣ Compare reportingDateTime (as Date)
+    const initialDate = new Date(initial.reportingDateTime);
+    if (initialDate.getTime() !== data.reportingDateTime.getTime()) {
+      changedValues.reportingDateTime = data.reportingDateTime;
+    }
 
-  // 8️⃣ Compare eventLocation (deep compare)
-  if (JSON.stringify(data.eventLocation) !== JSON.stringify(initial.eventLocation)) {
-    changedValues.eventLocation = data.eventLocation;
-  }
+    // 8️⃣ Compare eventLocation (deep compare)
+    if (JSON.stringify(data.eventLocation) !== JSON.stringify(initial.eventLocation)) {
+      changedValues.eventLocation = data.eventLocation;
+    }
 
-  // 9️⃣ Compare bonus
-  if (data.bonus !== initial.bonus) {
-    changedValues.bonus = data.bonus;
-  }
+    // 9️⃣ Compare bonus
+    if (data.bonus !== initial.bonus) {
+      changedValues.bonus = data.bonus;
+    }
 
-  // 🔟 Compare overTime
-  if (data.overTime !== initial.overTime) {
-    changedValues.overTime = data.overTime;
-  }
+    // 🔟 Compare overTime
+    if (data.overTime !== initial.overTime) {
+      changedValues.overTime = data.overTime;
+    }
 
-  // 1️⃣1️⃣ Compare travelExpense
-  if (data.travelExpense !== initial.travelExpense) {
-    changedValues.travelExpense = data.travelExpense;
-  }
+    // 1️⃣1️⃣ Compare travelExpense
+    if (data.travelExpense !== initial.travelExpense) {
+      changedValues.travelExpense = data.travelExpense;
+    }
 
-  // 1️⃣2️⃣ Compare totalBill
-  if (data.totalBill !== initial.totalBill) {
-    changedValues.totalBill = data.totalBill;
-  }
+    // 1️⃣2️⃣ Compare totalBill
+    if (data.totalBill !== initial.totalBill) {
+      changedValues.totalBill = data.totalBill;
+    }
 
-  console.log("Changed values:", changedValues);
+    console.log("Changed values:", changedValues);
 
-  await onUpdate?.(changedValues);
-};
-
+    await onUpdate?.(changedValues);
+  };
 
   const handleCancel = () => {
     setEditMode(false);
@@ -492,9 +491,7 @@ const EventDetails = ({
             >
               <ArrowLeft className="w-5 h-5 text-primary" />
             </button>
-            <h1 className="text-2xl font-semibold text-foreground">
-              Event Details
-            </h1>
+            <h1 className="text-2xl font-semibold text-foreground">Event Details</h1>
           </div>
 
           {editMode && !completedEvent && (
@@ -518,7 +515,7 @@ const EventDetails = ({
                 <>
                   <input
                     type="text"
-                    {...register('customerName')}
+                    {...register("customerName")}
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
                       "focus:ring-1 focus:ring-primary focus:border-primary",
@@ -577,9 +574,7 @@ const EventDetails = ({
             </div> */}
 
             <div>
-              <label className="block text-sm text-muted-foreground mb-1.5">
-                Date of Event
-              </label>
+              <label className="block text-sm text-muted-foreground mb-1.5">Date of Event</label>
 
               {editMode && !completedEvent ? (
                 <>
@@ -641,19 +636,20 @@ const EventDetails = ({
               )}
             </div>
 
-
             <div>
               <label className="block text-sm text-muted-foreground mb-1.5">Type of Work</label>
               {editMode && !completedEvent ? (
                 <>
                   <Select
-                    value={watch('typeOfWork')}
-                    onValueChange={(value) => setValue('typeOfWork', value)}
+                    value={watch("typeOfWork")}
+                    onValueChange={(value) => setValue("typeOfWork", value)}
                   >
-                    <SelectTrigger className={cn(
-                      "w-full bg-background",
-                      errors.typeOfWork && "border-destructive"
-                    )}>
+                    <SelectTrigger
+                      className={cn(
+                        "w-full bg-background",
+                        errors.typeOfWork && "border-destructive"
+                      )}
+                    >
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -681,9 +677,7 @@ const EventDetails = ({
             </div> */}
 
             <div>
-              <label className="block text-sm text-muted-foreground mb-1.5">
-                Reporting Time
-              </label>
+              <label className="block text-sm text-muted-foreground mb-1.5">Reporting Time</label>
 
               {editMode && !completedEvent ? (
                 <>
@@ -727,44 +721,44 @@ const EventDetails = ({
               )}
             </div>
 
-                     {/* Location */}
-                      <div className="space-y-1">
-                        <Label className="text-sm text-muted-foreground">Location</Label>
-                        <div 
-                          className="flex w-full px-4 py-2.5 bg-background border border-primary/20 rounded-lg text-sm"
-                          onClick={() => editMode && setMapVisible(true)}
-                        >
-                          <MapPin className="h-5 w-5 text-primary mr-3" />
-                          <p className="flex-1 text-foreground overflow-hidden whitespace-nowrap">
-                            {watchedLocation?.address || 'Choose location'}
-                          </p>
-                        </div>
-                        {errors.eventLocation && (
-                          <p className="text-destructive text-xs mt-1">
-                            {errors.eventLocation.message}
-                          </p>
-                        )}
-                      </div>
-                        {/* Map Picker */}
-          {mapVisible && editMode && !completedEvent  && (
-            <MapPicker 
-              onClose={() => setMapVisible(false)} 
-              onSelectLocation={handleLocationSelect}
-            />
-          )}
+            {/* Location */}
+            <div className="space-y-1">
+              <Label className="text-sm text-muted-foreground">Location</Label>
+              <div
+                className="flex w-full px-4 py-2.5 bg-background border border-primary/20 rounded-lg text-sm"
+                onClick={() => editMode && setMapVisible(true)}
+              >
+                <MapPin className="h-5 w-5 text-primary mr-3" />
+                <p className="flex-1 text-foreground overflow-hidden whitespace-nowrap">
+                  {watchedLocation?.address || "Choose location"}
+                </p>
+              </div>
+              {errors.eventLocation && (
+                <p className="text-destructive text-xs mt-1">{errors.eventLocation.message}</p>
+              )}
+            </div>
+            {/* Map Picker */}
+            {mapVisible && editMode && !completedEvent && (
+              <MapPicker
+                onClose={() => setMapVisible(false)}
+                onSelectLocation={handleLocationSelect}
+              />
+            )}
 
             <div>
               <label className="block text-sm text-muted-foreground mb-1.5">Type of Service</label>
               {editMode && !completedEvent ? (
                 <>
                   <Select
-                    value={watch('typeOfService')}
-                    onValueChange={(value) => setValue('typeOfService', value)}
+                    value={watch("typeOfService")}
+                    onValueChange={(value) => setValue("typeOfService", value)}
                   >
-                    <SelectTrigger className={cn(
-                      "w-full bg-background",
-                      errors.typeOfService && "border-destructive"
-                    )}>
+                    <SelectTrigger
+                      className={cn(
+                        "w-full bg-background",
+                        errors.typeOfService && "border-destructive"
+                      )}
+                    >
                       <SelectValue placeholder="Select service type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -781,7 +775,7 @@ const EventDetails = ({
                 </>
               ) : (
                 <div className="w-full px-4 py-2.5 bg-background border border-primary/20 rounded-lg text-sm capitalize">
-                  {event.typeOfService.replace(/([A-Z])/g, ' $1').trim()}
+                  {event.typeOfService.replace(/([A-Z])/g, " $1").trim()}
                 </div>
               )}
             </div>
@@ -792,7 +786,7 @@ const EventDetails = ({
                 <>
                   <input
                     type="number"
-                    {...register('noOfPax', { valueAsNumber: true })}
+                    {...register("noOfPax", { valueAsNumber: true })}
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
                       "focus:ring-1 focus:ring-primary focus:border-primary",
@@ -813,25 +807,24 @@ const EventDetails = ({
 
             <div>
               <label className="block text-sm text-muted-foreground mb-1.5">Wage per Boy</label>
-                <div className="w-full px-4 py-2.5 bg-background border border-primary/20 rounded-lg text-sm">
-                  {event?.wagePerBoy ?? 300}
-                </div>
-             
+              <div className="w-full px-4 py-2.5 bg-background border border-primary/20 rounded-lg text-sm">
+                {event?.wagePerBoy ?? 300}
+              </div>
             </div>
           </div>
 
           {/* Right Column */}
           <div className="space-y-6">
-            
-
             <div>
-              <label className="block text-sm text-muted-foreground mb-1.5">Travel Expense Amount</label>
+              <label className="block text-sm text-muted-foreground mb-1.5">
+                Travel Expense Amount
+              </label>
               {editMode ? (
                 <>
                   <input
                     disabled
                     type="number"
-                    {...register('travelExpense', { valueAsNumber: true })}
+                    {...register("travelExpense", { valueAsNumber: true })}
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
                       "focus:ring-1 focus:ring-primary focus:border-primary",
@@ -856,7 +849,7 @@ const EventDetails = ({
                 <>
                   <input
                     type="number"
-                    {...register('overTime', { valueAsNumber: true })}
+                    {...register("overTime", { valueAsNumber: true })}
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
                       "focus:ring-1 focus:ring-primary focus:border-primary",
@@ -879,8 +872,8 @@ const EventDetails = ({
               <label className="block text-sm text-muted-foreground mb-1.5">Status</label>
               {editMode ? (
                 <Select
-                  value={watch('status')}
-                  onValueChange={(value) => setValue('status', value)}
+                  value={watch("status")}
+                  onValueChange={(value) => setValue("status", value)}
                 >
                   <SelectTrigger className="w-full bg-background">
                     <SelectValue placeholder="Select status" />
@@ -916,7 +909,7 @@ const EventDetails = ({
                 <>
                   <input
                     type="number"
-                    {...register('serviceBoys', { valueAsNumber: true })}
+                    {...register("serviceBoys", { valueAsNumber: true })}
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
                       "focus:ring-1 focus:ring-primary focus:border-primary",
@@ -941,7 +934,7 @@ const EventDetails = ({
                 <>
                   <input
                     type="number"
-                    {...register('bonus', { valueAsNumber: true })}
+                    {...register("bonus", { valueAsNumber: true })}
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
                       "focus:ring-1 focus:ring-primary focus:border-primary",
@@ -966,7 +959,7 @@ const EventDetails = ({
                 <>
                   <input
                     type="number"
-                    {...register('totalBill', { valueAsNumber: true })}
+                    {...register("totalBill", { valueAsNumber: true })}
                     disabled
                     className={cn(
                       "w-full px-4 py-2.5 bg-background border rounded-lg text-sm",
@@ -985,7 +978,6 @@ const EventDetails = ({
                 </div>
               )}
             </div>
-
           </div>
         </div>
 
@@ -1003,15 +995,17 @@ const EventDetails = ({
               </Button>
               <Button
                 type="button"
-                disabled={event.bookingStatus === BookingStatus.Completed || event.bookingStatus === BookingStatus.Cancelled}
+                disabled={
+                  event.bookingStatus === BookingStatus.Completed ||
+                  event.bookingStatus === BookingStatus.Cancelled
+                }
                 variant="default"
                 onClick={onCloseBooking}
                 className="px-5 py-2 text-sm font-medium bg-primary hover:bg-primary/90"
               >
-               {event.bookingStatus == BookingStatus.Stopped ? "Restart Booking" : "Close Booking" } 
+                {event.bookingStatus == BookingStatus.Stopped ? "Restart Booking" : "Close Booking"}
               </Button>
               <Button
-
                 type="button"
                 variant="default"
                 onClick={() => setEditMode(true)}
@@ -1026,7 +1020,7 @@ const EventDetails = ({
               disabled={isUpdating}
               className="px-5 py-2 text-sm font-medium bg-primary hover:bg-primary/90"
             >
-              {isUpdating ? 'Saving...' : 'Save'}
+              {isUpdating ? "Saving..." : "Save"}
             </Button>
           )}
         </div>
@@ -1036,5 +1030,3 @@ const EventDetails = ({
 };
 
 export default EventDetails;
-
-

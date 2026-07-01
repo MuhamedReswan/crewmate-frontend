@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
-import { X, AlertCircle } from 'lucide-react';
-import { VerificationRejectionModalProps } from '@/types/form.type';
+import React, { useState } from "react";
+import { X, AlertCircle } from "lucide-react";
+import { VerificationRejectionModalProps } from "@/types/form.type";
 
- export default function VerificationRejectionModal({ isOpen, onClose, onSubmit }:VerificationRejectionModalProps) {
-  const [reason, setReason] = useState('');
-  const [selectedReason, setSelectedReason] = useState('');
+export default function VerificationRejectionModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: VerificationRejectionModalProps) {
+  const [reason, setReason] = useState("");
+  const [selectedReason, setSelectedReason] = useState("");
 
   const predefinedReasons = [
-    'Document is not clear or readable',
-    'Document appears to be tampered or edited',
-    'Information does not match profile',
-    'Document has expired',
-    'Wrong document type submitted',
-    'Photo quality is too low',
-    'Other'
+    "Document is not clear or readable",
+    "Document appears to be tampered or edited",
+    "Information does not match profile",
+    "Document has expired",
+    "Wrong document type submitted",
+    "Photo quality is too low",
+    "Other",
   ];
 
   const handleSubmit = () => {
-    if (!selectedReason || (selectedReason === 'Other' && !reason.trim())) {
+    if (!selectedReason || (selectedReason === "Other" && !reason.trim())) {
       return;
     }
-    const finalReason = selectedReason === 'Other' ? reason : selectedReason;
+    const finalReason = selectedReason === "Other" ? reason : selectedReason;
     onSubmit(finalReason);
     handleReset();
   };
@@ -31,8 +35,8 @@ import { VerificationRejectionModalProps } from '@/types/form.type';
   };
 
   const handleReset = () => {
-    setReason('');
-    setSelectedReason('');
+    setReason("");
+    setSelectedReason("");
   };
 
   if (!isOpen) return null;
@@ -86,7 +90,7 @@ import { VerificationRejectionModalProps } from '@/types/form.type';
               </div>
             </div>
 
-            {selectedReason === 'Other' && (
+            {selectedReason === "Other" && (
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
                   Additional details
@@ -114,7 +118,7 @@ import { VerificationRejectionModalProps } from '@/types/form.type';
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={!selectedReason || (selectedReason === 'Other' && !reason.trim())}
+              disabled={!selectedReason || (selectedReason === "Other" && !reason.trim())}
               className="flex-1 px-3 py-2 text-sm bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors font-medium disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
             >
               Reject
@@ -125,4 +129,3 @@ import { VerificationRejectionModalProps } from '@/types/form.type';
     </div>
   );
 }
-

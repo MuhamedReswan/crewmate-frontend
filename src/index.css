@@ -5,8 +5,8 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 219 23% 7%;
-    --surface: 241, 40%, 48%, 0.10;
-    --card: 0 0% 100% / 0.50;
+    --surface: 241, 40%, 48%, 0.1;
+    --card: 0 0% 100% / 0.5;
     --card-foreground: 219 23% 7%;
     --popover: 0 0% 100%;
     --popover-foreground: 219 23% 7%;
@@ -21,8 +21,6 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
     --border: 220 13% 91%;
-
-
 
     --input: 220 13% 91%;
     --ring: 241 40.4% 48%;
@@ -46,13 +44,13 @@
   @apply flex items-center gap-3 px-4 py-2 rounded-md transition-colors duration-200;
 } */
 
-  .light.admin {
-    /* --primary: 260 80% 60%;
+.light.admin {
+  /* --primary: 260 80% 60%;
     --background: 0 100% 60%;
     --foreground: 79 100% 60%; */
-    /* override only what’s different */
+  /* override only what’s different */
 
-    /* --background: 0 0% 98%;
+  /* --background: 0 0% 98%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -71,49 +69,47 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%; */
 
+  --background: 210 36.4% 96.1%;
+  --foreground: 224 71.4% 4.1%;
+  --card: 210 36.4% 92%;
+  --surface: 210 36.4% 92%;
+  --surface-foreground: 224 71.4% 4.1%;
+  --popover: 210 36.4% 96.1%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 258 89.5% 66.3%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 210 10% 80%;
+  --muted-foreground: 217.9 10.6% 64.9%;
+  --accent: 152 94.9% 38.8% / 0.25;
+  --accent-foreground: 142 70.6% 45.3%;
+  --destructive: 0 62.8% 30.6% / 0.76;
+  --destructive-foreground: 0 97.4% 39.2%;
+  --secondary: 284 100% 61.8%;
+}
+.dark.admin {
+  --background: 224 71.4% 4.1%;
+  --foreground: 0 0% 100%;
+  --card: 225 66.7% 9.4%;
+  --surface: 225 66.7% 9.4%;
+  --surface-foreground: 210 20% 98%;
+  --popover: 224 71.4% 4.1%;
+  --popover-foreground: 210 20% 98%;
+  --primary: 258 89.5% 66.3%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 227 45.9% 78.2%;
+  --muted-foreground: 217.9 10.6% 64.9%;
+  --accent: 152 94.9% 38.8% / 0.25;
+  --accent-foreground: 142 70.6% 45.3%;
+  --destructive: 0 62.8% 30.6% / 0.76;
+  --destructive-foreground: 0 97.4% 39.2%;
+  --secondary: 284 100% 61.8%;
 
---background: 210 36.4% 96.1%;
---foreground: 224 71.4% 4.1%;
---card: 210 36.4% 92%;
---surface: 210 36.4% 92%;
---surface-foreground: 224 71.4% 4.1%;
---popover: 210 36.4% 96.1%;
---popover-foreground: 224 71.4% 4.1%;
---primary: 258 89.5% 66.3%;
---primary-foreground: 0 0% 100%;
---muted: 210 10% 80%;
---muted-foreground: 217.9 10.6% 64.9%;
---accent: 152 94.9% 38.8% / 0.25;
---accent-foreground: 142 70.6% 45.3%;
---destructive: 0 62.8% 30.6% / 0.76;
---destructive-foreground: 0 97.4% 39.2%;
---secondary: 284 100% 61.8%;
-  }
-  .dark.admin {
-
-       --background: 224 71.4% 4.1%;
-    --foreground: 0 0% 100%;
-    --card: 225 66.7% 9.4%;
-    --surface: 225 66.7% 9.4%;
-    --surface-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 258 89.5% 66.3%;
-    --primary-foreground: 0 0% 100% ;
-    --muted: 227 45.9% 78.2%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 152 94.9% 38.8% / 0.25;
-    --accent-foreground: 142 70.6% 45.3%;
-    --destructive: 0 62.8% 30.6% / 0.76;
-    --destructive-foreground: 0 97.4% 39.2%;
-    --secondary: 284 100% 61.8%;
-
-    --border: 227 45.9% 78.2%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
+  --border: 227 45.9% 78.2%;
+  --input: 215 27.9% 16.9%;
+  --ring: 216 12.2% 83.9%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}

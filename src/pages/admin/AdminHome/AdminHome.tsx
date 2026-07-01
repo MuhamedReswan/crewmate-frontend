@@ -84,7 +84,13 @@ const AdminHome = () => {
           <h3 className="text-lg font-bold mb-6">Event Details</h3>
           <div className="relative flex justify-center">
             <svg className="w-48 h-48 transform -rotate-90">
-              <circle cx="96" cy="96" r="88" className="stroke-primary-foreground fill-none" strokeWidth="12" />
+              <circle
+                cx="96"
+                cy="96"
+                r="88"
+                className="stroke-primary-foreground fill-none"
+                strokeWidth="12"
+              />
               <circle
                 cx="96"
                 cy="96"
@@ -141,8 +147,6 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
-
-
 
 // const AdminHome = () => {
 
@@ -305,13 +309,3 @@ export default AdminHome;
 // }
 
 // export default AdminHome;
-
-
-
-
-
-
-
-
-
-

@@ -1,8 +1,7 @@
-
-import { Calendar, Coffee, Utensils, Wine, CheckCircle, Clock, Users } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import crewmateLogo from './assets/images/CrewMate_logo.png'
-import Footer from './components/common/Footer/Footer';
+import { Calendar, Coffee, Utensils, Wine, CheckCircle, Clock, Users } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import crewmateLogo from "./assets/images/CrewMate_logo.png";
+import Footer from "./components/common/Footer/Footer";
 
 function Test2() {
   const navigate = useNavigate();
@@ -13,17 +12,25 @@ function Test2() {
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-5 flex justify-between items-center">
           <div className="flex items-center">
-            <img src={crewmateLogo} alt="site logo" className='h-10 w-10 mr-1' />
+            <img src={crewmateLogo} alt="site logo" className="h-10 w-10 mr-1" />
             <h1 className="text-2xl font-bold text-[#4B49AC]">Crewmate</h1>
           </div>
           <nav className="hidden md:flex space-x-6">
-            <Link to='#' className="text-gray-700 font-bold hover:text-[#4B49AC]">Home</Link>
-            <Link to='#' className="text-gray-700 font-bold hover:text-[#4B49AC]">Services</Link>
-            <Link to='#' className="text-gray-700 font-bold hover:text-[#4B49AC]">About</Link>
-            <Link to='#' className="text-gray-700 font-bold hover:text-[#4B49AC]">Contact</Link>
+            <Link to="#" className="text-gray-700 font-bold hover:text-[#4B49AC]">
+              Home
+            </Link>
+            <Link to="#" className="text-gray-700 font-bold hover:text-[#4B49AC]">
+              Services
+            </Link>
+            <Link to="#" className="text-gray-700 font-bold hover:text-[#4B49AC]">
+              About
+            </Link>
+            <Link to="#" className="text-gray-700 font-bold hover:text-[#4B49AC]">
+              Contact
+            </Link>
           </nav>
           <button
-            onClick={() => navigate('/service-boy/login')}
+            onClick={() => navigate("/service-boy/login")}
             className="bg-[#4B49AC] text-white px-4 py-2 rounded-md hover:bg-[#3f3d91] transition duration-150"
           >
             Login
@@ -36,12 +43,19 @@ function Test2() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#0000]/80 to-[#0000]/10 z-10"></div>
         <div
           className="h-[400px] bg-cover bg-center relative"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80')" }}
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80')",
+          }}
         >
           <div className="container mx-auto px-4 h-full flex items-center relative z-20">
             <div className="max-w-lg">
-              <h1 className="text-4xl font-bold text-white mb-4">Event Helpers & Corporation Service</h1>
-              <p className="text-white text-lg mb-6">Professional staff for your events, parties, and corporate functions</p>
+              <h1 className="text-4xl font-bold text-white mb-4">
+                Event Helpers & Corporation Service
+              </h1>
+              <p className="text-white text-lg mb-6">
+                Professional staff for your events, parties, and corporate functions
+              </p>
               <button className="bg-white text-[#4B49AC] px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition duration-150">
                 Book Now
               </button>
@@ -67,7 +81,9 @@ function Test2() {
                   <Utensils className="h-5 w-5 text-[#4B49AC] mr-2" />
                   <h3 className="font-medium text-gray-800">Serving Staff</h3>
                 </div>
-                <p className="text-gray-600 text-sm">Professional servers for your events and parties</p>
+                <p className="text-gray-600 text-sm">
+                  Professional servers for your events and parties
+                </p>
               </div>
             </div>
 
@@ -83,7 +99,9 @@ function Test2() {
                   <Coffee className="h-5 w-5 text-[#4B49AC] mr-2" />
                   <h3 className="font-medium text-gray-800">Barista</h3>
                 </div>
-                <p className="text-gray-600 text-sm">Expert coffee service for your corporate events</p>
+                <p className="text-gray-600 text-sm">
+                  Expert coffee service for your corporate events
+                </p>
               </div>
             </div>
 
@@ -99,7 +117,9 @@ function Test2() {
                   <Wine className="h-5 w-5 text-[#4B49AC] mr-2" />
                   <h3 className="font-medium text-gray-800">Bartending</h3>
                 </div>
-                <p className="text-gray-600 text-sm">Professional bartenders for your special occasions</p>
+                <p className="text-gray-600 text-sm">
+                  Professional bartenders for your special occasions
+                </p>
               </div>
             </div>
 
@@ -115,7 +135,9 @@ function Test2() {
                   <Calendar className="h-5 w-5 text-[#4B49AC] mr-2" />
                   <h3 className="font-medium text-gray-800">Events</h3>
                 </div>
-                <p className="text-gray-600 text-sm">Full-service event planning and coordination</p>
+                <p className="text-gray-600 text-sm">
+                  Full-service event planning and coordination
+                </p>
               </div>
             </div>
           </div>
@@ -155,8 +177,12 @@ function Test2() {
       {/* Process Section */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">We Follow The Process</h2>
-          <p className="text-gray-600 mb-8 text-center">Our streamlined approach ensures your event runs smoothly</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+            We Follow The Process
+          </h2>
+          <p className="text-gray-600 mb-8 text-center">
+            Our streamlined approach ensures your event runs smoothly
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
@@ -164,7 +190,9 @@ function Test2() {
                 <Calendar className="h-8 w-8 text-yellow-500" />
               </div>
               <h3 className="font-medium text-gray-800 mb-2">Booking</h3>
-              <p className="text-gray-600 text-sm">Schedule your event with our easy booking system</p>
+              <p className="text-gray-600 text-sm">
+                Schedule your event with our easy booking system
+              </p>
             </div>
 
             <div className="text-center">
@@ -199,8 +227,13 @@ function Test2() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-8 md:mb-0 md:pr-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Over 25+ Year Of Experience In Event Helpers Service</h2>
-              <p className="text-gray-700 mb-6">We&apos;ve been providing top-quality event staffing and services for over two decades, making us the trusted choice for events of all sizes.</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Over 25+ Year Of Experience In Event Helpers Service
+              </h2>
+              <p className="text-gray-700 mb-6">
+                We&apos;ve been providing top-quality event staffing and services for over two
+                decades, making us the trusted choice for events of all sizes.
+              </p>
               <button className="bg-[#4B49AC] text-white px-6 py-2 rounded-md hover:bg-[#3f3d91] transition duration-150">
                 Learn More
               </button>
@@ -232,13 +265,11 @@ function Test2() {
       </section>
 
       <Footer />
-
     </div>
   );
 }
 
 export default Test2;
-
 
 // ADMIN LOGIN
 
@@ -380,18 +411,11 @@ export default Test2;
 
 // export default Test2;
 
+// login modal
 
-
-
-
-
-
-
-
-
-// login modal 
-
-{/* Login Modal */ }
+{
+  /* Login Modal */
+}
 //  {showLoginModal && (
 //   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 //     <div className="bg-white rounded-xl shadow-xl overflow-hidden w-full max-w-md">

@@ -1,24 +1,24 @@
-import { lazy, Suspense } from 'react';
-import ProtectAdmin from './privateRoutes/ProtectAdmin';
-import AdminLayout from '@/layouts/AdminLayout';
-import ServiceBoysManage from '@/pages/admin/ServiceBoyManage/ServiceBoysManage';
-import VendorVerfication from '@/pages/admin/VendorVerification/VendorVerfication';
-import ServiceBoyVerfication from '@/pages/admin/ServiceBoyVerification/ServiceBoyVerification';
-import ServiceBoyDetailsPage from '@/pages/admin/ServiceBoyManage/ServiceBoyDetailsPage';
-import SingleVerifcationPage from '@/pages/admin/ServiceBoyVerification/SingleVerifcationPage';
-import VendorVerificationDetails from '@/pages/admin/VendorVerification/SingleVendorVerificationPage';
-import VendorManagement from '@/pages/admin/VendorManage/VendorManagement';
-import VendorDetailsPage from '@/pages/admin/VendorManage/VendorDetailsPage';
+import { lazy, Suspense } from "react";
+import ProtectAdmin from "./privateRoutes/ProtectAdmin";
+import AdminLayout from "@/layouts/AdminLayout";
+import ServiceBoysManage from "@/pages/admin/ServiceBoyManage/ServiceBoysManage";
+import VendorVerfication from "@/pages/admin/VendorVerification/VendorVerfication";
+import ServiceBoyVerfication from "@/pages/admin/ServiceBoyVerification/ServiceBoyVerification";
+import ServiceBoyDetailsPage from "@/pages/admin/ServiceBoyManage/ServiceBoyDetailsPage";
+import SingleVerifcationPage from "@/pages/admin/ServiceBoyVerification/SingleVerifcationPage";
+import VendorVerificationDetails from "@/pages/admin/VendorVerification/SingleVendorVerificationPage";
+import VendorManagement from "@/pages/admin/VendorManage/VendorManagement";
+import VendorDetailsPage from "@/pages/admin/VendorManage/VendorDetailsPage";
 
-const AdminHome = lazy(() => import('@/pages/admin/AdminHome/AdminHome'));
-const AdminLogin = lazy(() => import('@/pages/admin/Auth/LoginPage/LoginPage'));
+const AdminHome = lazy(() => import("@/pages/admin/AdminHome/AdminHome"));
+const AdminLogin = lazy(() => import("@/pages/admin/Auth/LoginPage/LoginPage"));
 
 const adminRoutes = {
-  path: '/admin/',
+  path: "/admin/",
   element: <AdminLayout />,
   children: [
     {
-      path: 'login',
+      path: "login",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <AdminLogin />
@@ -36,7 +36,7 @@ const adminRoutes = {
       ),
     },
     {
-      path: "vendor/verify",
+      path: "vendors/pending-verification",
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
@@ -46,11 +46,11 @@ const adminRoutes = {
       ),
     },
     {
-      path: "service-boy/verify",
+      path: "service-boys/pending-verification",
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-            < ServiceBoyVerfication/>
+            <ServiceBoyVerfication />
           </Suspense>
         </ProtectAdmin>
       ),
@@ -60,7 +60,7 @@ const adminRoutes = {
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-            < SingleVerifcationPage/>
+            <SingleVerifcationPage />
           </Suspense>
         </ProtectAdmin>
       ),
@@ -70,27 +70,27 @@ const adminRoutes = {
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-<ServiceBoysManage/>
+            <ServiceBoysManage />
           </Suspense>
         </ProtectAdmin>
       ),
     },
     {
-  path: "service-boys/:id",
-  element: (
-    <ProtectAdmin>
-      <Suspense fallback={<div>Loading...</div>}>
-<ServiceBoyDetailsPage />
-     </Suspense>
-    </ProtectAdmin>
-  ),
-},
+      path: "service-boys/:id",
+      element: (
+        <ProtectAdmin>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ServiceBoyDetailsPage />
+          </Suspense>
+        </ProtectAdmin>
+      ),
+    },
     {
       path: "vendors",
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-<VendorManagement/>
+            <VendorManagement />
           </Suspense>
         </ProtectAdmin>
       ),
@@ -100,17 +100,17 @@ const adminRoutes = {
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-<VendorDetailsPage/>
+            <VendorDetailsPage />
           </Suspense>
         </ProtectAdmin>
       ),
     },
-      {
-      path: "vendors/verify/:id",
+    {
+      path: "vendors/:id/verify",
       element: (
         <ProtectAdmin>
           <Suspense fallback={<div>Loading...</div>}>
-            < VendorVerificationDetails/>
+            <VendorVerificationDetails />
           </Suspense>
         </ProtectAdmin>
       ),

@@ -7,20 +7,13 @@ import L from "leaflet";
 // Fix Leaflet default marker icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
 interface MapPickerProps {
-  onSelectLocation: (location: {
-    lat: number;
-    lng: number;
-    address: string;
-  }) => void;
+  onSelectLocation: (location: { lat: number; lng: number; address: string }) => void;
   onClose?: () => void;
 }
 
@@ -45,7 +38,7 @@ const MapPicker: React.FC<MapPickerProps> = ({ onSelectLocation, onClose }) => {
         }
       );
       const data = await response.json();
-      console.log("data form mapPicker ",data)
+      console.log("data form mapPicker ", data);
 
       if (data.error) {
         throw new Error(data.error);
@@ -62,9 +55,7 @@ const MapPicker: React.FC<MapPickerProps> = ({ onSelectLocation, onClose }) => {
         if (addr.country) addressParts.push(addr.country);
       }
 
-      return addressParts.length > 0
-        ? addressParts.join(", ")
-        : data.display_name;
+      return addressParts.length > 0 ? addressParts.join(", ") : data.display_name;
     } catch (err) {
       console.error("Error fetching address:", err);
       throw new Error("Failed to get address for selected location");
@@ -74,7 +65,7 @@ const MapPicker: React.FC<MapPickerProps> = ({ onSelectLocation, onClose }) => {
   const LocationMarker: React.FC = () => {
     useMapEvents({
       async click(e) {
-        console.log("e from mapPicker ",e)
+        console.log("e from mapPicker ", e);
         const { lat, lng } = e.latlng;
         setIsLoading(true);
         setError(null);
@@ -93,7 +84,7 @@ const MapPicker: React.FC<MapPickerProps> = ({ onSelectLocation, onClose }) => {
       },
     });
 
-    return locationData ? <Marker position={locationData.position}  /> : null;
+    return locationData ? <Marker position={locationData.position} /> : null;
   };
 
   return (
@@ -101,11 +92,7 @@ const MapPicker: React.FC<MapPickerProps> = ({ onSelectLocation, onClose }) => {
       <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl">
         <div className="p-4 border-b border-gray-200 flex justify-between items-center">
           <h3 className="text-lg font-medium">Select Your Location</h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button type="button" onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <X size={20} />
           </button>
         </div>
@@ -122,17 +109,14 @@ const MapPicker: React.FC<MapPickerProps> = ({ onSelectLocation, onClose }) => {
             <LocationMarker />
           </MapContainer>
 
-          {isLoading && (
-            <div className="mt-2 text-[#4B49AC]/60">Fetching address...</div>
-          )}
+          {isLoading && <div className="mt-2 text-[#4B49AC]/60">Fetching address...</div>}
 
           {error && <div className="mt-2 text-red-600">{error}</div>}
 
           {locationData && !isLoading && (
             <div className="mt-2 p-2 bg-amber-50 border border-gray-300 rounded-lg">
               <p className="text-sm text-gray-700">
-                <span className="font-medium">Selected Location:</span>{" "}
-                {locationData.address}
+                <span className="font-medium">Selected Location:</span> {locationData.address}
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 Coordinates: {locationData.position[0].toFixed(6)},{" "}

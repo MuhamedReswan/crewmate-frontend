@@ -1,12 +1,16 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import ServiceBoyHeader from '@/components/serviceBoyComponent/ServiceBoyHeader/ServiceBoyHeader';
-import SideBar from '@/components/serviceBoyComponent/SideBar/SideBar';
+import { Outlet, useLocation } from "react-router-dom";
+import ServiceBoyHeader from "@/components/serviceBoyComponent/ServiceBoyHeader/ServiceBoyHeader";
+import SideBar from "@/components/serviceBoyComponent/SideBar/SideBar";
 
 const ServiceBoyLayout = () => {
   const { pathname } = useLocation();
-  const routesWithoutLayout = ['/service-boy/login', '/service-boy/register', '/service-boy/reset-password'];
+  const routesWithoutLayout = [
+    "/service-boy/login",
+    "/service-boy/register",
+    "/service-boy/reset-password",
+  ];
 
-  const shouldHideLayout = routesWithoutLayout.some(route => pathname.startsWith(route));
+  const shouldHideLayout = routesWithoutLayout.some((route) => pathname.startsWith(route));
 
   return (
     <div className="flex h-screen bg-white">
@@ -20,6 +24,3 @@ const ServiceBoyLayout = () => {
 };
 
 export default ServiceBoyLayout;
-
-
-

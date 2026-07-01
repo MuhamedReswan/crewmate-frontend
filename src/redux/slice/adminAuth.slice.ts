@@ -3,30 +3,27 @@ import { AdminState } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
 
 const initialState: AdminState = {
-    adminStatus : false,
-    adminData : null
-}
-
+  adminStatus: false,
+  adminData: null,
+};
 
 const adminAuthSlice = createSlice({
-    name:Role.ADMIN,
-    initialState:initialState,
+  name: Role.ADMIN,
+  initialState: initialState,
 
+  reducers: {
+    adminLogin: (state, action) => {
+      state.adminStatus = true;
+      state.adminData = action.payload;
+    },
 
-    reducers:{
-        adminLogin: (state, action) => {
-            state.adminStatus= true;
-            state.adminData = action.payload;
-        },
-
-
-        adminLogout: (state) => {
-            state.adminData = null;
-            state.adminStatus = false;
-        }
-    }
+    adminLogout: (state) => {
+      state.adminData = null;
+      state.adminStatus = false;
+    },
+  },
 });
 
-const {adminLogin, adminLogout} = adminAuthSlice.actions;
-export {adminLogin, adminLogout} 
+const { adminLogin, adminLogout } = adminAuthSlice.actions;
+export { adminLogin, adminLogout };
 export default adminAuthSlice.reducer;

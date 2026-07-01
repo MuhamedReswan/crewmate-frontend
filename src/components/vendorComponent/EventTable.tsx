@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
-import { Plus } from 'lucide-react';
-import { CreateEventModal } from './Modals/EventCreateModal';
+import { Plus } from "lucide-react";
+import { CreateEventModal } from "./Modals/EventCreateModal";
 
 export function EventCreationDemo() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEventSubmit = (data: any) => {
-    console.log('Event created:', data);
+    console.log("Event created:", data);
     // Here you would typically send the data to your API
   };
 
@@ -17,7 +17,7 @@ export function EventCreationDemo() {
       <div className="text-center space-y-4">
         <h2 className="text-2xl font-bold text-foreground">Event Management</h2>
         <p className="text-muted-foreground">Create and manage events with location selection</p>
-        
+
         <Button
           onClick={() => setIsModalOpen(true)}
           className="bg-primary text-primary-foreground hover:bg-primary/90"

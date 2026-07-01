@@ -3,44 +3,34 @@ import { ServiceBoyState } from "@/types/auth.type";
 import { Role } from "@/types/enum.type";
 import { ServiceBoy } from "@/types/users.type";
 
-
-
-
-    const intialState: ServiceBoyState = {
-        serviceBoyStatus:false,
-        serviceBoyData:null
-}
-
+const intialState: ServiceBoyState = {
+  serviceBoyStatus: false,
+  serviceBoyData: null,
+};
 
 const serviceBoyAuthSlice = createSlice({
-    name: Role.SERVICE_BOY,
-    initialState:intialState,
+  name: Role.SERVICE_BOY,
+  initialState: intialState,
 
-    reducers:{
-        login:(state, action)=>{
-            state.serviceBoyStatus =true;
-            state.serviceBoyData= action.payload
-        },
+  reducers: {
+    login: (state, action) => {
+      state.serviceBoyStatus = true;
+      state.serviceBoyData = action.payload;
+    },
 
+    logout: (state) => {
+      state.serviceBoyStatus = false;
+      state.serviceBoyData = null;
+    },
 
-        logout: (state) =>{
-            state.serviceBoyStatus= false;
-            state.serviceBoyData=null       
-        },
-
-
-        updateServiceBoyData: (
-  state,
-  action: PayloadAction<Partial<Partial<ServiceBoy>>>
-) => {
-  if (state.serviceBoyData) {
-    state.serviceBoyData = { ...state.serviceBoyData, ...action.payload };
-  }
-},
-    }
+    updateServiceBoyData: (state, action: PayloadAction<Partial<Partial<ServiceBoy>>>) => {
+      if (state.serviceBoyData) {
+        state.serviceBoyData = { ...state.serviceBoyData, ...action.payload };
+      }
+    },
+  },
 });
 
-
- const {login, logout,updateServiceBoyData} = serviceBoyAuthSlice.actions;
- export {login, logout,updateServiceBoyData};
+const { login, logout, updateServiceBoyData } = serviceBoyAuthSlice.actions;
+export { login, logout, updateServiceBoyData };
 export default serviceBoyAuthSlice.reducer;

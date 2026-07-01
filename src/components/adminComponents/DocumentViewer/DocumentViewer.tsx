@@ -118,8 +118,8 @@ interface Document {
 }
 
 interface DocumentViewerProps {
-  title?: string; 
-  documents: Document[]; 
+  title?: string;
+  documents: Document[];
 }
 
 export function DocumentViewer({ title = "Documents", documents }: DocumentViewerProps) {
@@ -135,13 +135,13 @@ export function DocumentViewer({ title = "Documents", documents }: DocumentViewe
       </CardHeader>
 
       <CardContent>
-<div
-  className={
-    documents.length === 1
-      ? "flex justify-center" 
-      : "grid grid-cols-1 md:grid-cols-2 gap-6"
-  }
->          {documents.map((doc, idx) => (
+        <div
+          className={
+            documents.length === 1 ? "flex justify-center" : "grid grid-cols-1 md:grid-cols-2 gap-6"
+          }
+        >
+          {" "}
+          {documents.map((doc, idx) => (
             <div key={idx} className="space-y-3">
               <h4 className="text-muted-foreground font-medium">{doc.label}</h4>
               <div className="relative group">

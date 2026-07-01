@@ -22,14 +22,17 @@ import { Role } from "@/types/enum.type";
 import { ForgotPasswordFormData, ForgotPasswordModalProps } from "@/types/form.type";
 import { forgotPasswordSchema } from "@/validation/validationSchema";
 
-
-
 const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, setOpen, role }) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ForgotPasswordFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      role: role
-    }
+      role: role,
+    },
   });
 
   const { toast } = useToast();
@@ -47,16 +50,14 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, setOpen
       }
       console.log("Forgot Password Response:", responseResult);
       if (responseResult && responseResult.statusCode == 200) {
-
         toast({
           description: <SuccessMessage message={responseResult.message} />,
           className: "",
         });
       } else {
         toast({
-          description: <ErrorMessage message={responseResult?.message}
-            className="" />,
-        })
+          description: <ErrorMessage message={responseResult?.message} className="" />,
+        });
       }
       setOpen(false); // Close modal after success
       reset(); // Reset form
@@ -83,11 +84,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, setOpen
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            {...register("email")}
-          />
+          <Input type="email" placeholder="Enter your email" {...register("email")} />
           {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
 
           <DialogFooter className="flex justify-between">
@@ -99,11 +96,10 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, setOpen
             </Button>
           </DialogFooter>
         </form>
-        <DialogClose className="absolute top-0 right-0">
-        </DialogClose>
+        <DialogClose className="absolute top-0 right-0"></DialogClose>
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default ForgotPasswordModal;

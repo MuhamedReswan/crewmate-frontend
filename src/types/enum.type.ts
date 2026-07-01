@@ -18,21 +18,19 @@ export enum Messages {
   BLOCKED_BY_ADMIN = "You were blocked by admin.",
 
   LOGOUT_FAILED = "some thing went wrong on logout. please try again",
-  
+
   FETCH_USER_FAILED = "Something went wrong while fetch. Please login again.",
   FAILED_TO_FETCH_IMAGES = "Failed to fetch images",
 
-  FAILED_TO_FETCH_VERIFICATION_SERVICE_BOY ="Failed to fetch service boy verification",
+  FAILED_TO_FETCH_VERIFICATION_SERVICE_BOY = "Failed to fetch service boy verification",
   VERIFCATION_STATUS_CHANGE_FAILED = "Failed verification status change",
 
   FAILED_TO_CREATE_EVENT = "Event creation failed.",
   EVENT_CREATION_SUCCESS = "Event creation success",
   EVENTS_lOAD_SUCCESS = "Events loaded success",
 
-
-  INVALID_USER_ID = "Invalid user Id"
+  INVALID_USER_ID = "Invalid user Id",
 }
-
 
 export enum VerificationStatus {
   Pending = "pending",
@@ -40,20 +38,22 @@ export enum VerificationStatus {
   Rejected = "rejected",
 }
 
-
-
 export enum BookingStatus {
-  Active= "Active",
+  Active = "Active",
   Stopped = "Stopped",
   Cancelled = "Cancelled",
-  Completed = "Completed"
+  Completed = "Completed",
 }
 
-
 export enum EventStatus {
-  Pending = "Pending",    
-  Upcoming = "Upcoming",   
-  Ongoing = "Ongoing",   
-  Completed = "Completed", 
-  Cancelled = "Cancelled", 
+  Pending = "Pending",
+  Upcoming = "Upcoming",
+  Ongoing = "Ongoing",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+}
+
+export enum UserType {
+  VENDOR = "vendors",
+  SERVICE_BOY = "service-boys",
 }

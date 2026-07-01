@@ -1,10 +1,10 @@
-import React, { ReactNode, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { RootState } from '@/redux/store/store'
+import React, { ReactNode, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "@/redux/store/store";
 
 interface ProtectServiceBoyProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const ProtectServiceBoy: React.FC<ProtectServiceBoyProps> = ({ children }) => {
@@ -13,17 +13,17 @@ const ProtectServiceBoy: React.FC<ProtectServiceBoyProps> = ({ children }) => {
 
   useEffect(() => {
     if (!serviceBoyIsLoggedIn) {
-      navigate('/service-boy/login'); // Redirect to service boy login page if not logged in
+      navigate("/service-boy/login"); // Redirect to service boy login page if not logged in
     }
   }, [serviceBoyIsLoggedIn, navigate]);
 
   // If the service boy is logged in, render the children components
   if (serviceBoyIsLoggedIn) {
-    return <>{children}</>
+    return <>{children}</>;
   }
 
   // If not logged in, render nothing (the user is being redirected)
-  return null
-}
+  return null;
+};
 
-export default ProtectServiceBoy
+export default ProtectServiceBoy;

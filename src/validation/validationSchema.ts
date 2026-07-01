@@ -8,34 +8,29 @@ const mobileRegex = /^[0-9]{10}$/;
 //Singup validation
 export const signupSchema = z
   .object({
-    name: z.string()
-  .trim() 
-  .min(3, 'Full name is required')
-  .max(20, 'Name cannot exceed 20 characters')
-  .regex(nameRegex, 'Name can only contain alphabets and spaces')
-  .refine(
-    (value) => (value.match(/ /g) || []).length <= 2,
-    'Name cannot contain more than 2 spaces'
-  ),
-      
+    name: z
+      .string()
+      .trim()
+      .min(3, "Full name is required")
+      .max(20, "Name cannot exceed 20 characters")
+      .regex(nameRegex, "Name can only contain alphabets and spaces")
+      .refine(
+        (value) => (value.match(/ /g) || []).length <= 2,
+        "Name cannot contain more than 2 spaces"
+      ),
+
     email: z.string().email({ message: "Invalid email address" }),
 
-    mobile: z
-      .string()
-      .regex(mobileRegex, {
-        message: "Mobile number must be exactly 10 digits",
-      }),
+    mobile: z.string().regex(mobileRegex, {
+      message: "Mobile number must be exactly 10 digits",
+    }),
 
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters long" })
-      .regex(
-        passwordRegex,
-        {
-          message:
-            "Password must include uppercase, lowercase, number, and special character",
-        }
-      ),
+      .regex(passwordRegex, {
+        message: "Password must include uppercase, lowercase, number, and special character",
+      }),
 
     confirmPassword: z.string().optional(),
 
@@ -63,13 +58,9 @@ export const loginSchema = z.object({
     .string()
     .min(1, { message: "Password is required" })
     .min(8, { message: "Password must be at least 8 characters long" })
-    .regex(
-      passwordRegex,
-      {
-        message:
-          "Password must include uppercase, lowercase, number, and special character",
-      }
-    ),
+    .regex(passwordRegex, {
+      message: "Password must include uppercase, lowercase, number, and special character",
+    }),
 
   rememberMe: z.boolean().optional().default(false),
 });
@@ -89,34 +80,29 @@ export const passwordSchema = z
       .string()
       .min(1, { message: "Password is required" })
       .min(8, { message: "Password must be at least 8 characters long" })
-      .regex(
-        passwordRegex,
-        {
-          message:
-            "Password must include uppercase, lowercase, number, and special character",
-        }
-      ),
-    confirmPassword: z
-      .string()
-      .min(1, { message: "Please confirm your password" }),
+      .regex(passwordRegex, {
+        message: "Password must include uppercase, lowercase, number, and special character",
+      }),
+    confirmPassword: z.string().min(1, { message: "Please confirm your password" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
 
-  //service boy profile validation
+//service boy profile validation
 export const profileSchema = z.object({
   _id: z.string().optional(),
-  name:z.string()
-  .trim() 
-  .min(3, 'Full name is required')
-  .max(20, 'Name cannot exceed 20 characters')
-  .regex(nameRegex, 'Name can only contain alphabets and spaces')
-  .refine(
-    (value) => (value.match(/ /g) || []).length <= 2,
-    'Name cannot contain more than 2 spaces'
-  ),
+  name: z
+    .string()
+    .trim()
+    .min(3, "Full name is required")
+    .max(20, "Name cannot exceed 20 characters")
+    .regex(nameRegex, "Name can only contain alphabets and spaces")
+    .refine(
+      (value) => (value.match(/ /g) || []).length <= 2,
+      "Name cannot contain more than 2 spaces"
+    ),
   qualification: z.string().min(1, "Qualification is required"),
   aadharNumber: z
     .string()
@@ -161,20 +147,13 @@ export const profileSchema = z.object({
   //     message: "Aadhar back image is required ",
   //   }
   // ),
-profileImage: z.any().refine(
-  imageValidation(),
-  { message: "Profile image is required" }
-),
+  profileImage: z.any().refine(imageValidation(), { message: "Profile image is required" }),
 
-aadharImageFront: z.any().refine(
-  imageValidation(),
-  { message: "Aadhar front image is required" }
-),
+  aadharImageFront: z
+    .any()
+    .refine(imageValidation(), { message: "Aadhar front image is required" }),
 
-aadharImageBack: z.any().refine(
-  imageValidation(),
-  { message: "Aadhar back image is required" }
-),
+  aadharImageBack: z.any().refine(imageValidation(), { message: "Aadhar back image is required" }),
 
   location: z.any().refine(
     (val) => {
@@ -195,20 +174,20 @@ aadharImageBack: z.any().refine(
   email: z.string().email("Invalid email address"),
 });
 
-
 // vendor proifile validation
 export const vendorProfileSchema = z.object({
   _id: z.string().optional(),
 
-  name: z.string()
-  .trim() 
-  .min(3, 'Full name is required')
-  .max(20, 'Name cannot exceed 20 characters')
-  .regex(nameRegex, 'Name can only contain alphabets and spaces')
-  .refine(
-    (value) => (value.match(/ /g) || []).length <= 2,
-    'Name cannot contain more than 2 spaces'
-  ),
+  name: z
+    .string()
+    .trim()
+    .min(3, "Full name is required")
+    .max(20, "Name cannot exceed 20 characters")
+    .regex(nameRegex, "Name can only contain alphabets and spaces")
+    .refine(
+      (value) => (value.match(/ /g) || []).length <= 2,
+      "Name cannot contain more than 2 spaces"
+    ),
 
   // licenceImage: z.any().refine(
   //   (val) => {
@@ -220,23 +199,14 @@ export const vendorProfileSchema = z.object({
   //   }
   // ),
 
-  licenceImage: z.any().refine(
-  imageValidation(),
-  { message: "Licence Image  is required" }
-),
+  licenceImage: z.any().refine(imageValidation(), { message: "Licence Image  is required" }),
 
-  profileImage: z.any().refine(
-  imageValidation(),
-  { message: "Profile image is required" }
-),
+  profileImage: z.any().refine(imageValidation(), { message: "Profile image is required" }),
 
   licenceNumber: z
     .string()
     .min(1, "Licence number is required")
-    .regex(
-      /^[A-Za-z0-9]+$/,
-      "Licence number must contain only letters and numbers"
-    )
+    .regex(/^[A-Za-z0-9]+$/, "Licence number must contain only letters and numbers")
     .length(21, "valid Licence number must be exactly 21 characters"),
 
   mobile: z
@@ -244,76 +214,82 @@ export const vendorProfileSchema = z.object({
     .min(1, "Mobile number is required")
     .regex(mobileRegex, "Mobile number must be 10 digits"),
 
-    location: z.any().refine(
-      (val) => {
-        if (typeof val === "string" && val.length > 3) return true;
-        return (
-          val instanceof Object &&
-          val.lat !== undefined &&
-          val.lng !== undefined &&
-          typeof val.lat === "number" &&
-          typeof val.lng === "number"
-        );
-      },
-      {
-        message: "Location is required",
-      }
-    ),
-    
+  location: z.any().refine(
+    (val) => {
+      if (typeof val === "string" && val.length > 3) return true;
+      return (
+        val instanceof Object &&
+        val.lat !== undefined &&
+        val.lng !== undefined &&
+        typeof val.lat === "number" &&
+        typeof val.lng === "number"
+      );
+    },
+    {
+      message: "Location is required",
+    }
+  ),
+
   instaId: z
-  .string()
-  .min(1, "Instagram ID is required")
-  .max(30, "Instagram ID must be at most 30 characters")
-  .regex(/^(?!.*\.\.)(?!.*\.$)[A-Za-z0-9._]+$/, "Invalid Instagram ID format"),
+    .string()
+    .min(1, "Instagram ID is required")
+    .max(30, "Instagram ID must be at most 30 characters")
+    .regex(/^(?!.*\.\.)(?!.*\.$)[A-Za-z0-9._]+$/, "Invalid Instagram ID format"),
 
   estd: z
     .string()
     .min(1, "Establishment year is required")
     .regex(/^[0-9]{4}$/, "Establishment year must be a 4-digit year")
-    .refine(
-      (val) => parseInt(val) <= new Date().getFullYear(),
-      "Year cannot be in the future"
-    ),
+    .refine((val) => parseInt(val) <= new Date().getFullYear(), "Year cannot be in the future"),
 
   email: z.string().email("Invalid email address"),
 });
 
 // Event creation validation
-export const eventSchema = z.object({
-  customerName: z.string()
-  .trim() 
-  .min(3, 'Customer name must have at least 2 characters')
-  .max(20, 'Customer name cannot exceed 20 characters')
-  .regex(nameRegex, 'Customer name can only contain alphabets and spaces')
-  .refine(
-    (value) => (value.match(/ /g) || []).length <= 2,
-    'Customer name cannot contain more than 2 spaces'
-  ),  
-  typeOfService: z.string().min(1, 'Type of service is required'),
-  typeOfWork: z.string().min(1, 'Type of work is required'),
-  noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
-  reportingTime: z.string().min(1, 'Reporting time is required'),
-  serviceBoys: z.coerce.number().min(1, 'Number of boys must be at least 1'),
-  eventLocation: z.object({
-    lat: z.number(),
-    lng: z.number(),
-    address: z.string().min(1, 'Address is required'),
-  }).nullable().refine(val => val !== null, 'Location is required'),
- date: z
-    .string()
-    .min(1, 'Date is required')
-    .refine((val) => {
-      const selectedDate = new Date(val);
-      const today = new Date();
+export const eventSchema = z
+  .object({
+    customerName: z
+      .string()
+      .trim()
+      .min(3, "Customer name must have at least 2 characters")
+      .max(20, "Customer name cannot exceed 20 characters")
+      .regex(nameRegex, "Customer name can only contain alphabets and spaces")
+      .refine(
+        (value) => (value.match(/ /g) || []).length <= 2,
+        "Customer name cannot contain more than 2 spaces"
+      ),
+    typeOfService: z.string().min(1, "Type of service is required"),
+    typeOfWork: z.string().min(1, "Type of work is required"),
+    noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
+    reportingTime: z.string().min(1, "Reporting time is required"),
+    serviceBoys: z.coerce.number().min(1, "Number of boys must be at least 1"),
+    eventLocation: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+        address: z.string().min(1, "Address is required"),
+      })
+      .nullable()
+      .refine((val) => val !== null, "Location is required"),
+    date: z
+      .string()
+      .min(1, "Date is required")
+      .refine(
+        (val) => {
+          const selectedDate = new Date(val);
+          const today = new Date();
 
-      // Reset time part for "today" comparison
-      today.setHours(0, 0, 0, 0);
+          // Reset time part for "today" comparison
+          today.setHours(0, 0, 0, 0);
 
-      return selectedDate >= today;
-    }, {
-      message: "Date cannot be in the past",
-    }),})
- .superRefine((data, ctx) => {
+          return selectedDate >= today;
+        },
+        {
+          message: "Date cannot be in the past",
+        }
+      ),
+  })
+  .superRefine((data, ctx) => {
     if (data.noOfPax > 1000 && data.serviceBoys > Math.ceil(data.noOfPax * 0.07)) {
       ctx.addIssue({
         path: ["serviceBoys"],
@@ -331,17 +307,19 @@ export const eventSchema = z.object({
     }
   });
 
-  // Event Updation 
- export const eventUpdateSchema = z.object({
-    customerName: z.string()
-      .trim() 
-      .min(3, 'Customer name must have at least 3 characters')
-      .max(20, 'Customer name cannot exceed 20 characters')
-      .regex(nameRegex, 'Customer name can only contain alphabets and spaces')
+// Event Updation
+export const eventUpdateSchema = z
+  .object({
+    customerName: z
+      .string()
+      .trim()
+      .min(3, "Customer name must have at least 3 characters")
+      .max(20, "Customer name cannot exceed 20 characters")
+      .regex(nameRegex, "Customer name can only contain alphabets and spaces")
       .refine(
         (value) => (value.match(/ /g) || []).length <= 2,
-        'Customer name cannot contain more than 2 spaces'
-      ),  
+        "Customer name cannot contain more than 2 spaces"
+      ),
     typeOfWork: z.string().min(1, "Type of work is required"),
     typeOfService: z.string().min(1, "Type of service is required"),
     noOfPax: z.coerce.number().min(10, "Number of pax must be at least 10"),
@@ -364,7 +342,7 @@ export const eventSchema = z.object({
     today.setHours(0, 0, 0, 0);
     const selectedDate = new Date(data.reportingDateTime);
     selectedDate.setHours(0, 0, 0, 0);
-    
+
     if (selectedDate < today) {
       ctx.addIssue({
         path: ["reportingDateTime"],
@@ -372,21 +350,20 @@ export const eventSchema = z.object({
         code: "custom",
       });
     }
-      // Service boys validation based on pax count
-      if (data.noOfPax > 1000 && data.serviceBoys > Math.ceil(data.noOfPax * 0.07)) {
-        ctx.addIssue({
-          path: ["serviceBoys"],
-          message: "For events over 1000 pax, service boys cannot exceed 7% of the pax count",
-          code: "custom",
-        });
-      }
-    
-      if (data.noOfPax <= 1000 && data.serviceBoys > 100) {
-        ctx.addIssue({
-          path: ["serviceBoys"],
-          message: "For events below 1000 pax, a maximum of 100 service boys is allowed",
-          code: "custom",
-        });
-      }
-    });
-  
+    // Service boys validation based on pax count
+    if (data.noOfPax > 1000 && data.serviceBoys > Math.ceil(data.noOfPax * 0.07)) {
+      ctx.addIssue({
+        path: ["serviceBoys"],
+        message: "For events over 1000 pax, service boys cannot exceed 7% of the pax count",
+        code: "custom",
+      });
+    }
+
+    if (data.noOfPax <= 1000 && data.serviceBoys > 100) {
+      ctx.addIssue({
+        path: ["serviceBoys"],
+        message: "For events below 1000 pax, a maximum of 100 service boys is allowed",
+        code: "custom",
+      });
+    }
+  });

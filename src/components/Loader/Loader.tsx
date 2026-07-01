@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Loader = () => {
   return (
@@ -20,7 +20,7 @@ const Loader = () => {
       </div>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   .loader {
@@ -39,7 +39,7 @@ const StyledWrapper = styled.div`
     top: 30%;
     opacity: 0;
     border-radius: 50px;
-    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     animation: fade458 1s linear infinite;
   }
 
@@ -111,6 +111,7 @@ const StyledWrapper = styled.div`
   .loader .bar12 {
     transform: rotate(330deg) translate(0, -130%);
     animation-delay: -0.1s;
-  }`;
+  }
+`;
 
 export default Loader;

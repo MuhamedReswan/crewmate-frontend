@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const ServiceBoys = () => {
-    return (
-        <div>
+  return <div></div>;
+};
 
-        </div>
-    )
-}
-
-export default ServiceBoys
+export default ServiceBoys;

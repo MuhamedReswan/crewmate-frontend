@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit, MapPin, } from "lucide-react";
+import { Edit, MapPin } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,12 +23,8 @@ import { handleLocationSelect } from "@/utils/handleLocationSelection";
 import { profileSchema } from "@/validation/validationSchema";
 import { useSecureImage } from "@/hooks/useSecureImage";
 
-
-
-
 const Profile = () => {
-
-  const [profileData, setProfileData] = useState<Partial<ServiceBoy> | null>(null)
+  const [profileData, setProfileData] = useState<Partial<ServiceBoy> | null>(null);
   const { serviceBoyData } = useSelector((state: RootState) => state.serviceBoy);
 
   // Create references for file inputs
@@ -51,15 +47,13 @@ const Profile = () => {
   const backImageSrc = backPreview || backAadharImage;
   const frontImageSrc = frontPreview || frontAadharImage;
 
-
   const dispatch = useDispatch();
 
   const { toast } = useToast();
 
-
   // Default profile image
-  const defaultImage = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";
-
+  const defaultImage =
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -70,9 +64,7 @@ const Profile = () => {
 
           if (!profile) {
             toast({
-              description: (
-                <ErrorMessage message={Messages.FETCH_PROFILE_FAILED} />
-              ),
+              description: <ErrorMessage message={Messages.FETCH_PROFILE_FAILED} />,
             });
             dispatch(logout());
             return;
@@ -84,7 +76,6 @@ const Profile = () => {
             return;
           }
 
-
           const filteredData = pickDTOFields(serviceBoyLoginShape, profile);
           const keys = Object.keys(filteredData) as (keyof typeof filteredData)[];
 
@@ -93,21 +84,21 @@ const Profile = () => {
             dispatch(login(filteredData));
           }
 
-          setProfileData(profile)
-
+          setProfileData(profile);
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
         dispatch(logout());
         toast({
-          description: <ErrorMessage message={getApiErrorMessage(error, "Failed to fetch profile")} />,
-        })
+          description: (
+            <ErrorMessage message={getApiErrorMessage(error, "Failed to fetch profile")} />
+          ),
+        });
       }
     };
 
     fetchProfile();
-  }, [serviceBoyData, toast, dispatch]);  // }, [serviceBoyData?._id, dispatch]);
-
+  }, [serviceBoyData, toast, dispatch]); // }, [serviceBoyData?._id, dispatch]);
 
   const {
     register,
@@ -120,7 +111,6 @@ const Profile = () => {
     mode: "onChange",
     resolver: zodResolver(profileSchema),
   });
-
 
   useEffect(() => {
     if (profileData) {
@@ -142,15 +132,14 @@ const Profile = () => {
     }
   }, [profileData, reset]);
 
-
   useEffect(() => {
     if (location) {
-      setValue("location", location)
+      setValue("location", location);
     }
-  }, [location, setValue])
+  }, [location, setValue]);
 
   const watchedValues = watch();
-  console.log("watchedValues", watchedValues)
+  console.log("watchedValues", watchedValues);
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -163,7 +152,6 @@ const Profile = () => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
-
 
   const onSubmit = async (data: ProfileFormValues) => {
     setIsUpdating(true);
@@ -214,21 +202,21 @@ const Profile = () => {
         console.log(`form data - ${key}: ${value}`);
       }
 
-
       const response = await ServiceBoyUpdateProfile(formData);
       if (response?.statusCode === 200) {
         dispatch(login(response.data));
         setEditMode(false);
         toast({
           description: <SuccessMessage message={response.message} className="" />,
-        })
+        });
       }
     } catch (error) {
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error, Messages.FAILED_TO_UPDATE_PROFILE)} />,
-      })
-    }
-    finally {
+        description: (
+          <ErrorMessage message={getApiErrorMessage(error, Messages.FAILED_TO_UPDATE_PROFILE)} />
+        ),
+      });
+    } finally {
       setIsUpdating(false);
     }
   };
@@ -236,7 +224,7 @@ const Profile = () => {
   return (
     <div className="max-h-screen mx-auto w-full bg-[#4B49AC]/5 shadow-sm p-8 pt-10 md:p-8 overflow-auto">
       {/* Form */}
-      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} >
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         {/* Header with profile image */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
@@ -248,7 +236,7 @@ const Profile = () => {
               />
               <button
                 type="button"
-                className={`absolute bottom-0 right-0 bg-[#4B49AC] text-white rounded-full p-1 w-5 h-5 flex items-center justify-center text-xs ${!editMode && 'hidden'}`}
+                className={`absolute bottom-0 right-0 bg-[#4B49AC] text-white rounded-full p-1 w-5 h-5 flex items-center justify-center text-xs ${!editMode && "hidden"}`}
                 onClick={() => profileInputRef.current?.click()}
               >
                 <Edit size={12} />
@@ -258,63 +246,60 @@ const Profile = () => {
               <input
                 type="file"
                 ref={profileInputRef}
-                onChange={(e) => handleImageChange(e, setProfileImagePreview, 'profileImage',)}
+                onChange={(e) => handleImageChange(e, setProfileImagePreview, "profileImage")}
                 accept="image/*"
                 className="hidden"
               />
             </div>
             <div>
-              <h2 className="text-gray-800 font-medium">{profileData?.name
-                ? profileData.name
-                  .split(" ")
-                  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                  .join(" ")
-                : ""}</h2>
+              <h2 className="text-gray-800 font-medium">
+                {profileData?.name
+                  ? profileData.name
+                      .split(" ")
+                      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                      .join(" ")
+                  : ""}
+              </h2>
               <p className="text-sm text-gray-500">ID: A-12</p>
               <p className="text-sm text-gray-500">Email: {profileData?.email}</p>
             </div>
           </div>
           <div>
-
-            <Button type="button" className="px-5   rounded-lg hover:bg-opacity-90 transition-colors"
-              onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit"}</Button>
+            <Button
+              type="button"
+              className="px-5   rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => setEditMode(!editMode)}
+            >
+              {editMode ? "Cancel" : "Edit"}
+            </Button>
           </div>
         </div>
         {typeof errors.profileImage?.message === "string" && (
-          <p className="text-red-500 text-xs">
-            {errors?.profileImage?.message}
-          </p>)}
+          <p className="text-red-500 text-xs">{errors?.profileImage?.message}</p>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">
             <div>
-              <label className="block text-sm text-gray-600 mb-1.5">
-                Full Name
-              </label>
+              <label className="block text-sm text-gray-600 mb-1.5">Full Name</label>
               <input
                 type="text"
                 placeholder="Your Full Name"
-                className={`w-full px-4 py-2.5 bg-white border  ${errors.name
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border  ${
+                  errors.name ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 {...register("name")}
                 disabled={!editMode}
               />
-              {errors.name && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.name.message}
-                </p>
-              )}
+              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm text-gray-600 mb-1.5">
-                Qualification
-              </label>
+              <label className="block text-sm text-gray-600 mb-1.5">Qualification</label>
               <select
-                className={`appearance-none w-full px-4 py-2.5 bg-white border ${errors.qualification ? "border-red-500" : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC] disabled:text-black disabled:bg-white`}
+                className={`appearance-none w-full px-4 py-2.5 bg-white border ${
+                  errors.qualification ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC] disabled:text-black disabled:bg-white`}
                 {...register("qualification")}
                 disabled={!editMode}
               >
@@ -326,48 +311,39 @@ const Profile = () => {
                 <option value="Others">Others</option>
               </select>
               {errors.qualification && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.qualification.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.qualification.message}</p>
               )}
             </div>
 
-
             <div>
-              <label className="block text-sm text-gray-600 mb-1.5">
-                Aadhar Number
-              </label>
+              <label className="block text-sm text-gray-600 mb-1.5">Aadhar Number</label>
               <input
                 type="text"
                 placeholder="Please enter your Aadhar number"
-                className={`w-full px-4 py-2.5 bg-white border ${errors.aadharNumber
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border ${
+                  errors.aadharNumber ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 {...register("aadharNumber")}
                 disabled={!editMode}
               />
               {errors.aadharNumber && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.aadharNumber.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.aadharNumber.message}</p>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               {/* Front Aadhar Image Upload */}
               <div className="space-y-2">
-                <label className="block text-sm text-gray-600">
-                  Aadhar Image Front
-                </label>
+                <label className="block text-sm text-gray-600">Aadhar Image Front</label>
                 <div className="relative">
                   <input
                     type="file"
                     ref={frontAadharInputRef}
                     accept="image/*"
-                    className={`w-full px-4 py-2.5 bg-white border ${frontImageSrc && 'hidden'}  ${errors.aadharImageFront ? "border-red-500" : "border-[#4B49AC]/20"
-                      } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
-                    onChange={(e) => handleImageChange(e, setFrontPreview, 'aadharImageFront')}
+                    className={`w-full px-4 py-2.5 bg-white border ${frontImageSrc && "hidden"}  ${
+                      errors.aadharImageFront ? "border-red-500" : "border-[#4B49AC]/20"
+                    } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                    onChange={(e) => handleImageChange(e, setFrontPreview, "aadharImageFront")}
                     disabled={!editMode}
                   />
                 </div>
@@ -385,7 +361,7 @@ const Profile = () => {
                           frontAadharInputRef.current.click();
                         }
                       }}
-                      className={`absolute top-1 right-1 bg-[#4B49AC] text-white rounded-full w-5 h-5 flex items-center justify-center ${!editMode && 'hidden'}`}
+                      className={`absolute top-1 right-1 bg-[#4B49AC] text-white rounded-full w-5 h-5 flex items-center justify-center ${!editMode && "hidden"}`}
                     >
                       <Edit size={12} />
                     </button>
@@ -393,27 +369,23 @@ const Profile = () => {
                 )}
 
                 {typeof errors.aadharImageFront?.message === "string" && (
-                  <p className="text-red-500 text-xs">
-                    {errors.aadharImageFront.message}
-                  </p>
+                  <p className="text-red-500 text-xs">{errors.aadharImageFront.message}</p>
                 )}
-
               </div>
 
               {/* Back Aadhar Image Upload */}
               <div className="space-y-2">
-                <label className="block text-sm text-gray-600">
-                  Aadhar Image Back
-                </label>
+                <label className="block text-sm text-gray-600">Aadhar Image Back</label>
                 <div className="relative">
                   <input
                     type="file"
                     ref={backAadharInputRef}
 
                     accept="image/*"
-                    className={`w-full px-4 py-2.5 bg-white border ${backImageSrc && 'hidden'}  ${errors.aadharImageBack ? "border-red-500" : "border-[#4B49AC]/20"
-                      } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
-                    onChange={(e) => handleImageChange(e, setBackPreview, 'aadharImageBack')}
+                    className={`w-full px-4 py-2.5 bg-white border ${backImageSrc && "hidden"}  ${
+                      errors.aadharImageBack ? "border-red-500" : "border-[#4B49AC]/20"
+                    } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                    onChange={(e) => handleImageChange(e, setBackPreview, "aadharImageBack")}
                     disabled={!editMode}
                   />
                 </div>
@@ -431,18 +403,15 @@ const Profile = () => {
                           backAadharInputRef.current.click();
                         }
                       }}
-                      className={`absolute top-1 right-1 bg-[#4B49AC] text-white rounded-full w-5 h-5 flex items-center justify-center ${!editMode && 'hidden'}`}
+                      className={`absolute top-1 right-1 bg-[#4B49AC] text-white rounded-full w-5 h-5 flex items-center justify-center ${!editMode && "hidden"}`}
                     >
                       <Edit size={12} />
                     </button>
                   </div>
                 )}
                 {typeof errors.aadharImageBack?.message === "string" && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.aadharImageBack.message}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.aadharImageBack.message}</p>
                 )}
-
               </div>
             </div>
           </div>
@@ -453,70 +422,67 @@ const Profile = () => {
               <input
                 type="text"
                 placeholder="Your age"
-                className={`w-full px-4 py-2.5 bg-white border ${errors.age ? "border-red-500" : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border ${
+                  errors.age ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 {...register("age")}
                 disabled={!editMode}
               />
-              {errors.age && (
-                <p className="text-red-500 text-xs mt-1">{errors.age.message}</p>
-              )}
+              {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm text-gray-600 mb-1.5">
-                Mobile Number
-              </label>
+              <label className="block text-sm text-gray-600 mb-1.5">Mobile Number</label>
               <input
                 type="tel"
                 placeholder="Please enter your mobile number"
-                className={`w-full px-4 py-2.5 bg-white border ${errors.mobile
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border ${
+                  errors.mobile ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 {...register("mobile")}
                 disabled={!editMode}
               />
               {errors.mobile && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.mobile.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.mobile.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm text-gray-600 mb-1.5">
-                Location
-              </label>
-              <div className={` flex gap-2 w-full px-4 py-2.5 bg-white border ${errors.location
-                ? "border-red-500"
-                : "border-[#4B49AC]/20"
-                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}>
-
-
-                <MapPin className="left-4 top-3 h-5 w-5 text-[#4B49AC]"
-                  onClick={editMode ? () => setMapVisible(true) : undefined} />
-                <p className="flex-1 overflow-x-hidden whitespace-nowrap"> {location?.address ? location?.address : 'Choose location'}   </p>
-
+              <label className="block text-sm text-gray-600 mb-1.5">Location</label>
+              <div
+                className={` flex gap-2 w-full px-4 py-2.5 bg-white border ${
+                  errors.location ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+              >
+                <MapPin
+                  className="left-4 top-3 h-5 w-5 text-[#4B49AC]"
+                  onClick={editMode ? () => setMapVisible(true) : undefined}
+                />
+                <p className="flex-1 overflow-x-hidden whitespace-nowrap">
+                  {" "}
+                  {location?.address ? location?.address : "Choose location"}{" "}
+                </p>
               </div>
               {typeof errors.location?.message === "string" && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.location.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.location.message}</p>
               )}
-
             </div>
 
-            {location && !mapVisible && (<div className="w-full text-center">
-              <label className="block text-sm text-gray-600 mb-3">
-                Your Location
-              </label>
-              <MapPreview location={location} />
-            </div>)}
+            {location && !mapVisible && (
+              <div className="w-full text-center">
+                <label className="block text-sm text-gray-600 mb-3">Your Location</label>
+                <MapPreview location={location} />
+              </div>
+            )}
 
-            {mapVisible && <MapPicker onClose={() => setMapVisible(false)} onSelectLocation={(location) => handleLocationSelect(location, setLocation, setMapVisible)}
-            />}
-
+            {mapVisible && (
+              <MapPicker
+                onClose={() => setMapVisible(false)}
+                onSelectLocation={(location) =>
+                  handleLocationSelect(location, setLocation, setMapVisible)
+                }
+              />
+            )}
           </div>
         </div>
 
@@ -557,8 +523,6 @@ const Profile = () => {
             )}
           </button>
         </div>
-
-
       </form>
     </div>
   );

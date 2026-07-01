@@ -1,10 +1,9 @@
-
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import serviceBoyLogin from "../../../assets/images/catering_login_image.jpg";
-import crewmateLogo from "../../../assets/images/CrewMate_logo.png"
+import crewmateLogo from "../../../assets/images/CrewMate_logo.png";
 import ErrorMessage from "@/components/common/Message/Error.message";
 import SuccessMessage from "@/components/common/Message/SuccessMessage";
 import ForgotPasswordModal from "@/components/common/Modal/ForgotPasswordModal";
@@ -15,12 +14,12 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
-import { useLoginForm } from '@/hooks/useLoginForm';
+import { useLoginForm } from "@/hooks/useLoginForm";
 import { login } from "@/redux/slice/serviceBoyAuth.slice";
 import { Role } from "@/types/enum.type";
 import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
 const LoginPage = () => {
-  const { googleLogin } = useGoogleAuth(Role.SERVICE_BOY)
+  const { googleLogin } = useGoogleAuth(Role.SERVICE_BOY);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -28,36 +27,29 @@ const LoginPage = () => {
   const [forgotModal, setForgotModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-
-  const {
-    register,
-    onSubmit,
-    errors,
-    isLoading,
-    watch
-  } = useLoginForm({
+  const { register, onSubmit, errors, isLoading, watch } = useLoginForm({
     loginType: Role.SERVICE_BOY,
     onLoginSuccess: (response) => {
-      console.log('Login successful data', response);
+      console.log("Login successful data", response);
       toast({
         description: <SuccessMessage message={response.message} className="" />,
-      })
-      console.log("login response.data ----------", response.data)
+      });
+      console.log("login response.data ----------", response.data);
       dispatch(login(response.data));
-      navigate('/service-boy/');
+      navigate("/service-boy/");
     },
     onLoginError: (error) => {
-      console.error('Login failed', error);
+      console.error("Login failed", error);
       toast({
-        description: <ErrorMessage
-          message={getApiErrorMessage(error, "Login failed. Please try again.")}
-        />,
-      })
-    }
+        description: (
+          <ErrorMessage message={getApiErrorMessage(error, "Login failed. Please try again.")} />
+        ),
+      });
+    },
   });
 
   const loginFormValues = watch();
-  console.log(";loginFormValues", loginFormValues)
+  console.log(";loginFormValues", loginFormValues);
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -65,12 +57,7 @@ const LoginPage = () => {
       <div className="w-full md:w-1/2 flex flex-col h-full p-6">
         {/* Logo and Brand Name */}
         <div className="flex items-center gap-2 mb-4">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 400 400"
-            className="text-[#4B49AC]"
-          />
+          <svg width="32" height="32" viewBox="0 0 400 400" className="text-[#4B49AC]" />
           <img src={crewmateLogo} alt="logo" className="w-10 h-10" />
           <span className="text-2xl font-bold text-[#4B49AC]">Crewmate</span>
         </div>
@@ -84,10 +71,17 @@ const LoginPage = () => {
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-2">
                 <div className="space-y-1">
-                  <Tabs defaultValue={Role.SERVICE_BOY} >
+                  <Tabs defaultValue={Role.SERVICE_BOY}>
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value={Role.SERVICE_BOY} className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white ">Service Boy</TabsTrigger>
-                      <TabsTrigger value={Role.VENDOR} onClick={() => navigate('/vendor/login')}>Vendor</TabsTrigger>
+                      <TabsTrigger
+                        value={Role.SERVICE_BOY}
+                        className="data-[state=active]:bg-[#4B49AC] data-[state=active]:text-white "
+                      >
+                        Service Boy
+                      </TabsTrigger>
+                      <TabsTrigger value={Role.VENDOR} onClick={() => navigate("/vendor/login")}>
+                        Vendor
+                      </TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
@@ -99,7 +93,7 @@ const LoginPage = () => {
                     type="email"
                     placeholder="Enter your email"
                     className="p-1.5 h-8"
-                    {...register('email')}
+                    {...register("email")}
                   />
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
@@ -114,7 +108,7 @@ const LoginPage = () => {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       className="p-1.5 h-8"
-                      {...register('password')}
+                      {...register("password")}
                     />
                     <button
                       type="button"
@@ -141,14 +135,12 @@ const LoginPage = () => {
                   </button>
                 </div>
 
-
-
                 <Button
                   type="submit"
                   className="w-full bg-[#4B49AC] hover:bg-[#4B49AC h-8"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Signing in...' : 'Sign in'}
+                  {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
 
                 <div className="relative">
@@ -156,9 +148,7 @@ const LoginPage = () => {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-gray-500">
-                      Or continue with
-                    </span>
+                    <span className="bg-white px-2 text-gray-500">Or continue with</span>
                   </div>
                 </div>
 
@@ -190,11 +180,11 @@ const LoginPage = () => {
                 </Button>
 
                 <div className="text-center text-sm text-gray-500">
-                  Don&apos;t have an account?{' '}
+                  Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     className="text-[#4B49AC] hover:text-[#3f3d91] font-medium"
-                    onClick={() => navigate('/service-boy/register')}
+                    onClick={() => navigate("/service-boy/register")}
                   >
                     Sign up
                   </button>
@@ -215,7 +205,9 @@ const LoginPage = () => {
           />
         </div>
       </div>
-      {forgotModal && <ForgotPasswordModal open={forgotModal} setOpen={setForgotModal} role={Role.SERVICE_BOY} />}
+      {forgotModal && (
+        <ForgotPasswordModal open={forgotModal} setOpen={setForgotModal} role={Role.SERVICE_BOY} />
+      )}
     </div>
   );
 };

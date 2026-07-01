@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue}
-import { Calendar, MapPin, X } from 'lucide-react';
+import { Calendar, MapPin, X } from "lucide-react";
 // import MapPreview from '@/components/common/MapPreview/MapPreview';
-import MapPicker from '@/components/common/MapPicker/MapPicker';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CreateEventModalProps, EventFormData, LocationData } from '@/types/form.type';
-import { eventSchema } from '@/validation/validationSchema';
-
-
+import MapPicker from "@/components/common/MapPicker/MapPicker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CreateEventModalProps, EventFormData, LocationData } from "@/types/form.type";
+import { eventSchema } from "@/validation/validationSchema";
 
 export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModalProps) {
   const [location, setLocation] = useState<LocationData | undefined>(undefined);
@@ -25,25 +29,29 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
     formState: { errors },
     setValue,
     watch,
-    reset
+    reset,
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      eventLocation: undefined
-    }
+      eventLocation: undefined,
+    },
   });
 
-    const formValues = watch();
-  console.log("formValues from event creation", formValues)
+  const formValues = watch();
+  console.log("formValues from event creation", formValues);
 
-  const handleLocationSelect = (selectedLocation: LocationData ) => {
-    console.log("selectedLocation",selectedLocation)
+  const handleLocationSelect = (selectedLocation: LocationData) => {
+    console.log("selectedLocation", selectedLocation);
     setLocation(selectedLocation);
-   setValue('eventLocation', {
-    lat: selectedLocation.lat,
-    lng: selectedLocation.lng,
-    address: selectedLocation.address,
-  }, { shouldValidate: true });
+    setValue(
+      "eventLocation",
+      {
+        lat: selectedLocation.lat,
+        lng: selectedLocation.lng,
+        address: selectedLocation.address,
+      },
+      { shouldValidate: true }
+    );
     setMapVisible(false);
   };
 
@@ -89,19 +97,17 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               id="customerName"
               placeholder="Name of customer"
               className="bg-accent/10 border-border text-foreground placeholder:text-muted-foreground"
-              {...register('customerName')}
+              {...register("customerName")}
             />
             {errors.customerName && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.customerName.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.customerName.message}</p>
             )}
           </div>
 
           {/* Type of Service */}
           <div className="space-y-1">
             <Label className="text-sm text-muted-foreground">Type of Service</Label>
-            <Select onValueChange={(value:string) => setValue('typeOfService', value)}>
+            <Select onValueChange={(value: string) => setValue("typeOfService", value)}>
               <SelectTrigger className="bg-accent/10 border-border text-foreground">
                 <SelectValue placeholder="Your First Name" />
               </SelectTrigger>
@@ -114,16 +120,14 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               </SelectContent>
             </Select>
             {errors.typeOfService && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.typeOfService.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.typeOfService.message}</p>
             )}
           </div>
 
           {/* Type of Work */}
           <div className="space-y-1">
             <Label className="text-sm text-muted-foreground">Type of Work</Label>
-            <Select onValueChange={(value:string) => setValue('typeOfWork', value)}>
+            <Select onValueChange={(value: string) => setValue("typeOfWork", value)}>
               <SelectTrigger className="bg-accent/10 border-border text-foreground">
                 <SelectValue placeholder="Your First Name" />
               </SelectTrigger>
@@ -134,9 +138,7 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               </SelectContent>
             </Select>
             {errors.typeOfWork && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.typeOfWork.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.typeOfWork.message}</p>
             )}
           </div>
 
@@ -148,14 +150,12 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
             <Input
               id="noOfPax"
               placeholder="Your First Name"
-             type="number"
+              type="number"
               className="bg-accent/10 border-border text-foreground placeholder:text-muted-foreground"
-              {...register('noOfPax')}
+              {...register("noOfPax")}
             />
             {errors.noOfPax && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.noOfPax.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.noOfPax.message}</p>
             )}
           </div>
 
@@ -168,12 +168,10 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               id="reportingTime"
               type="time"
               className="bg-accent/10 border-border text-foreground"
-              {...register('reportingTime')}
+              {...register("reportingTime")}
             />
             {errors.reportingTime && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.reportingTime.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.reportingTime.message}</p>
             )}
           </div>
 
@@ -187,31 +185,27 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
               placeholder="Your First Name"
               type="number"
               className="bg-accent/10 border-border text-foreground placeholder:text-muted-foreground"
-              {...register('serviceBoys')}
+              {...register("serviceBoys")}
             />
             {errors.serviceBoys && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.serviceBoys.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.serviceBoys.message}</p>
             )}
           </div>
 
           {/* Location */}
           <div className="space-y-1">
             <Label className="text-sm text-muted-foreground">Location</Label>
-            <div 
+            <div
               className="relative flex items-center bg-accent/10 border border-border rounded-md px-3 py-2 cursor-pointer hover:bg-accent/20 transition-colors"
               onClick={() => setMapVisible(true)}
             >
               <MapPin className="h-5 w-5 text-primary mr-3" />
               <p className="flex-1 text-foreground overflow-hidden whitespace-nowrap">
-                {location?.address || 'Choose location'}
+                {location?.address || "Choose location"}
               </p>
             </div>
             {errors.eventLocation && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.eventLocation.message}
-              </p>
+              <p className="text-destructive text-xs mt-1">{errors.eventLocation.message}</p>
             )}
           </div>
 
@@ -227,8 +221,8 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
 
           {/* Map Picker */}
           {mapVisible && (
-            <MapPicker 
-              onClose={() => setMapVisible(false)} 
+            <MapPicker
+              onClose={() => setMapVisible(false)}
               onSelectLocation={handleLocationSelect}
             />
           )}
@@ -243,15 +237,11 @@ export function CreateEventModal({ isOpen, onClose, onSubmit }: CreateEventModal
                 id="date"
                 type="date"
                 className="bg-accent/10 border-border text-foreground pr-10"
-                {...register('date')}
+                {...register("date")}
               />
               <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary pointer-events-none" />
             </div>
-            {errors.date && (
-              <p className="text-destructive text-xs mt-1">
-                {errors.date.message}
-              </p>
-            )}
+            {errors.date && <p className="text-destructive text-xs mt-1">{errors.date.message}</p>}
           </div>
 
           {/* Action Buttons */}

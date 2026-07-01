@@ -1,32 +1,43 @@
-
-import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Search, CalendarIcon, Loader2, Plus } from 'lucide-react';
-import { CreateEventModal } from '@/components/vendorComponent/Modals/EventCreateModal';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarComponent } from '@/components/ui/calender';
-import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { CreateEvent, getEvents } from '@/api/vendor/vendor';
-import ErrorMessage from '@/components/common/Message/Error.message';
-import { useToast } from '@/hooks/use-toast';
-import { Messages } from '@/types/enum.type';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
-import { RootState } from '@/redux/store/store';
-import { useSelector } from 'react-redux';
-import { Event } from '@/types/type';
-import useDebounce from '@/hooks/useDebounce';
-import { useNavigate } from 'react-router-dom';
-
+import { useEffect, useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Search,
+  CalendarIcon,
+  Loader2,
+  Plus,
+} from "lucide-react";
+import { CreateEventModal } from "@/components/vendorComponent/Modals/EventCreateModal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calender";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { CreateEvent, getEvents } from "@/api/vendor/vendor";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import { useToast } from "@/hooks/use-toast";
+import { Messages } from "@/types/enum.type";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { RootState } from "@/redux/store/store";
+import { useSelector } from "react-redux";
+import { Event } from "@/types/type";
+import useDebounce from "@/hooks/useDebounce";
+import { useNavigate } from "react-router-dom";
 
 const Events = () => {
-
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [customDateFrom, setCustomDateFrom] = useState<Date>();
   const [customDateTo, setCustomDateTo] = useState<Date>();
   const [isCustomDateOpen, setIsCustomDateOpen] = useState(false);
@@ -41,14 +52,13 @@ const Events = () => {
     hasPrev: false,
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const debouncedSearch = useDebounce(searchTerm, 3000);
   const vendorData = useSelector((state: RootState) => state.vendor.vendorData);
   const { toast } = useToast();
-  
 
-   useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearch]);
 
@@ -73,20 +83,22 @@ const Events = () => {
       const response = await CreateEvent(payload);
       if (!response?.data) {
         toast({
-          description: (
-            <ErrorMessage message={Messages.FAILED_TO_CREATE_EVENT} />
-          ),
+          description: <ErrorMessage message={Messages.FAILED_TO_CREATE_EVENT} />,
         });
       }
       if (response && response?.statusCode === 201) {
-        toast({ description: <SuccessMessage message={response.message || Messages.EVENT_CREATION_SUCCESS} /> });
+        toast({
+          description: (
+            <SuccessMessage message={response.message || Messages.EVENT_CREATION_SUCCESS} />
+          ),
+        });
         fetchEvents(currentPage);
       }
-
     } catch (error) {
-
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error, Messages.FAILED_TO_CREATE_EVENT)} />,
+        description: (
+          <ErrorMessage message={getApiErrorMessage(error, Messages.FAILED_TO_CREATE_EVENT)} />
+        ),
       });
     }
   };
@@ -94,13 +106,12 @@ const Events = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, statusFilter, dateFilter]);
-  
+
   const startIndex = (currentPage - 1) * pagination?.limit;
   const endIndex = startIndex + pagination?.limit;
 
-
   useEffect(() => {
-    fetchEvents(currentPage)
+    fetchEvents(currentPage);
   }, [debouncedSearch, statusFilter, dateFilter, customDateFrom, customDateTo, currentPage]);
 
   const fetchEvents = async (page: number) => {
@@ -145,8 +156,11 @@ const Events = () => {
           setEvents(eventData || []);
           setPagination(pagination || pagination);
           setCurrentPage(pagination.page);
-          toast({ description: <SuccessMessage message={response.message || Messages.EVENTS_lOAD_SUCCESS} /> });
-
+          toast({
+            description: (
+              <SuccessMessage message={response.message || Messages.EVENTS_lOAD_SUCCESS} />
+            ),
+          });
         }
       }
     } catch (error) {
@@ -156,13 +170,12 @@ const Events = () => {
     }
   };
 
-  console.log("Debug events:", { events })
+  console.log("Debug events:", { events });
   return (
     <div className="w-full bg-surface min-h-screen p-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4  pe-4">
         <div className="flex flex-wrap items-center gap-3 mb-4">
-
           {/* Search Input */}
           <div className="relative w-52">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -205,7 +218,7 @@ const Events = () => {
           </Select>
 
           {/* Custom Date Range */}
-          {dateFilter === 'custom' && (
+          {dateFilter === "custom" && (
             <Popover open={isCustomDateOpen} onOpenChange={setIsCustomDateOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -213,10 +226,11 @@ const Events = () => {
                   className="w-52 justify-start text-left font-normal bg-card border-input"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {customDateFrom && customDateTo
-                    ? `${format(customDateFrom, 'MMM dd')} - ${format(customDateTo, 'MMM dd, yyyy')}`
-                    : <span className="text-muted-foreground">Pick date range</span>
-                  }
+                  {customDateFrom && customDateTo ? (
+                    `${format(customDateFrom, "MMM dd")} - ${format(customDateTo, "MMM dd, yyyy")}`
+                  ) : (
+                    <span className="text-muted-foreground">Pick date range</span>
+                  )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -261,14 +275,12 @@ const Events = () => {
             </Popover>
           )}
 
-
-
           {/* Add Event Button */}
           <Button
             className="bg-primary/20 hover:bg-primary hover:text-white text-primary font-medium px-4 py-2.5 shadow-sm"
             onClick={() => setIsModalOpen(true)}
           >
-            <Plus/>
+            <Plus />
             Add New Event
           </Button>
         </div>
@@ -293,7 +305,6 @@ const Events = () => {
               </tr>
             </thead>
             <tbody>
-
               {loading ? (
                 <tr>
                   <td colSpan={10}>
@@ -303,66 +314,69 @@ const Events = () => {
                     </div>
                   </td>
                 </tr>
-              ) :
-                events.length > 0 ? (
-                  events.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={`border-b border-table-border ${index % 2 === 0 ? 'bg-table-row-even' : 'bg-table-row-odd'
-                        } hover:bg-white transition-colors`}
-                    >
-                      <td className="px-6 py-4 text-sm text-card-foreground font-medium">
-                        {(pagination.limit * (pagination.page - 1)) + index + 1}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.customerName}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfWork}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfService}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item?.eventLocation?.address ?? "location"}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item.serviceBoys}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">
-                        {item.reportingDateTime
-                          ? `Reporting ${format(new Date(item.reportingDateTime), "hh:mm a")}`
-                          : "No time"}
-                      </td>
-                      <td className="px-6 py-4 text-sm">{item.status}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">
-                        {item.reportingDateTime
-                          ? format(new Date(item.reportingDateTime), "dd-MM-yyyy")
-                          : "No date"}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <Button
+              ) : events.length > 0 ? (
+                events.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`border-b border-table-border ${
+                      index % 2 === 0 ? "bg-table-row-even" : "bg-table-row-odd"
+                    } hover:bg-white transition-colors`}
+                  >
+                    <td className="px-6 py-4 text-sm text-card-foreground font-medium">
+                      {pagination.limit * (pagination.page - 1) + index + 1}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-card-foreground font-medium">
+                      {item.customerName}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfWork}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfService}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">
+                      {item?.eventLocation?.address ?? "location"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">{item.serviceBoys}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">
+                      {item.reportingDateTime
+                        ? `Reporting ${format(new Date(item.reportingDateTime), "hh:mm a")}`
+                        : "No time"}
+                    </td>
+                    <td className="px-6 py-4 text-sm">{item.status}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">
+                      {item.reportingDateTime
+                        ? format(new Date(item.reportingDateTime), "dd-MM-yyyy")
+                        : "No date"}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <Button
                         onClick={() => navigate(`/vendor/events/${item._id}`, { state: item })}
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={10}
-                      className="text-center py-6 text-sm font-medium bg-accent/40 text-accent-foreground rounded-md"
-                    >
-
-                      No events found.
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </td>
                   </tr>
-                )}
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={10}
+                    className="text-center py-6 text-sm font-medium bg-accent/40 text-accent-foreground rounded-md"
+                  >
+                    No events found.
+                  </td>
+                </tr>
+              )}
             </tbody>
-
           </table>
         </div>
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-table-border bg-card">
           <div className="text-sm text-muted-foreground">
-
-            Showing <span>{startIndex + 1}</span> to <span>{Math.min(endIndex, pagination.totalItems)}</span> of <span>{pagination.totalItems}</span> entries
+            Showing <span>{startIndex + 1}</span> to{" "}
+            <span>{Math.min(endIndex, pagination.totalItems)}</span> of{" "}
+            <span>{pagination.totalItems}</span> entries
           </div>
 
           <div className="flex items-center gap-2">
@@ -396,10 +410,11 @@ const Events = () => {
                     variant={currentPage === pageNum ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`h-9 w-9 p-0 ${currentPage === pageNum
-                      ? 'bg-primary text-primary-foreground hover:bg-primary-hover'
-                      : 'hover:bg-accent'
-                      }`}
+                    className={`h-9 w-9 p-0 ${
+                      currentPage === pageNum
+                        ? "bg-primary text-primary-foreground hover:bg-primary-hover"
+                        : "hover:bg-accent"
+                    }`}
                   >
                     {pageNum}
                   </Button>

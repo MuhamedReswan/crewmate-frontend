@@ -1,18 +1,16 @@
 // useLoginForm.ts
-import { zodResolver } from '@hookform/resolvers/zod';
-import { isAxiosError } from 'axios';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Login } from '@/api/admin/admin';
-import { serviceBoyLogin } from '@/api/serviceBoy/serviceBoy';
-import { vendorLogin } from '@/api/vendor/vendor';
-import { ApiResponse } from '@/types/apiTypes/ApiResponse';
-import { Role } from '@/types/enum.type';
-import { LoginFormInputs } from '@/types/form.type';
-import { loginSchema } from '@/validation/validationSchema';
-import { clearAllAuthState } from '@/utils/auth.utils';
-
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Login } from "@/api/admin/admin";
+import { serviceBoyLogin } from "@/api/serviceBoy/serviceBoy";
+import { vendorLogin } from "@/api/vendor/vendor";
+import { ApiResponse } from "@/types/apiTypes/ApiResponse";
+import { Role } from "@/types/enum.type";
+import { LoginFormInputs } from "@/types/form.type";
+import { loginSchema } from "@/validation/validationSchema";
+import { clearAllAuthState } from "@/utils/auth.utils";
 
 export interface UseLoginFormProps<T extends ApiResponse = ApiResponse> {
   // eslint-disable-next-line no-unused-vars
@@ -27,36 +25,33 @@ export const useLoginForm = <T extends ApiResponse = ApiResponse>({
   onLoginError,
   loginType,
 }: UseLoginFormProps<T> = {}) => {
-
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      rememberMe: false
-    }
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
   });
-
-
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      console.log("data from the useLogin on submit", data)
+      console.log("data from the useLogin on submit", data);
       setIsLoading(true);
-      
+
       let result: T | undefined;
 
       if (loginType === Role.VENDOR) {
-        result = await vendorLogin(data) as T
+        result = (await vendorLogin(data)) as T;
       } else if (loginType === Role.SERVICE_BOY) {
-        result = await serviceBoyLogin(data) as T
+        result = (await serviceBoyLogin(data)) as T;
       } else if (loginType === Role.ADMIN) {
-        result = await Login(data) as T
-        console.log("admin login form useLoginForm")
+        result = (await Login(data)) as T;
+        console.log("admin login form useLoginForm");
       }
-      console.log("result of login", result)
+      console.log("result of login", result);
       if (result && result.statusCode === 200) {
         // clear previous session
         await clearAllAuthState();
@@ -64,14 +59,7 @@ export const useLoginForm = <T extends ApiResponse = ApiResponse>({
         onLoginSuccess?.(result);
       }
     } catch (error) {
-
-      if (isAxiosError(error) && error.response) {
-        onLoginError?.(error.response.data);
-      } else {
-        console.error("Unknown error", error);
-        onLoginError?.({ message: "Unexpected error occurred", statusCode: 500, data: null });
-      }
-
+      onLoginError?.(error);
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +74,6 @@ export const useLoginForm = <T extends ApiResponse = ApiResponse>({
     reset: form.reset,
     watch: form.watch,
     setValue: form.setValue,
-    formState: form.formState
+    formState: form.formState,
   };
 };
-

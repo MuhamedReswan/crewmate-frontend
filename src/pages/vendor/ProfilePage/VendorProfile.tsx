@@ -1,39 +1,41 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Edit, MapPin } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { VendorFetchProfile, VendorUpdateProfile } from '@/api/vendor/vendor';
-import MapPicker from '@/components/common/MapPicker/MapPicker';
-import MapPreview from '@/components/common/MapPreview/MapPreview';
-import ErrorMessage from '@/components/common/Message/Error.message';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import { useToast } from '@/hooks/use-toast';
-import { vendorLogin, vendorLogout } from '@/redux/slice/vendorAuth.slice';
-import { RootState } from '@/redux/store/store';
-import { Messages } from '@/types/enum.type';
-import { LocationData, VendrProfileFormValues } from '@/types/form.type';
-import { Vendor } from '@/types/users.type';
-import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
-import { isDataChanged } from '@/utils/compareObjects';
-import { pickDTOFields } from '@/utils/dtoMapper';
-import { VendorLoginShape } from '@/utils/dtoShapes';
-import { handleLocationSelect } from '@/utils/handleLocationSelection';
-import { vendorProfileSchema } from '@/validation/validationSchema';
-import { useSecureImage } from '@/hooks/useSecureImage';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Edit, MapPin } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { VendorFetchProfile, VendorUpdateProfile } from "@/api/vendor/vendor";
+import MapPicker from "@/components/common/MapPicker/MapPicker";
+import MapPreview from "@/components/common/MapPreview/MapPreview";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import { useToast } from "@/hooks/use-toast";
+import { vendorLogin, vendorLogout } from "@/redux/slice/vendorAuth.slice";
+import { RootState } from "@/redux/store/store";
+import { Messages } from "@/types/enum.type";
+import { LocationData, VendrProfileFormValues } from "@/types/form.type";
+import { Vendor } from "@/types/users.type";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import { isDataChanged } from "@/utils/compareObjects";
+import { pickDTOFields } from "@/utils/dtoMapper";
+import { VendorLoginShape } from "@/utils/dtoShapes";
+import { handleLocationSelect } from "@/utils/handleLocationSelection";
+import { vendorProfileSchema } from "@/validation/validationSchema";
+import { useSecureImage } from "@/hooks/useSecureImage";
 
 const VendorProfile = () => {
   const { vendorData } = useSelector((state: RootState) => state.vendor);
 
   // Default profile image
-  const defaultImage = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";
+  const defaultImage =
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100";
 
   const [profileData, setProfileData] = useState<Partial<Vendor> | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [mapVisible, setMapVisible] = useState(false);
-  const [location, setLocation] = useState<LocationData | undefined>(profileData?.location || undefined);
+  const [location, setLocation] = useState<LocationData | undefined>(
+    profileData?.location || undefined
+  );
   const [isUpdating, setIsUpdating] = useState(false);
-
 
   // State for images
   // const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
@@ -44,7 +46,7 @@ const VendorProfile = () => {
   const [profileImagePreview, setProfileImagePreview] = useState<string>();
   const [licencePreview, setLicencePreview] = useState<string>();
 
-   const licenceImageSrc = licencePreview || licenceImage;
+  const licenceImageSrc = licencePreview || licenceImage;
 
   // Create references for file inputs
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -61,9 +63,7 @@ const VendorProfile = () => {
           const profile = response?.data;
           if (!profile) {
             toast({
-              description: (
-                <ErrorMessage message={Messages.FETCH_PROFILE_FAILED} />
-              ),
+              description: <ErrorMessage message={Messages.FETCH_PROFILE_FAILED} />,
             });
             dispatch(vendorLogout());
             return;
@@ -74,7 +74,6 @@ const VendorProfile = () => {
             dispatch(vendorLogout());
             return;
           }
-
 
           // const fetchImage = async () => {
           //   if (profile.profileImage) {
@@ -102,15 +101,15 @@ const VendorProfile = () => {
       } catch (error) {
         dispatch(vendorLogout());
         toast({
-          description: <ErrorMessage message={getApiErrorMessage(error, Messages.FETCH_PROFILE_FAILED)} />,
+          description: (
+            <ErrorMessage message={getApiErrorMessage(error, Messages.FETCH_PROFILE_FAILED)} />
+          ),
         });
       }
     };
 
     fetchProfile();
   }, [vendorData?._id, dispatch]);
-
-
 
   const {
     register,
@@ -125,7 +124,6 @@ const VendorProfile = () => {
   });
 
   useEffect(() => {
-
     if (!profileData || Object.keys(profileData).length === 0) return;
     reset({
       _id: profileData._id || "",
@@ -142,16 +140,16 @@ const VendorProfile = () => {
 
     setLocation(profileData.location || undefined);
   }, [profileData, reset]);
-  console.log("profileData",profileData);
+  console.log("profileData", profileData);
 
   const watchedValues = watch();
-  console.log("watchedValues", watchedValues)
+  console.log("watchedValues", watchedValues);
 
   useEffect(() => {
     if (location) {
-      setValue("location", location)
+      setValue("location", location);
     }
-  }, [location, setValue])
+  }, [location, setValue]);
   console.log("location from profile", location?.address);
 
   const handleImageChange = (
@@ -166,15 +164,13 @@ const VendorProfile = () => {
     }
   };
 
-
   const onSubmit = async (data: VendrProfileFormValues) => {
-    console.log("vendor profile sumited")
+    console.log("vendor profile sumited");
     console.log("Form data:", data);
     setIsUpdating(true);
 
     const formData = new FormData();
     try {
-
       Object.keys(data).forEach((key) => {
         const typedKey = key as keyof typeof data;
 
@@ -185,7 +181,7 @@ const VendorProfile = () => {
         }
       });
 
-        // remove invalid string values
+      // remove invalid string values
       if (data.licenceImage === "[object Object]") {
         delete data.licenceImage;
       }
@@ -194,7 +190,7 @@ const VendorProfile = () => {
         delete data.profileImage;
       }
 
-   // Add image files only if they exist AND are File
+      // Add image files only if they exist AND are File
       if (data.profileImage instanceof File) {
         formData.append("profileImage", data.profileImage);
       }
@@ -203,9 +199,9 @@ const VendorProfile = () => {
         formData.append("licenceImage", data.licenceImage);
       }
 
-      console.log("form data-----------------------------------------", formData)
+      console.log("form data-----------------------------------------", formData);
       const response = await VendorUpdateProfile(formData);
-      console.log("vendor update profile", response)
+      console.log("vendor update profile", response);
       if (response?.statusCode === 200) {
         console.log("vendor Profile Updated Successfully", response);
         dispatch(vendorLogin(response.data));
@@ -213,26 +209,24 @@ const VendorProfile = () => {
         setEditMode(false);
         toast({
           description: <SuccessMessage message={response.message} className="" />,
-        })
+        });
       }
     } catch (error) {
-      console.log("error from profile", error)
+      console.log("error from profile", error);
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error, Messages.UPDATE_PROFILE_FAILED)} />,
-      })
-    }
-    finally {
+        description: (
+          <ErrorMessage message={getApiErrorMessage(error, Messages.UPDATE_PROFILE_FAILED)} />
+        ),
+      });
+    } finally {
       setIsUpdating(false);
     }
-
-  }
-
-
+  };
 
   return (
     <div className="max-h-screen mx-auto w-full h-full bg-surface shadow-sm p-8 pt-10 md:p-8 overflow-auto">
       {/* Form */}
-      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} >
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         {/* Header with profile image */}
         <div className="flex justify-between sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
@@ -246,7 +240,7 @@ const VendorProfile = () => {
               <input
                 type="file"
                 ref={profileInputRef}
-                onChange={(e) => handleImageChange(e, setProfileImagePreview, 'profileImage',)}
+                onChange={(e) => handleImageChange(e, setProfileImagePreview, "profileImage")}
                 accept="image/*"
                 className="hidden"
               />
@@ -254,29 +248,29 @@ const VendorProfile = () => {
               <button
                 type="button"
                 className={`absolute bottom-0 right-0 bg-[#4B49AC] text-white rounded-full p-1 w-5 h-5
-                 flex items-center justify-center text-xs ${!editMode && 'hidden'}`}
+                 flex items-center justify-center text-xs ${!editMode && "hidden"}`}
                 onClick={() => profileInputRef.current?.click()}
               >
                 <Edit size={12} />
               </button>
-
             </div>
 
             <div>
-              <h2 className="text-gray-800 font-medium">{profileData?.name
-                ? profileData.name
-                  .split(" ")
-                  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                  .join(" ")
-                : ""}</h2>
+              <h2 className="text-gray-800 font-medium">
+                {profileData?.name
+                  ? profileData.name
+                      .split(" ")
+                      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                      .join(" ")
+                  : ""}
+              </h2>
               <h4>Name</h4>
               <p className="text-sm text-gray-500">Estd:{profileData?.estd}</p>
               <p className="text-sm text-gray-500">Email: {profileData?.email}</p>
 
               {typeof errors.profileImage?.message === "string" && (
-                <p className="text-red-500 text-xs mt-2">
-                  {errors.profileImage.message}
-                </p>)}
+                <p className="text-red-500 text-xs mt-2">{errors.profileImage.message}</p>
+              )}
             </div>
           </div>
 
@@ -284,7 +278,9 @@ const VendorProfile = () => {
             <button
               type="button"
               className="px-5 py-2 text-sm font-medium text-white bg-[#4B49AC] rounded-lg hover:bg-opacity-90 transition-colors"
-              onClick={() => { setEditMode(!editMode) }}
+              onClick={() => {
+                setEditMode(!editMode);
+              }}
             >
               {editMode ? "Cancel" : "Edit"}
             </button>
@@ -298,17 +294,13 @@ const VendorProfile = () => {
               <input
                 type="text"
                 placeholder="Enter Comapany Name"
-                className={`w-full px-4 py-2.5 bg-white border  ${errors.name
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border  ${
+                  errors.name ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 disabled={!editMode}
-                {...register("name")} />
-              {errors.name && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.name.message}
-                </p>)}
-
+                {...register("name")}
+              />
+              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
             </div>
 
             <div>
@@ -316,17 +308,15 @@ const VendorProfile = () => {
               <input
                 type="text"
                 placeholder="Your Licence Number"
-                className={`w-full px-4 py-2.5 bg-white border  ${errors.licenceNumber
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border  ${
+                  errors.licenceNumber ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 disabled={!editMode}
                 {...register("licenceNumber")}
               />
               {errors.licenceNumber && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.licenceNumber.message}
-                </p>)}
+                <p className="text-red-500 text-xs mt-1">{errors.licenceNumber.message}</p>
+              )}
             </div>
 
             <div>
@@ -334,17 +324,15 @@ const VendorProfile = () => {
               <input
                 type="text"
                 placeholder="Please enter your Instagram Id"
-                className={`w-full px-4 py-2.5 bg-white border  ${errors.instaId
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border  ${
+                  errors.instaId ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 disabled={!editMode}
                 {...register("instaId")}
               />
               {errors.instaId && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.instaId.message}
-                </p>)}
+                <p className="text-red-500 text-xs mt-1">{errors.instaId.message}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -356,12 +344,9 @@ const VendorProfile = () => {
                     type="file"
                     accept="image/*"
                     className={`w-full px-4 py-2.5 bg-white border rounded-lg text-sm placeholder-gray-400 focus:ring-1 
-                    focus:ring-[#4B49AC] ${licenceImageSrc && 'hidden'} border-[#4B49AC]/20
-                    ${errors.licenceImage
-                        ? "border-red-500"
-                        : "border-[#4B49AC]/20"
-                      }`}
-                    onChange={(e) => handleImageChange(e, setLicencePreview, 'licenceImage')}
+                    focus:ring-[#4B49AC] ${licenceImageSrc && "hidden"} border-[#4B49AC]/20
+                    ${errors.licenceImage ? "border-red-500" : "border-[#4B49AC]/20"}`}
+                    onChange={(e) => handleImageChange(e, setLicencePreview, "licenceImage")}
                     disabled={!editMode}
                   />
                   {licenceImageSrc && (
@@ -375,19 +360,17 @@ const VendorProfile = () => {
                         type="button"
                         onClick={() => licenceImgaeInputRef.current?.click()}
                         className={`absolute top-1 right-1 bg-[#4B49AC] text-white rounded-full w-5 h-5 
-                        flex items-center justify-center ${!editMode && 'hidden'}`}
+                        flex items-center justify-center ${!editMode && "hidden"}`}
                       >
                         <Edit size={12} />
                       </button>
                     </div>
                   )}
                   {typeof errors.licenceImage?.message === "string" && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.licenceImage.message}
-                    </p>)}
+                    <p className="text-red-500 text-xs mt-1">{errors.licenceImage.message}</p>
+                  )}
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -397,17 +380,13 @@ const VendorProfile = () => {
               <input
                 type="number"
                 placeholder="Your age"
-                className={`w-full px-4 py-2.5 bg-white border  ${errors.estd
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border  ${
+                  errors.estd ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 disabled={!editMode}
                 {...register("estd")}
               />
-              {errors.estd && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.estd.message}
-                </p>)}
+              {errors.estd && <p className="text-red-500 text-xs mt-1">{errors.estd.message}</p>}
             </div>
 
             <div>
@@ -415,49 +394,52 @@ const VendorProfile = () => {
               <input
                 type="tel"
                 placeholder="Please enter your mobile number"
-                className={`w-full px-4 py-2.5 bg-white border  ${errors.mobile
-                  ? "border-red-500"
-                  : "border-[#4B49AC]/20"
-                  } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+                className={`w-full px-4 py-2.5 bg-white border  ${
+                  errors.mobile ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
                 disabled={!editMode}
                 {...register("mobile")}
               />
-              {errors.mobile && (
-                <p className="text-red-500 text-xs">
-                  {errors.mobile.message}
-                </p>)}
+              {errors.mobile && <p className="text-red-500 text-xs">{errors.mobile.message}</p>}
             </div>
 
             <div>
               <label className="block text-sm text-gray-600 mb-1.5">Location</label>
-              <div className={` flex gap-2 w-full px-4 py-2.5 bg-white border ${errors.location
-                ? "border-red-500"
-                : "border-[#4B49AC]/20"
-                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}>
-                <MapPin className="left-4 top-3 h-5 w-5 text-[#4B49AC]"
+              <div
+                className={` flex gap-2 w-full px-4 py-2.5 bg-white border ${
+                  errors.location ? "border-red-500" : "border-[#4B49AC]/20"
+                } rounded-lg text-sm placeholder-gray-400 focus:ring-1 focus:ring-[#4B49AC]`}
+              >
+                <MapPin
+                  className="left-4 top-3 h-5 w-5 text-[#4B49AC]"
                   onClick={editMode ? () => setMapVisible(true) : undefined}
                 />
-                <p className={`flex-1 overflow-x-hidden whitespace-nowrap ${location?.address ? "text-gray-400" : ""} text-gray-400`}>
-                  {location?.address ? location.address : 'Choose location'}
+                <p
+                  className={`flex-1 overflow-x-hidden whitespace-nowrap ${location?.address ? "text-gray-400" : ""} text-gray-400`}
+                >
+                  {location?.address ? location.address : "Choose location"}
                 </p>
               </div>
               {typeof errors.location?.message === "string" && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.location.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.location.message}</p>
               )}
             </div>
-
 
             {location && !mapVisible && (
               <div className="w-full text-center">
                 <label className="block text-sm text-gray-600 mb-3">Your Location</label>
                 <MapPreview location={location} />
-              </div>)}
+              </div>
+            )}
 
-            {mapVisible && <MapPicker onClose={() => setMapVisible(false)} onSelectLocation={(location) => handleLocationSelect(location, setLocation, setMapVisible)}
-            />}
-
+            {mapVisible && (
+              <MapPicker
+                onClose={() => setMapVisible(false)}
+                onSelectLocation={(location) =>
+                  handleLocationSelect(location, setLocation, setMapVisible)
+                }
+              />
+            )}
           </div>
         </div>
 
@@ -498,10 +480,9 @@ const VendorProfile = () => {
             )}
           </button>
         </div>
-
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default VendorProfile
+export default VendorProfile;

@@ -7,7 +7,6 @@ export interface MessageProps {
   className?: string;
 }
 
-
 export interface Event {
   _id: string;
   customerName: string;
@@ -23,12 +22,11 @@ export interface Event {
   typeOfWork: string;
   vendor: Vendor;
   bonus?: number;
-  wagePerBoy:number
-  bookingStatus:BookingStatus;
+  wagePerBoy: number;
+  bookingStatus: BookingStatus;
   createdAt: string;
   updatedAt: string;
 }
-
 
 export interface EventQueryParams {
   search?: string;

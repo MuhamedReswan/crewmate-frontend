@@ -1,26 +1,36 @@
-
-import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Search, CalendarIcon, Loader2 } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarComponent } from '@/components/ui/calender';
-import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { Messages } from '@/types/enum.type';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import { RootState } from '@/redux/store/store';
-import { useSelector } from 'react-redux';
-import useDebounce from '@/hooks/useDebounce';
-import { getWorks } from '@/api/serviceBoy/serviceBoy';
-
+import { useEffect, useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Search,
+  CalendarIcon,
+  Loader2,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calender";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Messages } from "@/types/enum.type";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import { RootState } from "@/redux/store/store";
+import { useSelector } from "react-redux";
+import useDebounce from "@/hooks/useDebounce";
+import { getWorks } from "@/api/serviceBoy/serviceBoy";
 
 const Works = () => {
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [customDateFrom, setCustomDateFrom] = useState<Date>();
   const [customDateTo, setCustomDateTo] = useState<Date>();
   const [isCustomDateOpen, setIsCustomDateOpen] = useState(false);
@@ -38,9 +48,8 @@ const Works = () => {
   const debouncedSearch = useDebounce(searchTerm, 3000);
   const serviceBoyData = useSelector((state: RootState) => state.serviceBoy.serviceBoyData);
   const { toast } = useToast();
-  
 
-   useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearch]);
 
@@ -51,18 +60,17 @@ const Works = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, statusFilter, dateFilter]);
-  
+
   const startIndex = (currentPage - 1) * pagination?.limit;
   const endIndex = startIndex + pagination?.limit;
 
- useEffect(() => {
-          setCurrentPage(1);
-        }, [searchTerm, statusFilter, dateFilter]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, dateFilter]);
 
   useEffect(() => {
-    fetchWorks(currentPage)
+    fetchWorks(currentPage);
   }, [debouncedSearch, statusFilter, dateFilter, customDateFrom, customDateTo, currentPage]);
-
 
   const fetchWorks = async (page: number) => {
     try {
@@ -98,26 +106,26 @@ const Works = () => {
         params.to = to.toISOString();
       }
 
-       
-        
-        const startIndex = (currentPage - 1) * pagination?.limit;
-        const endIndex = startIndex + pagination?.limit;
+      const startIndex = (currentPage - 1) * pagination?.limit;
+      const endIndex = startIndex + pagination?.limit;
 
       if (serviceBoyData?._id) {
-              const response = await getWorks(params, serviceBoyData._id);
-      
-              console.log('works response.data',response?.data);
-              if (response?.statusCode === 200 && response.data) {
-                const { data: workData, pagination } = response.data;
-                setWorks(workData || []);
-                setPagination(pagination || pagination);
-                setCurrentPage(pagination.page);
-                toast({ description: <SuccessMessage message={response.message || Messages.EVENTS_lOAD_SUCCESS} /> });
-      
-              }
-              console.log("works",works)
-            }
+        const response = await getWorks(params, serviceBoyData._id);
 
+        console.log("works response.data", response?.data);
+        if (response?.statusCode === 200 && response.data) {
+          const { data: workData, pagination } = response.data;
+          setWorks(workData || []);
+          setPagination(pagination || pagination);
+          setCurrentPage(pagination.page);
+          toast({
+            description: (
+              <SuccessMessage message={response.message || Messages.EVENTS_lOAD_SUCCESS} />
+            ),
+          });
+        }
+        console.log("works", works);
+      }
     } catch (error) {
       console.error("Failed to fetch works:", error);
     } finally {
@@ -125,13 +133,12 @@ const Works = () => {
     }
   };
 
-  console.log("Debug works:", { works })
+  console.log("Debug works:", { works });
   return (
     <div className="w-full bg-surface min-h-screen p-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4  pe-4">
         <div className="flex flex-wrap items-center gap-3 mb-4">
-
           {/* Search Input */}
           <div className="relative w-52">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -174,7 +181,7 @@ const Works = () => {
           </Select>
 
           {/* Custom Date Range */}
-          {dateFilter === 'custom' && (
+          {dateFilter === "custom" && (
             <Popover open={isCustomDateOpen} onOpenChange={setIsCustomDateOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -182,10 +189,11 @@ const Works = () => {
                   className="w-52 justify-start text-left font-normal bg-card border-input"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {customDateFrom && customDateTo
-                    ? `${format(customDateFrom, 'MMM dd')} - ${format(customDateTo, 'MMM dd, yyyy')}`
-                    : <span className="text-muted-foreground">Pick date range</span>
-                  }
+                  {customDateFrom && customDateTo ? (
+                    `${format(customDateFrom, "MMM dd")} - ${format(customDateTo, "MMM dd, yyyy")}`
+                  ) : (
+                    <span className="text-muted-foreground">Pick date range</span>
+                  )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -229,7 +237,6 @@ const Works = () => {
               </PopoverContent>
             </Popover>
           )}
-
         </div>
       </div>
 
@@ -252,7 +259,6 @@ const Works = () => {
               </tr>
             </thead>
             <tbody>
-
               {loading ? (
                 <tr>
                   <td colSpan={10}>
@@ -262,65 +268,68 @@ const Works = () => {
                     </div>
                   </td>
                 </tr>
-              ) :
-                works.length > 0 ? (
-                  works.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={`border-b border-table-border ${index % 2 === 0 ? 'bg-table-row-even' : 'bg-table-row-odd'
-                        } hover:bg-white transition-colors`}
-                    >
-                      <td className="px-6 py-4 text-sm text-card-foreground font-medium">
-                        {(pagination.limit * (pagination.page - 1)) + index + 1}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-card-foreground font-medium">{item.vendor.name}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfWork}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfService}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item?.eventLocation?.address ?? "location"}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">{item.serviceBoys}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">
-                        {item.reportingDateTime
-                          ? `Reporting ${format(new Date(item.reportingDateTime), "hh:mm a")}`
-                          : "No time"}
-                      </td>
-                      <td className="px-6 py-4 text-sm">{item.status}</td>
-                      <td className="px-6 py-4 text-sm text-card-foreground">
-                        {item.reportingDateTime
-                          ? format(new Date(item.reportingDateTime), "dd-MM-yyyy")
-                          : "No date"}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={10}
-                      className="text-center py-6 text-sm font-medium bg-accent/40 text-accent-foreground rounded-md"
-                    >
-
-                      No works found.
+              ) : works.length > 0 ? (
+                works.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`border-b border-table-border ${
+                      index % 2 === 0 ? "bg-table-row-even" : "bg-table-row-odd"
+                    } hover:bg-white transition-colors`}
+                  >
+                    <td className="px-6 py-4 text-sm text-card-foreground font-medium">
+                      {pagination.limit * (pagination.page - 1) + index + 1}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-card-foreground font-medium">
+                      {item.vendor.name}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfWork}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">{item.typeOfService}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">
+                      {item?.eventLocation?.address ?? "location"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">{item.serviceBoys}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">
+                      {item.reportingDateTime
+                        ? `Reporting ${format(new Date(item.reportingDateTime), "hh:mm a")}`
+                        : "No time"}
+                    </td>
+                    <td className="px-6 py-4 text-sm">{item.status}</td>
+                    <td className="px-6 py-4 text-sm text-card-foreground">
+                      {item.reportingDateTime
+                        ? format(new Date(item.reportingDateTime), "dd-MM-yyyy")
+                        : "No date"}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-accent text-muted-foreground hover:text-foreground"
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </td>
                   </tr>
-                )}
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={10}
+                    className="text-center py-6 text-sm font-medium bg-accent/40 text-accent-foreground rounded-md"
+                  >
+                    No works found.
+                  </td>
+                </tr>
+              )}
             </tbody>
-
           </table>
         </div>
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-table-border bg-card">
           <div className="text-sm text-muted-foreground">
-
-            Showing <span>{startIndex + 1}</span> to <span>{Math.min(endIndex, pagination.totalItems)}</span> of <span>{pagination.totalItems}</span> entries
+            Showing <span>{startIndex + 1}</span> to{" "}
+            <span>{Math.min(endIndex, pagination.totalItems)}</span> of{" "}
+            <span>{pagination.totalItems}</span> entries
           </div>
 
           <div className="flex items-center gap-2">
@@ -354,10 +363,11 @@ const Works = () => {
                     variant={currentPage === pageNum ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`h-9 w-9 p-0 ${currentPage === pageNum
-                      ? 'bg-primary text-primary-foreground hover:bg-primary-hover'
-                      : 'hover:bg-accent'
-                      }`}
+                    className={`h-9 w-9 p-0 ${
+                      currentPage === pageNum
+                        ? "bg-primary text-primary-foreground hover:bg-primary-hover"
+                        : "hover:bg-accent"
+                    }`}
                   >
                     {pageNum}
                   </Button>
@@ -374,7 +384,7 @@ const Works = () => {
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
-        </div>
+          </div>
         </div>
       </div>
     </div>

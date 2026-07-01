@@ -33,7 +33,7 @@ API.interceptors.response.use(
       const role = getCurrentUserRole(store.getState());
 
       console.log("Full state:", store.getState());
- if (!role) return Promise.reject(error);
+      if (!role) return Promise.reject(error);
 
       switch (role) {
         case "admin":
@@ -47,7 +47,7 @@ API.interceptors.response.use(
           break;
       }
 
-      console.log("role from interceptor", role)
+      console.log("role from interceptor", role);
 
       return API(originalRequest);
     }

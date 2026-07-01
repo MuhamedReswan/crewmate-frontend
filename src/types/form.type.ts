@@ -39,7 +39,6 @@ export interface ForgotPasswordModalProps {
   role: Role;
 }
 
-
 export interface CreateEventModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -51,10 +50,6 @@ export interface VerificationRejectionModalProps {
   onClose: () => void;
   onSubmit: (reason: string) => void;
 }
-
-
-
-
 
 // Type for form validation
 export type SignupFormData = z.infer<typeof signupSchema>;

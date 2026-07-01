@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from "react";
 import { getSecureDocumentUrl } from "@/api/common/common";
 
 export const useSecureImage = (publicId?: string) => {
   const [url, setUrl] = useState<string | null>(null);
-console.log("secure hook calleed publicId",publicId)
+  console.log("secure hook calleed publicId", publicId);
   useEffect(() => {
     if (!publicId) return;
 
@@ -12,8 +11,7 @@ console.log("secure hook calleed publicId",publicId)
 
     const fetchUrl = async () => {
       try {
-
-          console.log("called fetchurl function--------------------------------------------",)
+        console.log("called fetchurl function--------------------------------------------");
         const result = await getSecureDocumentUrl(publicId);
         setUrl(result.data);
       } catch (err) {

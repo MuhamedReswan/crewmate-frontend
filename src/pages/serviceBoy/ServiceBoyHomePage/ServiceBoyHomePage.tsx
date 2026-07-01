@@ -1,23 +1,23 @@
-import { useDispatch, useSelector } from 'react-redux';
-import StatCard from '@/components/common/StatCard/StatCard';
-import { RootState } from '@/redux/store/store';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Messages, VerificationStatus } from '@/types/enum.type';
-import { GetServiceBoyById, RetryVerficationRequestServiceBoy } from '@/api/serviceBoy/serviceBoy';
-import SuccessMessage from '@/components/common/Message/SuccessMessage';
-import { toast } from '@/hooks/use-toast';
-import { getApiErrorMessage } from '@/utils/apiErrorHanldler';
-import ErrorMessage from '@/components/common/Message/Error.message';
-import { updateServiceBoyData } from '@/redux/slice/serviceBoyAuth.slice';
-import { useVerificationSync } from '@/hooks/useVerificationSync';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { useDispatch, useSelector } from "react-redux";
+import StatCard from "@/components/common/StatCard/StatCard";
+import { RootState } from "@/redux/store/store";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Messages, VerificationStatus } from "@/types/enum.type";
+import { GetServiceBoyById, RetryVerficationRequestServiceBoy } from "@/api/serviceBoy/serviceBoy";
+import SuccessMessage from "@/components/common/Message/SuccessMessage";
+import { toast } from "@/hooks/use-toast";
+import { getApiErrorMessage } from "@/utils/apiErrorHanldler";
+import ErrorMessage from "@/components/common/Message/Error.message";
+import { updateServiceBoyData } from "@/redux/slice/serviceBoyAuth.slice";
+import { useVerificationSync } from "@/hooks/useVerificationSync";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 function ServiceBoyHomePage() {
   const dispatch = useDispatch();
   const serviceBoy = useSelector((state: RootState) => state.serviceBoy.serviceBoyData);
   const date = new Date(Date.now());
-const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()}`;
+  const formattedDate = `${date.getDate().toString().padStart(2, "0")}-${date.toLocaleString("default", { month: "short" })}-${date.getFullYear()}`;
 
   useVerificationSync({
     user: serviceBoy,
@@ -42,16 +42,18 @@ const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLo
       }
     } catch (error) {
       toast({
-        description: <ErrorMessage message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)} />,
+        description: (
+          <ErrorMessage
+            message={getApiErrorMessage(error, Messages.VERIFCATION_STATUS_CHANGE_FAILED)}
+          />
+        ),
       });
     }
   };
 
-  console.log("serviceBoy ====",serviceBoy)
+  console.log("serviceBoy ====", serviceBoy);
   return (
     <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-    
-
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">Welcome {serviceBoy?.name}</h1>
@@ -62,11 +64,10 @@ const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLo
           )}
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          
           <span>Today ( {formattedDate} )</span>
         </div>
       </div>
-        {/* Rejection Alert Banner */}
+      {/* Rejection Alert Banner */}
       {serviceBoy?.isVerified === VerificationStatus.Rejected && (
         <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-sm">
           <div className="flex items-start">
@@ -78,7 +79,9 @@ const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLo
                 Verification Request Rejected
               </h3>
               <p className="text-sm text-red-700 mb-4">
-                Your verification request has been rejected by the admin.due to {serviceBoy.rejectionReason}. Please review your profile information and submit a new verification request.
+                Your verification request has been rejected by the admin.due to{" "}
+                {serviceBoy.rejectionReason}. Please review your profile information and submit a
+                new verification request.
               </p>
               <div className="flex items-center gap-3">
                 <Button
@@ -90,7 +93,11 @@ const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLo
                   Resubmit Verification
                 </Button>
                 <Link to="/service-boy/profile">
-                  <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-50">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-300 text-red-700 hover:bg-red-50"
+                  >
                     Update Profile
                   </Button>
                 </Link>
@@ -154,4 +161,3 @@ const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${date.toLo
 }
 
 export default ServiceBoyHomePage;
-

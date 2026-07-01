@@ -20,7 +20,6 @@ export interface UnAvailable {
   reason: string;
 }
 export interface ServiceBoy extends CommonDetails {
-
   aadharNumber: string;
   aadharImageFront: ISecureImage;
   aadharImageBack: ISecureImage;

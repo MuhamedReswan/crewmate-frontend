@@ -28,7 +28,7 @@ export function useVerificationSync<T extends BaseUser>({
     if (!user?._id) return;
 
     // Stop syncing if already verified
-    if (user.isVerified === VerificationStatus.Verified) return
+    if (user.isVerified === VerificationStatus.Verified) return;
 
     let isMounted = true;
 
@@ -36,9 +36,12 @@ export function useVerificationSync<T extends BaseUser>({
       try {
         if (!user?._id) return;
         const latest = await fetchById(user._id);
-        console.log("latest",latest)
-        console.log("user",user)
-        console.log("is this same",(latest && isMounted && JSON.stringify(latest) !== JSON.stringify(user)))
+        console.log("latest", latest);
+        console.log("user", user);
+        console.log(
+          "is this same",
+          latest && isMounted && JSON.stringify(latest) !== JSON.stringify(user)
+        );
         if (latest?.data && isMounted && JSON.stringify(latest) !== JSON.stringify(user)) {
           dispatch(updateAction(latest.data));
         }
